@@ -206,10 +206,10 @@ def founders(c):
 </section>'''
 
 
-def wall(c, projects=None, link=True):
+def wall(c, projects=None, link=True, title=None):
     items = projects or PROJECTS
     lis = ''.join(tile(c, p, PROJECTS.index(p) + 1) for p in items)
-    head = b.section_head('Selected works', f'All {len(PROJECTS)} projects.',
+    head = b.section_head('Selected works', title or f'All {len(PROJECTS)} projects.',
                           (c.loc + 'works.html', 'View all works') if link else None)
     return f'''<!-- component: works-wall -->
 <section class="section d-wallsec">
@@ -423,6 +423,15 @@ def page_contact():
     write_d(c, 'Contact | Archipixels', 'Contact Archipixels in Gomti Nagar, Lucknow, by WhatsApp, phone or email.', 'studio.jpg', 'contact', 'contact.html', body)
 
 
+def page_404():
+    c = b.Ctx404('d')
+    body = f'''{b.error_hero(c)}
+{wall(c, PROJECTS[:3], title='Recent work')}
+{b.cta(c)}'''
+    write_d(c, 'Page not found | Archipixels', 'This page does not exist. Start from the Archipixels home page or the works.', 'deco-facade.jpg', '404', '', body,
+            extra='<meta name="robots" content="noindex">\n')
+
+
 def main():
     if OUT.exists():
         shutil.rmtree(OUT)
@@ -433,6 +442,7 @@ def main():
     b.page_services('d')
     page_works()
     page_contact()
+    page_404()
     for i, p in enumerate(PROJECTS):
         page_project(p, i)
     print('built', sum(1 for _ in OUT.glob('**/*.html')), 'pages in d/')

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | Archipixels</title>
+<meta name="description" content="This page does not exist. Open one of the five Archipixels website versions.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F0D0C">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/img/brand/favicon-48.png">
+<link rel="icon" type="image/png" sizes="256x256" href="/assets/img/brand/favicon.png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Hanken+Grotesk:wght@400;500&display=swap">
+<style>
+/* Served by Cloudflare Pages at any missing URL, so every path here starts at the site root. */
+:root { --bg:#0F0D0C; --card:#1A1715; --fg:#F1EBE1; --muted:#B0A89C; --line:rgba(241,235,225,.16); --gold:#D3A94B; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; background: var(--bg); color: var(--fg); font: 16px/1.6 "Hanken Grotesk", system-ui, sans-serif; }
+.wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+header { border-bottom: 1px solid var(--line); }
+header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.1rem; }
+header img { display: block; width: 184px; height: auto; }
+a { color: inherit; }
+.top { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--gold); padding-bottom: .2rem; }
+.top:hover { color: var(--gold); }
+main { flex: 1; padding-block: clamp(3rem, 8vw, 6rem); }
+.eyebrow { font-size: .75rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); margin: 0 0 .6rem; }
+.code { font: 400 clamp(6rem, 22vw, 15rem)/.9 "Cormorant Garamond", Georgia, serif; letter-spacing: -.02em; margin: 0 0 1.2rem; color: var(--gold); }
+@supports (-webkit-text-stroke: 1px red) { .code { color: transparent; -webkit-text-stroke: 1.5px var(--gold); } }
+h1 { font: 400 clamp(2rem, 5vw, 3.6rem)/1.05 "Cormorant Garamond", Georgia, serif; margin: 0 0 1rem; text-wrap: balance; }
+.lead { color: var(--muted); max-width: 38rem; margin: 0 0 2rem; }
+.btn { display: inline-block; background: var(--gold); color: #1B1714; padding: .85rem 1.6rem; font-size: .8rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: transform .3s; }
+.btn:hover { transform: translateY(-2px); }
+.versions { list-style: none; margin: 3.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
+.versions a { display: grid; gap: .2rem; height: 100%; padding: 1.1rem 1.2rem; background: var(--card); border: 1px solid var(--line); text-decoration: none; transition: transform .3s, border-color .3s; }
+.versions a:hover, .versions a:focus-visible { transform: translateY(-4px); border-color: var(--gold); }
+.versions small { color: var(--gold); font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; }
+.versions b { font: 400 1.35rem/1.15 "Cormorant Garamond", Georgia, serif; }
+a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: .4rem 1.6rem; padding-block: 1.6rem; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--gold); }
+@media (max-width: 900px) { .versions { grid-template-columns: repeat(2, minmax(0, 1fr)); } .versions li:last-child { grid-column: span 2; } }
+@media (max-width: 480px) { .versions { grid-template-columns: minmax(0, 1fr); } .versions li:last-child { grid-column: span 1; } }
+@media (prefers-reduced-motion: reduce) { .btn, .versions a { transition: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a href="/"><img src="/assets/img/brand/logo-horizontal-white.png" alt="Archipixels, design that works" width="184" height="38"></a>
+    <a class="top" href="/">All versions</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <p class="eyebrow">Error 404</p>
+    <p class="code" aria-hidden="true">404</p>
+    <h1>This page is not here.</h1>
+    <p class="lead">The link may be old, or the address may have a typing error.</p>
+    <a class="btn" href="/">Back to home</a>
+    <ul class="versions">
+      <li><a href="/a/index.html"><small>Direction A</small><b>Velvet Night</b></a></li>
+      <li><a href="/b/index.html"><small>Direction B</small><b>Gallery Noir</b></a></li>
+      <li><a href="/c/index.html"><small>Direction C</small><b>Midnight Bazaar</b></a></li>
+      <li><a href="/d/index.html"><small>Direction D</small><b>Velvet Portfolio</b></a></li>
+      <li><a href="/portfolio/index.html"><small>Portfolio version</small><b>One-page portfolio</b></a></li>
+    </ul>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <span>© 2026 Archipixels. @SIGN_OFF@</span>
+    <a href="mailto:@EMAIL@">@EMAIL@</a>
+    <span>@ADDRESS@</span>
+  </div>
+</footer>
+</body>
+</html>

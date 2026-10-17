@@ -64,6 +64,14 @@ class Ctx:
         self.base = '../' * (self.depth + 1)   # from this page to the package root
 
 
+class Ctx404(Ctx):
+    """Context for 404.html. Cloudflare Pages serves it at whatever URL was missing, so every link and asset is root-relative."""
+    def __init__(self, t):
+        super().__init__(t, '404.html')
+        self.loc = f'/{t}/'
+        self.base = '/'
+
+
 def wa(msg_key='whatsapp_message_general'):
     return f"https://wa.me/{SITE['whatsapp_number']}?text={quote(SITE[msg_key], safe='')}"
 
@@ -860,6 +868,43 @@ def page_contact(t):
     write(c, 'Contact | Archipixels', 'Contact Archipixels in Gomti Nagar, Lucknow, by WhatsApp, phone or email.', 'studio.jpg', 'contact', 'contact.html', body)
 
 
+def error_hero(c):
+    return f'''<section class="page-hero page-hero--simple">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Error 404</p>
+    <p class="err-code" aria-hidden="true">404</p>
+    <h1 class="display" data-split>This page is not here.</h1>
+    <p class="lead" data-reveal>The link may be old, or the address may have a typing error.</p>
+    <p class="err-actions" data-reveal><a class="btn btn--primary" href="{c.loc}index.html">Back to home</a> <a class="btn btn--ghost" href="{c.loc}works.html">Selected works</a></p>
+  </div>
+</section>'''
+
+
+def page_404(t):
+    c = Ctx404(t)
+    picks = [BY_SLUG[s] for s in FEATURED[:3]]
+    if t == 'b':
+        listing = f'<ul class="index-list">{"".join(index_row(c, p) for p in picks)}</ul>'
+    else:
+        listing = f'<div class="grid-works">{"".join(card_work(c, p) for p in picks)}</div>'
+    body = f'''{error_hero(c)}
+<section class="section works">
+  <div class="container">{section_head('', 'Recent work', (c.loc + 'works.html', 'View all works'))}
+    {listing}
+  </div>
+</section>
+{cta(c)}'''
+    write(c, 'Page not found | Archipixels', 'This page does not exist. Start from the Archipixels home page or the works.', 'deco-facade.jpg', '404', '', body,
+          extra='<meta name="robots" content="noindex">\n')
+
+
+def page_404_root():
+    """The fallback 404 for URLs outside a version folder, in the chooser's style. Its paths start at the site root."""
+    tpl = (ROOT / 'tools/root-404.tpl').read_text()
+    page = tpl.replace('@EMAIL@', SITE['email']).replace('@ADDRESS@', e(SITE['address'])).replace('@SIGN_OFF@', e(SITE['sign_off']))
+    (ROOT / '404.html').write_text(page)
+
+
 def main():
     for t in THEMES:
         out = ROOT / t
@@ -872,8 +917,10 @@ def main():
         page_services(t)
         page_works(t)
         page_contact(t)
+        page_404(t)
         for i, p in enumerate(PROJECTS):
             page_project(t, p, i)
+    page_404_root()
     print('built', sum(1 for _ in ROOT.glob('[abc]/**/*.html')), 'pages')
 
 

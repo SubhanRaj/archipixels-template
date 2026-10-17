@@ -28,7 +28,7 @@ Four complete website directions (A, B, C and D) and a one-page portfolio, built
 
 ## What is in the package
 
-- Directions A, B, C and D, each with 26 pages: Home, About, Studio, Team, Services, Works, Contact and one page for each of the 19 projects.
+- Directions A, B, C and D, each with 26 pages: Home, About, Studio, Team, Services, Works, Contact and one page for each of the 19 projects. Each version also has its own `404.html`. The root has a fallback `404.html` for every other address, and Cloudflare Pages serves the nearest one.
 - A one-page portfolio version, which is the PDF portfolio as a single scrolling page.
 - A chooser page (`index.html`) that links to every version, and a small switcher at the bottom left of each page that opens the same page in another direction.
 - Mood boards for each direction and for the portfolio version in `moodboards/`.
@@ -110,6 +110,7 @@ assets/downloads/        the compressed portfolio PDF for the download buttons
 assets/img/brand/        logo variants for the dark themes, favicon and touch icon
 assets/brand-originals/  logo files as supplied
 moodboards/              mood boards as PNG, with an overview of all five, and small JPEG thumbnails in thumbs/
+404.html                 fallback 404 page, built from tools/root-404.tpl
 functions/               Cloudflare Pages middleware that returns 404 for the files that are not part of the site
 _routes.json             limits the middleware to requests outside assets, portfolio photos and mood boards
 data/                    site.json, projects.json, portfolio.json, legacy-projects.json

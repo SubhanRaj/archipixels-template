@@ -23,6 +23,7 @@ Frozen designs
 - The design of A, B and C is final. Do not change their layout, styling or content.
 - You may fix mistakes in them: broken links, stale text in docs and comments, markup errors, bugs, and accessibility or contrast defects.
 - A new site-wide change (a link, a button, a feature) goes into every version where it suits. Build it once in the shared source and style it with each version's existing classes. Add a rule to a theme file only when the existing classes do not cover it.
+- C is not the current pick because its pop style did not suit the client, and the design is sound. It receives every site-wide change like A and B, and its elements can be reused elsewhere.
 
 Effort
 - Rebuild only the builders whose output the change touches.
@@ -32,7 +33,7 @@ Effort
 
 ## Pages
 
-Home, About, Studio, Team, Services, Works, Contact, and one page per project (19). Each direction builds all of them.
+Home, About, Studio, Team, Services, Works, Contact, and one page per project (19). Each direction builds all of them, plus a `404.html` with root-relative paths, because Cloudflare Pages serves it at the missing URL. `build.py` also writes the root `404.html` from `tools/root-404.tpl`.
 
 ## Laravel build
 

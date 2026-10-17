@@ -134,7 +134,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Type: Rozha One for display, Karla for body. Weight is heavier than A and B.
 - Features: stickers that wobble, hard black offset shadows (`8px 8px 0 #000`), pill buttons with a black outline that press down on click, rounded 14 px corners, tilted photo frames on project pages.
 - Motion: cards-effect hero and coverflow works slider.
-- Status: the client is not pursuing C. Subhan may reuse single elements from it. Leave it untouched.
+- Status: C is not the current pick because the pop, street-poster style did not suit the client. The design is sound. Its pages stay in the set and receive every site-wide update (a menu item, the portfolio links, the 404 page) like A, B and D. Single elements from it can be reused in other directions.
 
 ### D, Velvet Portfolio (`d/`)
 
@@ -160,7 +160,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 ## 6. Decisions so far
 
 - The design of A, B and C is final. Only fixes are allowed (see Frozen designs in `CLAUDE.md`).
-- C is dropped. Leave it as is, or take elements from it if one is wanted.
+- C is not the current pick, and its design is unchanged. It receives every site-wide update, and elements from it can be reused.
 - D merges the one-page portfolio with A's multi-page structure and nested menu.
 - D's project page uses A's full-background hero, with the page body in the project's colour. The photo-and-tan-panel block appears only in D's home page spotlights.
 - Every project page in D has a gallery slider with a lightbox. Warehouse Studio has one photo, so it has no arrows.
@@ -168,6 +168,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - The About submenu starts closed on mobile in every direction.
 - The chooser page (`index.html`) lists five versions and shows the mood boards below them, with a lightbox. It has a favicon and share tags that assume `archipixels-template.pages.dev`.
 - The README follows the layout of Subhan's other repositories (centred logo, badges, preview image).
+- Each version has its own `404.html` (built by `build.py` and `build_d.py`), and the root has a fallback `404.html` (built from `tools/root-404.tpl`). Cloudflare Pages serves the nearest one, so `/a/missing` shows A's page. The pages use root-relative paths because they are served at the missing URL.
 - `functions/_middleware.js` and `_routes.json` stay in the root. They return 404 on the preview for `tools/`, `data/` and every `.md`, `.py` and `.pyc` file. A page that needs a new file of one of those types has to move it out of the blocked set.
 - `_headers` stays in the root. It blocks search engines on the preview, which an HTTP header does for every file type, including images and PDFs.
 - The portfolio PDF is compressed to 5 MB. Every version links it from the footer, and the one-page portfolio and D link it in more places.

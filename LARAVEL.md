@@ -71,6 +71,8 @@ Build rules that apply from the first migration:
 | `/contact` | Contact and enquiry form |
 | `/portfolio` | The one-page portfolio: the PDF as a web page that reads the same on every platform, with a button for the PDF download |
 
+The 404 design in `404.html` of the chosen direction maps to `resources/views/errors/404.blade.php` in the live site. Keep the numeral, the two buttons, the three recent works and the call to action band.
+
 ## Data
 
 Project fields: slug, name, by, tagline, kind, cats[], place, lit (hex), language[], details[], palette[] (name and hex), card image, gallery[], story, year and area. Direction D also uses a background colour (`bg`), a layout name and a photo list with captions per project, from `data/portfolio.json`.
