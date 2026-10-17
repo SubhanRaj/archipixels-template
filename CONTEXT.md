@@ -105,7 +105,8 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 ### Responsive and browser support
 
 - Pages do not scroll horizontally at 1440, 820 or 390 px wide.
-- iOS 15 Safari lacks `color-mix()`, `svh` and unprefixed `backdrop-filter`. Each rule that uses one of them has a plain fallback before it (`rgba(var(--bg-rgb), .9)`, `vh`, `-webkit-backdrop-filter`). New rules follow the same pattern.
+- iOS 15 Safari lacks `color-mix()`, `svh` and unprefixed `backdrop-filter`. Each rule that uses one of them has a plain fallback before it (`rgba(var(--bg-rgb), .9)`, `vh`, `-webkit-backdrop-filter`). New rules follow the same pattern. The mobile menu height in `core.css` follows it too (`100vh`, then `100svh`).
+- WebKit (Playwright's build, version 26.6) renders A, B, C, D and the portfolio without console errors or sideways scroll at 1440 and 390 px. Real iPhone, iPad and Mac Safari checks are still to do.
 
 ## 5. The directions
 

@@ -93,7 +93,7 @@ p.placeholder { display: inline-block; margin-top: 1rem; }
 @media (max-width: 1100px) {
   .nav-toggle { display: block; }
   .site-header__cta { display: none; }
-  .site-nav { position: fixed; inset: var(--header-h) 0 auto 0; padding: 1rem var(--gutter) 2rem; background: var(--bg); border-bottom: 1px solid var(--line); display: none; margin: 0; max-height: calc(100vh - var(--header-h)); overflow-y: auto; }
+  .site-nav { position: fixed; inset: var(--header-h) 0 auto 0; padding: 1rem var(--gutter) 2rem; background: var(--bg); border-bottom: 1px solid var(--line); display: none; margin: 0; max-height: calc(100vh - var(--header-h)); max-height: calc(100svh - var(--header-h)); overflow-y: auto; }
   .site-nav__list { flex-direction: column; gap: 0; }
   .has-sub { display: grid; grid-template-columns: minmax(0, 1fr) 52px; }
   .sub-toggle { display: block; position: relative; width: 52px; background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--text); cursor: pointer; }

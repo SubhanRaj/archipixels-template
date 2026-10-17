@@ -85,6 +85,7 @@ Direction D and the portfolio version:
 
 - The PDF backgrounds for Warehouse Studio, Pixel Pop and Chat House are black. The pages use a deep green, a near-black and a deep blue taken from their palettes.
 - Check the closing script line and the photo captions on a device with web fonts loaded.
+- Open the chosen direction on a real iPhone, iPad and Mac in Safari. The WebKit test on Linux cannot show the iOS toolbar height or the iOS 15 fallbacks.
 
 Build:
 
