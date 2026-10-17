@@ -12,7 +12,7 @@ Your job in this session has two stages.
 
 Read these files fully before you do anything else:
 
-1. `README.md`, `CLAUDE.md` and `LARAVEL.md`.
+1. `CONTEXT.md`, `README.md`, `CLAUDE.md` and `LARAVEL.md`. `CONTEXT.md` has the design intent, so read it first.
 2. `tools/build.py`, `tools/build_d.py` and `tools/build_portfolio.py`.
 3. `data/site.json`, `data/projects.json`, `data/portfolio.json` and `data/legacy-projects.json`.
 4. `assets/css/core.css`, `assets/css/theme-a.css`, `theme-b.css`, `theme-c.css`, `theme-d.css`, `assets/js/core.js` and `assets/js/theme-*.js`.

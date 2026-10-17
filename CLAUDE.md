@@ -2,6 +2,8 @@
 
 This repository holds static HTML, CSS and JS templates (four dark directions: A, B, C and D) for Archipixels, an architecture and interior studio in Lucknow. The website will be built in Laravel (Blade). These templates are the design reference for that build. The developer continues the work in his own local Laravel environment and in the style of his existing Laravel projects.
 
+Read `CONTEXT.md` first. It holds the brief, the design language of each direction, the decisions made so far and the open items. This file holds the working rules.
+
 The chosen direction is not decided yet. Update this paragraph when it is.
 
 The templates use no JS framework and no bundler. GSAP, Swiper and GLightbox are vendored in `assets/vendor/`.

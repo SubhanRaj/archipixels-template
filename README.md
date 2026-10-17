@@ -119,6 +119,7 @@ docs/                    logo and preview images used by this README
 
 | File | Covers |
 |---|---|
+| [CONTEXT.md](./CONTEXT.md) | The brief, the design language of each direction, the decisions made and the open items |
 | [docs/claude-code-prompt.md](./docs/claude-code-prompt.md) | First message for a Claude Code session on this repository |
 | [LARAVEL.md](./LARAVEL.md) | How these files map to a Laravel app: layout, partials, routes, data |
 | [CLAUDE.md](./CLAUDE.md) | Working rules for Claude Code, the Blade conversion plan and the Laravel build rules |
@@ -127,6 +128,8 @@ docs/                    logo and preview images used by this README
 
 The templates use no JS framework and no build step. GSAP and ScrollTrigger handle parallax, reveals and the pinned horizontal scroll. Swiper runs the slideshows and GLightbox the gallery lightbox. The libraries are vendored in `assets/vendor/`, and the fonts load from Google Fonts.
 
+The CSS keeps a plain `rgba()` fallback before each `color-mix()` and a `-webkit-` prefix beside `backdrop-filter`, so the header and hero overlays also work on iOS 15 Safari.
+
 Motion respects `prefers-reduced-motion`. Only JavaScript hides content before an animation, so the pages stay readable when scripts fail.
 
 ## Mood boards
@@ -134,8 +137,6 @@ Motion respects `prefers-reduced-motion`. Only JavaScript hides content before a
 `moodboards/` holds a 1620 x 2340 px board for each direction (A, B, C and D) and for the one-page portfolio. Each board shows the palette, type, components and photos of that version. `moodboards-overview.png` puts all five side by side. The site does not use the boards.
 
 ## Logo
-
-The CSS keeps a plain `rgba()` fallback before each `color-mix()` and a `-webkit-` prefix beside `backdrop-filter`, so the header and hero overlays also work on iOS 15 Safari.
 
 The supplied logos have a transparent white version for each dark theme in `assets/img/brand/`: horizontal in the header, stacked in the footer. The favicon and touch icon come from the mark. The white versions were derived from the supplied files, so replace them if the studio has a native white or reversed logo.
 
