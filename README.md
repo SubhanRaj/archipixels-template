@@ -109,7 +109,9 @@ assets/img/              photos cropped from the portfolio PDF
 assets/downloads/        the compressed portfolio PDF for the download buttons
 assets/img/brand/        logo variants for the dark themes, favicon and touch icon
 assets/brand-originals/  logo files as supplied
-moodboards/              mood boards as PNG, with an overview of all five
+moodboards/              mood boards as PNG, with an overview of all five, and small JPEG thumbnails in thumbs/
+functions/               Cloudflare Pages middleware that returns 404 for the files that are not part of the site
+_routes.json             limits the middleware to requests outside assets, portfolio photos and mood boards
 data/                    site.json, projects.json, portfolio.json, legacy-projects.json
 tools/                   build.py, build_d.py, build_portfolio.py
 docs/                    logo and preview images used by this README
@@ -134,7 +136,7 @@ Motion respects `prefers-reduced-motion`. Only JavaScript hides content before a
 
 ## Mood boards
 
-`moodboards/` holds a 1620 x 2340 px board for each direction (A, B, C and D) and for the one-page portfolio. Each board shows the palette, type, components and photos of that version. `moodboards-overview.png` puts all five side by side. The site does not use the boards.
+`moodboards/` holds a 1620 x 2340 px board for each direction (A, B, C and D) and for the one-page portfolio. Each board shows the palette, type, components and photos of that version. `moodboards-overview.png` puts all five side by side. The chooser page shows the boards under the five version cards and opens each one in a lightbox. It loads the small JPEGs in `moodboards/thumbs/` and opens the full PNG on click.
 
 ## Logo
 
@@ -150,4 +152,4 @@ The list of what to decide, confirm or fill before launch is in [LARAVEL.md](./L
 
 ## Hosting the preview
 
-The repository deploys to Cloudflare Pages with no build step. Set the framework preset to None, leave the build command empty and set the output directory to `/`. A `_headers` file asks search engines not to index the preview. The repository is public, so the photos, studio address and contact details are readable by anyone.
+The repository deploys to Cloudflare Pages with no build step. Set the framework preset to None, leave the build command empty and set the output directory to `/`. A `_headers` file asks search engines not to index the preview. Cloudflare Pages serves a fixed list of the committed files, so `../` paths and directory listings do not work. Every committed file is still a URL, so `functions/_middleware.js` returns 404 for `tools/`, `data/` and every `.md`, `.py` and `.pyc` file, which covers `CLAUDE.md`, `CONTEXT.md`, `LARAVEL.md`, `README.md` and `docs/claude-code-prompt.md`. Images in `docs/` stay public because the share tags use them. The repository is public, so the photos, studio address and contact details are readable by anyone, and the same files are on GitHub.

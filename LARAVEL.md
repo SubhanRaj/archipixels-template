@@ -1,12 +1,36 @@
 # Laravel build notes
 
-The static templates in this repository are the design reference for the Archipixels website. The site is built in Laravel (Blade). Versions, folder conventions, front-end tooling and test setup come from the developer's Laravel project and are not fixed here.
+The static templates in this repository are the design reference for the Archipixels website. The site is built in Laravel 13 in a separate repository, `SubhanRaj/archipixels`, checked out at `~/Sites/archipixels`. That repository's own `CLAUDE.md`, `ROADMAP.md` and `ARCHITECTURE.md` hold the build rules. This file maps the templates to that app.
 
 ## Starting point
 
 1. Pick the direction (A, B, C or D). Direction D combines the portfolio look with A's multi-page structure.
 2. Read the Laravel project's `CLAUDE.md`, `composer.json` and existing routes. Follow what is there.
-3. Move the chosen direction's markup into Blade, its CSS and JS into the project's asset pipeline, and `data/*.json` into migrations and seeders.
+3. Move the chosen direction's markup into Blade, its CSS and JS into `public/assets/` (the app has no build step), and `data/*.json` into migrations and seeders.
+
+## Target app
+
+| Item | Value |
+|---|---|
+| Repository | `SubhanRaj/archipixels`, local path `~/Sites/archipixels` |
+| Runtime | PHP ^8.5, Laravel 13, Livewire 4 |
+| Database | MariaDB locally, MySQL on Hostinger. Migrations use only features both support. |
+| Public site | Blade layout plus the chosen direction's CSS and JS from this repository, served from `public/assets/`. The templates are token-driven custom CSS, so the public side uses neither Tailwind nor Bootstrap. |
+| Admin panel (later phase) | Livewire 4 with Tailwind from the Play CDN, in the style of the Excise Livewire apps (`upexcise-stats-dashboard`, `excise-budget-tracker`). Tables, filters and confirm dialogs are reused from them. |
+| Front-end build | None. Hostinger shared hosting has no Node, so the public assets are vendored and the admin panel loads Tailwind from the CDN. The CDN is allowed in the admin CSP only. The public pages keep the strict CSP. |
+| Testing and style | Pest 4, Laravel Pint |
+| Local database setup | `php artisan db:provision` from `subhanraj/laravel-db-provisioner` (dev only) |
+| Hosting | Hostinger shared hosting, deployed as in `~/Sites/infra-notes/hostinger-laravel-deploy.md` |
+
+Build rules that apply from the first migration:
+
+- Public detail pages bind on `slug`, never on the row id.
+- Every create, update, delete and restore is a POST. Livewire actions and `fetch()` forms return without a page reload. Query strings carry navigation state only (filters, pagination).
+- A write that touches more than one row runs inside `DB::transaction()`. A single `create()`, `update()` or `delete()` is already atomic and is not wrapped.
+- Content models use `SoftDeletes` and an explicit `$fillable`.
+- A global `SecurityHeaders` middleware sets the CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` and `Permissions-Policy`, and HSTS over HTTPS. The public CSP lists only the origins the pages load. Admin routes add the Tailwind CDN origin and inline styles. Livewire runs with `csp_safe` on.
+- The enquiry form has a honeypot field, a per-IP rate limit and server-side validation.
+- The public site and its CRUD actions are built before the admin panel. The admin panel is a later phase that adds screens over the same actions.
 
 ## Files to carry over
 
@@ -17,7 +41,7 @@ The static templates in this repository are the design reference for the Archipi
 | `assets/css/theme-*.css` | Tokens and styling for the chosen direction. D loads `theme-a.css` and then `theme-d.css`. |
 | `assets/js/core.js` | Nav, works filter, forms, lightbox and the `window.AP` helpers. |
 | `assets/js/theme-*.js` | Motion for the chosen direction. D loads `theme-a.js` and then `theme-d.js`. |
-| `assets/vendor/` | GSAP 3.12.5 with ScrollTrigger, Swiper 11.1.4 and GLightbox 3.3.0. These can move to npm packages. |
+| `assets/vendor/` | GSAP 3.12.5 with ScrollTrigger, Swiper 11.1.4 and GLightbox 3.3.0. Copy them to `public/assets/vendor/`. |
 | `assets/img/`, `portfolio/img/` | Photos. D reads `portfolio/img/`. |
 | `assets/img/brand/`, `assets/brand-originals/` | Logos, favicon and touch icon. |
 | `data/*.json` | Seed data. |
@@ -60,7 +84,7 @@ Team members and services can move to database tables once the client supplies t
 - Colours, fonts and shadows are tokens. Components never hold literal theme colours.
 - JavaScript hides content right before it animates. CSS never hides content. `prefers-reduced-motion` turns the motion off.
 - Project pages set `--lit` from the project's `lit` value and use the body class `page-project`.
-- The works filter uses `data-cats`. It can run on Alpine.js or Livewire if the Laravel project already uses one of them.
+- The works filter uses `data-cats`. In the Laravel app it runs as a Livewire component with the same category logic.
 
 ## Before launch
 

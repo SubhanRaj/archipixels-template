@@ -36,13 +36,13 @@ Home, About, Studio, Team, Services, Works, Contact, and one page per project (1
 
 ## Laravel build
 
-Read `LARAVEL.md` for the mapping from these files to a Laravel app. The rules for the build:
+The Laravel app lives in its own repository, `SubhanRaj/archipixels`, at `~/Sites/archipixels`. Read `LARAVEL.md` for the mapping from these files to that app. The rules for the build:
 
 - The Laravel project is where the site lives. Before writing Laravel code, read that project's own `CLAUDE.md`, `composer.json`, routes and existing folder layout, and follow its conventions for structure, naming, formatting, testing and front-end tooling. Where the project has no convention for something, ask the developer before choosing.
 - Do not assume PHP, Laravel, database or Livewire versions. Take them from the project.
 - The Python generators (`tools/build*.py`) exist only to produce the templates. Blade views and partials replace them. Do not port the generators.
 - `data/*.json` is seed data. `site.json` holds the studio details, `projects.json` the 19 projects, `portfolio.json` the Direction D and portfolio colours, swatches and photo lists, and `legacy-projects.json` the earlier Lucknow work.
-- Keep the design tokens, the markup structure and the motion rules when moving a direction. Move the CSS and JS into the project's asset pipeline.
+- Keep the design tokens, the markup structure and the motion rules when moving a direction. Copy the CSS and JS into the app's `public/assets/`. The app has no build step.
 - Remove the `theme-switcher` block, the unused directions and `index.html` (the chooser) from the app.
 - The forms need a POST route, validation, CSRF protection, spam protection and a notification before launch.
 
@@ -52,7 +52,7 @@ Read `LARAVEL.md` for the mapping from these files to a Laravel app. The rules f
 - The `<!-- component: name -->` comments in the generated HTML mark the partials. A, B and C use `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. Direction D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, and adds `approach`, `founders`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
 - Some markup has no comment but is a partial in the same way: the work card (`.card-work` in A, B and C, `.d-tile` in D), which appears on Works and in the related-projects row, and the project hero and story block. Direction D's project page is described under Direction D below.
 - Projects become an Eloquent model with slug, name, by, tagline, kind, cats, place, lit (hex), language[], details[], palette[], card image, gallery[], story, year and area. `data/projects.json` seeds it.
-- The works filter can run on Alpine.js or Livewire using the same `data-cats` logic. `works.html#category` deep links already work in `core.js`.
+- The works filter runs as a Livewire component using the same `data-cats` logic. `works.html#category` deep links already work in `core.js`.
 - Project pages take the body class `page-project` and set `--lit` from `$project->lit`.
 - The contact form needs a POST route, validation, CSRF, spam protection and a notification.
 - Team members and services can move to database tables once the client supplies the content.

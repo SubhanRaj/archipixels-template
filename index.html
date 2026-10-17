@@ -16,6 +16,7 @@
 <meta property="og:url" content="https://archipixels-template.pages.dev/">
 <meta name="twitter:card" content="summary_large_image">
 <title>Archipixels Website Versions</title>
+<link rel="stylesheet" href="assets/vendor/glightbox.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Hanken+Grotesk:wght@400;500&display=swap">
 <style>
 :root { --bg:#0F0D0C; --card:#1A1715; --fg:#F1EBE1; --muted:#B0A89C; --line:rgba(241,235,225,.16); --gold:#D3A94B; color-scheme: dark; }
@@ -41,6 +42,23 @@ h1 { font: 400 clamp(2.3rem, 6vw, 4.6rem)/1.02 "Cormorant Garamond", Georgia, se
 .go { color: var(--fg); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; margin-top: .4rem; }
 .pages { margin-top: 3rem; display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; color: var(--muted); font-size: .9rem; }
 .pages b { color: var(--fg); font-weight: 500; }
+.boards { margin-top: clamp(4rem, 9vw, 7rem); }
+.boards h2 { font: 400 clamp(1.9rem, 4.4vw, 3.2rem)/1.05 "Cormorant Garamond", Georgia, serif; margin: 0 0 1rem; text-wrap: balance; }
+.boards .lead { margin-bottom: 2rem; }
+.boards__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.1rem; }
+.board { display: block; color: inherit; text-decoration: none; }
+.board__img { display: block; overflow: hidden; border: 1px solid var(--line); background: var(--card); box-shadow: 0 18px 40px -22px rgba(0,0,0,.6); transition: transform .35s, border-color .35s, box-shadow .35s; }
+.board img { display: block; width: 100%; height: auto; }
+.board:hover .board__img, .board:focus-visible .board__img { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 26px 48px -22px rgba(0,0,0,.75); }
+.board__cap { display: grid; gap: .15rem; margin-top: .8rem; }
+.board__cap b { font: 400 1.25rem/1.15 "Cormorant Garamond", Georgia, serif; }
+.board__cap span { color: var(--muted); font-size: .8rem; }
+.boards__all { display: inline-block; margin-top: 2rem; color: var(--fg); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--gold); padding-bottom: .3rem; }
+.boards__all:hover { color: var(--gold); }
+.board:focus-visible, .boards__all:focus-visible, .lead a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.lead a { color: var(--fg); text-decoration-color: var(--gold); text-underline-offset: .2em; }
+@media (prefers-reduced-motion: reduce) { .card, .board__img { transition: none; } }
+@media (max-width: 900px) { .boards__grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding-bottom: 1rem; margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px; } .boards__grid li { flex: 0 0 min(62vw, 280px); scroll-snap-align: start; } }
 @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .card, .card:nth-child(n+4) { grid-column: span 1; } .card:last-child { grid-column: span 2; } }
 @media (max-width: 600px) { .grid { grid-template-columns: minmax(0, 1fr); } .card, .card:nth-child(n+4), .card:last-child { grid-column: span 1; } }
 </style>
@@ -49,7 +67,7 @@ h1 { font: 400 clamp(2.3rem, 6vw, 4.6rem)/1.02 "Cormorant Garamond", Georgia, se
 <main>
   <p class="eyebrow">Website redesign · Template preview</p>
   <h1>Five versions for Archipixels.</h1>
-  <p class="lead">Directions A, B, C and D are full multi-page templates with the same content. The fifth version is the PDF portfolio as one scrolling page. Open any version. On the multi-page ones, the A · B · C · D switcher at the bottom left of every page opens the same page in another direction.</p>
+  <p class="lead">Directions A, B, C and D are full multi-page templates with the same content. The fifth version is the PDF portfolio as one scrolling page. Open any version. On the multi-page ones, the A · B · C · D switcher at the bottom left of every page opens the same page in another direction. The <a href="#moodboards">mood boards</a> for all five are further down.</p>
   <div class="grid">
     <a class="card" href="a/index.html">
       <img src="assets/img/deco-facade.jpg" alt="The Deco Grand hotel facade lit at night" loading="lazy">
@@ -82,7 +100,39 @@ h1 { font: 400 clamp(2.3rem, 6vw, 4.6rem)/1.02 "Cormorant Garamond", Georgia, se
       <p class="fx">Fading cover slideshow, word-by-word headings, photo wipes with parallax, swatches that pop in, a project counter, an index menu, a lightbox and a closing line written out in script.</p><span class="go">Open →</span></div>
     </a>
   </div>
+  <section class="boards" id="moodboards" aria-labelledby="boards-title">
+    <p class="eyebrow">Mood boards</p>
+    <h2 id="boards-title">How each version looks and feels.</h2>
+    <p class="lead">One sheet per version with its palette, type, photography and key components. Open a board to see it full size, then use the arrow keys or swipe to move between them.</p>
+    <ul class="boards__grid">
+      <li><a class="board glightbox" data-gallery="moodboards" data-title="A · Velvet Night" data-description="Oxblood-black, antique gold" href="moodboards/moodboard-A-velvet-night.png">
+        <span class="board__img"><img src="moodboards/thumbs/moodboard-A-velvet-night.jpg" width="640" height="924" alt="Mood board for Direction A, Velvet Night: palette, type, photography and key components" loading="lazy"></span>
+        <span class="board__cap"><b>A · Velvet Night</b><span>Oxblood-black, antique gold</span></span>
+      </a></li>
+      <li><a class="board glightbox" data-gallery="moodboards" data-title="B · Gallery Noir" data-description="Near-black, one accent at a time" href="moodboards/moodboard-B-gallery-noir.png">
+        <span class="board__img"><img src="moodboards/thumbs/moodboard-B-gallery-noir.jpg" width="640" height="924" alt="Mood board for Direction B, Gallery Noir: palette, type, photography and key components" loading="lazy"></span>
+        <span class="board__cap"><b>B · Gallery Noir</b><span>Near-black, one accent at a time</span></span>
+      </a></li>
+      <li><a class="board glightbox" data-gallery="moodboards" data-title="C · Midnight Bazaar" data-description="Deep teal, marigold, stickers" href="moodboards/moodboard-C-midnight-bazaar.png">
+        <span class="board__img"><img src="moodboards/thumbs/moodboard-C-midnight-bazaar.jpg" width="640" height="924" alt="Mood board for Direction C, Midnight Bazaar: palette, type, photography and key components" loading="lazy"></span>
+        <span class="board__cap"><b>C · Midnight Bazaar</b><span>Deep teal, marigold, stickers</span></span>
+      </a></li>
+      <li><a class="board glightbox" data-gallery="moodboards" data-title="D · Velvet Portfolio" data-description="A's structure, a colour per project" href="moodboards/moodboard-D-velvet-portfolio.png">
+        <span class="board__img"><img src="moodboards/thumbs/moodboard-D-velvet-portfolio.jpg" width="640" height="924" alt="Mood board for Direction D, Velvet Portfolio: palette, type, photography and key components" loading="lazy"></span>
+        <span class="board__cap"><b>D · Velvet Portfolio</b><span>A's structure, a colour per project</span></span>
+      </a></li>
+      <li><a class="board glightbox" data-gallery="moodboards" data-title="One-page portfolio" data-description="The PDF as one scroll" href="moodboards/moodboard-P-one-page-portfolio.png">
+        <span class="board__img"><img src="moodboards/thumbs/moodboard-P-one-page-portfolio.jpg" width="640" height="924" alt="Mood board for One-page portfolio version: palette, type, photography and key components" loading="lazy"></span>
+        <span class="board__cap"><b>One-page portfolio</b><span>The PDF as one scroll</span></span>
+      </a></li>
+    </ul>
+    <a class="boards__all glightbox" data-gallery="moodboards" data-title="All five mood boards" data-description="Directions A, B, C and D and the one-page portfolio" href="moodboards/moodboards-overview.png">View all five side by side &rarr;</a>
+  </section>
   <p class="pages"><span><b>Pages in each direction:</b> Home</span><span>About</span><span>Studio</span><span>Team</span><span>Services</span><span>Works (filterable)</span><span>19 project pages</span><span>Contact</span></p>
 </main>
+<script src="assets/vendor/glightbox.min.js"></script>
+<script>
+if (window.GLightbox) GLightbox({ selector: '.glightbox', loop: true, touchNavigation: true });
+</script>
 </body>
 </html>

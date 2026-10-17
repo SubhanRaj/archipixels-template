@@ -7,7 +7,7 @@ Project context for the Archipixels website templates. Read this file at the sta
 - Client: Archipixels, an architecture and interior design studio in Gomti Nagar, Lucknow. Founded in 2018 by Shivika and Abhinav, who started in Dubai before founding the studio in India. The studio now wants to take its work abroad.
 - Developer: Subhan, who leads the agency and IT side. He reviews the templates with the client, then builds the live site in Laravel (Blade) in his own local environment and style.
 - Deliverable in this repository: four complete multi-page directions (A, B, C, D), a one-page portfolio and a chooser page. All of them use the same 19 projects and the same copy.
-- Live preview: https://archipixels-template.pages.dev (Cloudflare Pages, no build step, `_headers` sets `X-Robots-Tag: noindex, nofollow`). The repository is `SubhanRaj/archipixels-template`.
+- Live preview: https://archipixels-template.pages.dev (Cloudflare Pages, no build step, a Pages Functions middleware blocks the dev files, `_headers` sets `X-Robots-Tag: noindex, nofollow`). The repository is `SubhanRaj/archipixels-template`.
 - The live site goes in a different folder and a different repository (`archipixels`). This repository stays the design reference.
 
 ## 2. Source material
@@ -166,8 +166,9 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Every project page in D has a gallery slider with a lightbox. Warehouse Studio has one photo, so it has no arrows.
 - The preview switcher lists A, B, C and D on every page.
 - The About submenu starts closed on mobile in every direction.
-- The chooser page (`index.html`) lists five versions, with a favicon and share tags that assume `archipixels-template.pages.dev`.
+- The chooser page (`index.html`) lists five versions and shows the mood boards below them, with a lightbox. It has a favicon and share tags that assume `archipixels-template.pages.dev`.
 - The README follows the layout of Subhan's other repositories (centred logo, badges, preview image).
+- `functions/_middleware.js` and `_routes.json` stay in the root. They return 404 on the preview for `tools/`, `data/` and every `.md`, `.py` and `.pyc` file. A page that needs a new file of one of those types has to move it out of the blocked set.
 - `_headers` stays in the root. It blocks search engines on the preview, which an HTTP header does for every file type, including images and PDFs.
 - The portfolio PDF is compressed to 5 MB. Every version links it from the footer, and the one-page portfolio and D link it in more places.
 - Writing rules for docs, comments and UI text: plain present tense, no em dashes, no "X, not Y" contrasts, no flourish adjectives, no bold lead-ins on bullets, no emoji in headings, no leftover placeholders unless they stand for content the client still owes.
