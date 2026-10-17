@@ -3,8 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Archipixels Website Directions</title>
-
+<meta name="description" content="Template preview for the Archipixels website: four multi-page directions (A, B, C and D) and a one-page portfolio version.">
+<meta name="theme-color" content="#0F0D0C">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/brand/favicon-48.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/img/brand/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Archipixels website versions">
+<meta property="og:description" content="Four multi-page directions and a one-page portfolio for the Archipixels website redesign.">
+<meta property="og:image" content="https://archipixels-template.pages.dev/docs/preview.jpg">
+<meta property="og:url" content="https://archipixels-template.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<title>Archipixels Website Versions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Hanken+Grotesk:wght@400;500&display=swap">
 <style>
 :root { --bg:#0F0D0C; --card:#1A1715; --fg:#F1EBE1; --muted:#B0A89C; --line:rgba(241,235,225,.16); --gold:#D3A94B; color-scheme: dark; }
@@ -15,11 +26,13 @@ body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 "Hanke
 main { max-width: 1120px; margin: 0 auto; }
 .eyebrow { font-size: .75rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); margin: 0 0 1rem; }
 h1 { font: 400 clamp(2.3rem, 6vw, 4.6rem)/1.02 "Cormorant Garamond", Georgia, serif; margin: 0 0 1.2rem; text-wrap: balance; }
-.lead { color: var(--muted); max-width: 40rem; margin: 0 0 3rem; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1.4rem; }
-.card { background: var(--card); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; color: inherit; text-decoration: none; transition: transform .3s, border-color .3s; }
+.lead { color: var(--muted); max-width: 42rem; margin: 0 0 3rem; }
+.grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1.4rem; }
+.card { grid-column: span 2; background: var(--card); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; color: inherit; text-decoration: none; transition: transform .3s, border-color .3s; }
+.card:nth-child(n+4) { grid-column: span 3; }
 .card:hover { transform: translateY(-4px); border-color: var(--gold); }
 .card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+.card:nth-child(n+4) img { aspect-ratio: 16/9; }
 .card div { padding: 1.3rem 1.4rem 1.5rem; display: grid; gap: .5rem; }
 .tag { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
 .card h2 { font: 400 1.9rem/1.1 "Cormorant Garamond", Georgia, serif; margin: 0; }
@@ -28,17 +41,13 @@ h1 { font: 400 clamp(2.3rem, 6vw, 4.6rem)/1.02 "Cormorant Garamond", Georgia, se
 .go { color: var(--fg); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; margin-top: .4rem; }
 .pages { margin-top: 3rem; display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; color: var(--muted); font-size: .9rem; }
 .pages b { color: var(--fg); font-weight: 500; }
-.portfolio-card { margin-top: 3.5rem; }
-.card--wide { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
-.card--wide img { aspect-ratio: auto; height: 100%; min-height: 260px; }
-@media (max-width: 720px) { .card--wide { grid-template-columns: minmax(0, 1fr); } .card--wide img { height: auto; aspect-ratio: 16/9; } }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .card, .card:nth-child(n+4) { grid-column: span 1; } .card:last-child { grid-column: span 2; } }
+@media (max-width: 600px) { .grid { grid-template-columns: minmax(0, 1fr); } .card, .card:nth-child(n+4), .card:last-child { grid-column: span 1; } }
 </style>
-</head>
-<body>
 <main>
   <p class="eyebrow">Website redesign · Template preview</p>
-  <h1>Three dark directions for Archipixels.</h1>
-  <p class="lead">Directions A, B and C are full multi-page templates with the same content. Open one, then use the A · B · C · D switcher at the bottom left of any page to see the same page in the other directions. Direction D is below, followed by the one-page portfolio.</p>
+  <h1>Five versions for Archipixels.</h1>
+  <p class="lead">Directions A, B, C and D are full multi-page templates with the same content. The fifth version is the PDF portfolio as one scrolling page. Open any version. On the multi-page ones, the A · B · C · D switcher at the bottom left of every page opens the same page in another direction.</p>
   <div class="grid">
     <a class="card" href="a/index.html">
       <img src="assets/img/deco-facade.jpg" alt="The Deco Grand hotel facade lit at night" loading="lazy">
@@ -58,25 +67,19 @@ h1 { font: 400 clamp(2.3rem, 6vw, 4.6rem)/1.02 "Cormorant Garamond", Georgia, se
       <p>Playful and graphic: deep teal night, marigold, street-poster stickers.</p>
       <p class="fx">Stacked-card hero, coverflow works slider, wobbling stickers, scroll-skewed marquee, 3D tilt cards, hard drop shadows.</p><span class="go">Open →</span></div>
     </a>
-  </div>
-  <section class="portfolio-card">
-    <p class="eyebrow">Direction D</p>
-    <a class="card card--wide" href="d/index.html">
-      <img src="portfolio/img/the-deco-grand-1.jpg" alt="The Deco Grand hotel lobby with a gold ceiling" loading="lazy">
+    <a class="card" href="d/index.html">
+      <img src="portfolio/img/helios-maximus-1.jpg" alt="Helios Maximus bedroom with crimson velvet and floral wallpaper" loading="lazy">
       <div><span class="tag">Direction D</span><h2>Velvet Portfolio</h2>
       <p>The one-page portfolio merged with the multi-page structure and style of Direction A. Every project keeps its own background colour, tan panel and swatches, and the site has a full menu with About, Team, Studio, Services, Works and Contact.</p>
-      <p class="fx">Fading hero slideshow, project sections in their PDF colours, photo wipes with parallax, swatches that pop in, filterable works wall, next-project band, closing line written out in script.</p><span class="go">Open →</span></div>
+      <p class="fx">Fading hero slideshow, project sections in their PDF colours, photo wipes with parallax, swatches that pop in, filterable works wall, project gallery with lightbox, next-project band, closing line written out in script.</p><span class="go">Open →</span></div>
     </a>
-  </section>
-  <section class="portfolio-card">
-    <p class="eyebrow">Also in this package</p>
-    <a class="card card--wide" href="portfolio/index.html">
+    <a class="card" href="portfolio/index.html">
       <img src="portfolio/img/cover.jpg" alt="A maximalist living room with stained-glass arched windows" loading="lazy">
       <div><span class="tag">Portfolio version</span><h2>One-page portfolio</h2>
-      <p>The PDF portfolio as a single scrolling page: cover, intro, founders, all 19 projects in their own colours, then studio, team and contact. Separate from the three directions above.</p>
+      <p>The PDF portfolio as a single scrolling page: cover, intro, founders, all 19 projects in their own colours, then studio, team and contact.</p>
       <p class="fx">Fading cover slideshow, word-by-word headings, photo wipes with parallax, swatches that pop in, project counter, index menu, lightbox, closing line written out in script.</p><span class="go">Open →</span></div>
     </a>
-  </section>
+  </div>
   <p class="pages"><span><b>Pages in each direction:</b> Home</span><span>About</span><span>Studio</span><span>Team</span><span>Services</span><span>Works (filterable)</span><span>19 project pages</span><span>Contact</span></p>
 </main>
 </body>

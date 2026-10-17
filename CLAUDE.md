@@ -10,6 +10,7 @@ The templates use no JS framework and no bundler. GSAP, Swiper and GLightbox are
 
 - Pages are generated. Edit `tools/build.py` and `data/*.json`, then run `python3 tools/build.py`. Do not edit the HTML in `a/`, `b/`, `c/` or `d/` by hand. `d/` is built by `tools/build_d.py`.
 - Colours, fonts and shadows are tokens (`--bg --surface --band --line --text --muted --accent --accent-ink --font-display --font-body --radius --shadow-card --lit`) set per direction in `assets/css/theme-*.css`. `core.css` has no theme colours.
+- The header menu is shared. On screens up to 1100 px wide the About submenu starts closed and opens with the `.sub-toggle` button (`core.css`, `core.js`). On wider screens it opens on hover or focus.
 - Hero and slider markup is shared across directions. Each theme's JS picks the effect (fade, creative, cards or coverflow).
 - JavaScript hides content before an animation (`gsap.set`). CSS never does. Keep it that way, and keep the `prefers-reduced-motion` handling.
 - Project text comes from the portfolio. Missing facts stay as bracket placeholders such as `[YEAR]` and `[PROJECT STORY]`.
@@ -50,7 +51,7 @@ The README lists what to confirm or fill before launch.
 
 `portfolio/` is a one-page version of the PDF portfolio. It is separate from directions A, B and C and does not use `build.py`.
 
-- Generate it with `python3 tools/build_portfolio.py`. Edit the generator, `data/portfolio.json` and `portfolio/css|js`, not the HTML.
+- Generate it with `python3 tools/build_portfolio.py`. The sources are the generator, `data/portfolio.json` and `portfolio/css|js`. Do not edit the HTML.
 - Each project section takes its colour from `data/portfolio.json` (`bg`). Text colour is picked by contrast in the generator. The tan panel stays the same on every project.
 - Photos live in `portfolio/img/`. Add a project by adding it to `data/projects.json` and `data/portfolio.json`, then rebuild.
 - Motion follows the same rule as the directions: JavaScript hides content right before animating it, and `prefers-reduced-motion` turns the motion off.
@@ -60,11 +61,11 @@ The README lists what to confirm or fill before launch.
 
 `d/` merges the one-page portfolio with the multi-page approach of Direction A. It has 26 pages and the same nested menu as the other directions (About holds About us and Team).
 
-- Generate it with `python3 tools/build_d.py`. Edit the generator, `assets/css/theme-d.css`, `assets/js/theme-d.js` and `data/*.json`, not the HTML.
+- Generate it with `python3 tools/build_d.py`. The sources are the generator, `assets/css/theme-d.css`, `assets/js/theme-d.js` and `data/*.json`. Do not edit the HTML.
 - `build_d.py` imports `build.py` and `build_portfolio.py` and reuses their functions. It replaces `b.write` at runtime and registers `b.THEMES['d']`, so `python3 tools/build.py` does not build D. The preview switcher in every footer lists `SWITCH` from `build.py` (A, B, C and D).
 - The body class is `theme-a theme-d`. D loads `theme-a.css` and `theme-a.js` first, then adds its own files. The A tokens apply, and D adds the colour-section components (`.d-pj`, `.d-panel`, `.d-swatches`, `.d-next`, `.d-wall`, `.d-closing`, `.d-contact*`).
 - Each project page has a gallery (`gallery_d` in `build_d.py`). It uses A's `.gallery-swiper` markup, which `core.js` starts, and lists the project's photos from `data/portfolio.json`. `theme-d.css` sizes the slides by photo height.
 - Each project block takes its colour from `data/portfolio.json` (`bg`). The generator picks text colour by contrast with `ink_for`.
 - Photos come from `portfolio/img/` and the closing logo from `assets/brand-originals/logo-stacked-light.png`. Keep both when moving D.
 - About, Studio and Services are A's pages with D's header and footer. The Studio page has one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.
-- For the Blade conversion of D, the same partial names apply. Add `project-colour-section`, `project-panel`, `next-project` and `works-wall`; the gallery reuses `project-gallery` for the D components.
+- In the Blade conversion, D's gallery reuses the `project-gallery` partial. The other D components are listed under the Blade conversion plan.
