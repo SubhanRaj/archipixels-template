@@ -71,7 +71,8 @@ Each command rebuilds only its own folders.
 
 - Home has a hero slideshow, the approach, the founders, three spotlight projects in their own colours, the works wall and the closing line.
 - Works is a filterable wall of all 19 projects.
-- Each project page has a full-colour section (photos, tan panel, swatches, design language, signature details and story), a gallery slider with a lightbox, a next-project band, related projects and an enquiry call to action. Warehouse Studio has one photo, so its gallery has one slide and no arrows.
+- Each project page uses A's layout: a full-background hero photo, a facts row, the design language, signature details and story, a colour palette, a gallery slider with a lightbox, related projects and an enquiry call to action. Below the hero, the page takes the project's own colour from `data/portfolio.json`, and the palette sits on D's tan panel. A next-project band follows the gallery. Warehouse Studio has one photo, so its gallery has one slide and no arrows.
+- The portfolio PDF (5 MB) is at `assets/downloads/Archipixels-Portfolio.pdf`. D links it from the closing band, the contact page and the footer, and the one-page portfolio links it from the contact section, the index menu and the footer. A, B and C do not link it.
 - About, Studio and Services use A's templates and styling. The Studio page keeps one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.
 - `tools/build_d.py` builds `d/`. It imports `tools/build.py` for the shared header, footer and pages, and `tools/build_portfolio.py` for the colour helpers. `build.py` has one addition for D, the `SWITCH` list.
 - `assets/css/theme-d.css` and `assets/js/theme-d.js` hold the D components and motion. D also loads `theme-a.css` and `theme-a.js`, so its body class is `theme-a theme-d`.
@@ -105,6 +106,7 @@ assets/js/core.js        nav, works filter, forms, lightbox and the window.AP he
 assets/js/theme-*.js     motion for each direction
 assets/vendor/           GSAP 3.12.5 with ScrollTrigger, Swiper 11.1.4, GLightbox 3.3.0
 assets/img/              photos cropped from the portfolio PDF
+assets/downloads/        the compressed portfolio PDF for the download buttons
 assets/img/brand/        logo variants for the dark themes, favicon and touch icon
 assets/brand-originals/  logo files as supplied
 moodboards/              mood boards as PNG, with an overview of all five
@@ -117,6 +119,7 @@ docs/                    logo and preview images used by this README
 
 | File | Covers |
 |---|---|
+| [docs/claude-code-prompt.md](./docs/claude-code-prompt.md) | First message for a Claude Code session on this repository |
 | [LARAVEL.md](./LARAVEL.md) | How these files map to a Laravel app: layout, partials, routes, data |
 | [CLAUDE.md](./CLAUDE.md) | Working rules for Claude Code, the Blade conversion plan and the Laravel build rules |
 
@@ -131,6 +134,8 @@ Motion respects `prefers-reduced-motion`. Only JavaScript hides content before a
 `moodboards/` holds a 1620 x 2340 px board for each direction (A, B, C and D) and for the one-page portfolio. Each board shows the palette, type, components and photos of that version. `moodboards-overview.png` puts all five side by side. The site does not use the boards.
 
 ## Logo
+
+The CSS keeps a plain `rgba()` fallback before each `color-mix()` and a `-webkit-` prefix beside `backdrop-filter`, so the header and hero overlays also work on iOS 15 Safari.
 
 The supplied logos have a transparent white version for each dark theme in `assets/img/brand/`: horizontal in the header, stacked in the footer. The favicon and touch icon come from the mark. The white versions were derived from the supplied files, so replace them if the studio has a native white or reversed logo.
 

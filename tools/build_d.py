@@ -43,11 +43,21 @@ def write_d(c, title, desc, og, page_cls, active, body, extra=''):
     out.parent.mkdir(parents=True, exist_ok=True)
     html = b.head(c, title, desc, og, page_cls, extra) + b.header(c, active) + body + b.footer(c)
     html = html.replace('<body class="theme-d ', '<body class="theme-a theme-d ')
+    html = html.replace('</a></li></ul>\n    </div>\n  </div>\n  <div class="container site-footer__base">',
+                        f'</a></li><li><a href="{c.base}{PDF_NAME}" download>Portfolio PDF</a></li></ul>\n    </div>\n  </div>\n  <div class="container site-footer__base">')
     css = f'<link rel="stylesheet" href="{c.base}assets/css/theme-d.css">'
     html = html.replace(css, f'<link rel="stylesheet" href="{c.base}assets/css/theme-a.css">\n{css}')
     js = f'<script src="{c.base}assets/js/theme-d.js"></script>'
     html = html.replace(js, f'<script src="{c.base}assets/js/theme-a.js"></script>\n{js}')
     out.write_text(html)
+
+
+PDF_NAME = 'assets/downloads/Archipixels-Portfolio.pdf'
+PDF_LABEL = 'Download portfolio (PDF, 5 MB)'
+
+
+def pdf_link(c, cls='btn btn--outline', label=PDF_LABEL):
+    return f'<a class="{cls}" href="{c.base}{PDF_NAME}" download>{label}</a>'
 
 
 b.write = write_d   # About, Studio and Services call build.write
@@ -218,7 +228,7 @@ def closing(c):
   <div class="container d-closing__body">
     <p class="d-closing__line" data-closing>{e(line)}</p>
     <img class="d-closing__logo" src="{c.base}assets/brand-originals/logo-stacked-light.png" width="260" height="160" alt="Archipixels, design that works" loading="lazy">
-    <div class="actions"><a class="btn btn--primary" href="{b.wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a><a class="btn btn--dark" href="{c.loc}contact.html">Contact page</a></div>
+    <div class="actions"><a class="btn btn--primary" href="{b.wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a><a class="btn btn--dark" href="{c.loc}contact.html">Contact page</a>{pdf_link(c)}</div>
   </div>
 </section>'''
 
@@ -290,21 +300,72 @@ def gallery_d(c, p):
 </section>'''
 
 
+def _rgb(h):
+    h = h.lstrip('#')
+    return [int(h[i:i + 2], 16) for i in (0, 2, 4)]
+
+
+def _mix(a, z, t):
+    """Blend colour a towards z by t (0 to 1), as a hex string."""
+    ra, rz = _rgb(a), _rgb(z)
+    return '#' + ''.join(f'{round(x + (y - x) * t):02X}' for x, y in zip(ra, rz))
+
+
+def tone_style(bg):
+    """Tokens that recolour A's project sections in the project's own colour."""
+    ink = bp.ink_for(bg)
+    accent = next((x for x in ('#D8A93A', '#8A5A12', '#7A1F2E', '#F3E9DC', '#14090C') if bp.contrast(bg, x) >= 4.5), ink)
+    r, g, bl = _rgb(ink)
+    return (f'--bg:{bg};--text:{ink};--muted:{_mix(ink, bg, .32)};--surface:{_mix(bg, ink, .07)};'
+            f'--band:{_mix(bg, ink, .12)};--line:rgba({r},{g},{bl},.28);--accent:{accent};'
+            f'--accent-ink:{bp.ink_for(accent)};--prev:{DARK}')
+
+
 def page_project(p, idx):
+    """A's project page (full-background hero), with the body recoloured to the project's colour."""
     c = b.Ctx('d', f"projects/{p['slug']}.html")
-    n = idx + 1
+    d = PF['projects'][p['slug']]
     nxt = PROJECTS[(idx + 1) % len(PROJECTS)]
     nbg = PF['projects'][nxt['slug']]['bg']
-    nink = bp.ink_for(nbg)
     nim = PF['projects'][nxt['slug']]['images'][0]
-    back = f'<div class="d-backbar" style="--bg:{PF["projects"][p["slug"]]["bg"]};--ink:{bp.ink_for(PF["projects"][p["slug"]]["bg"])};--prev:{DARK}"><div class="container"><a class="back" href="{c.loc}works.html">All selected works</a></div></div>'
-    nxt_html = f'''<a class="d-next" href="{c.loc}projects/{nxt['slug']}.html" style="--bg:{nbg};--ink:{nink}">
+    by = f'<p class="phero__by">by {e(p["by"])}</p>' if p['by'] else ''
+    hero = f'''<section class="phero phero--a">
+  <div class="phero__media parallax"><img src="{b.img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="eager"></div>
+  <div class="phero__veil"></div>
+  <div class="container phero__content">
+    <a class="back" href="{c.loc}works.html">All selected works</a>
+    <p class="eyebrow">{e(b.meta_line(p))}</p>
+    <h1 class="phero__title" data-split>{e(p['name'])}</h1>{by}
+    <p class="phero__tag">{e(p['tagline'])}</p>
+  </div>
+</section>'''
+    story = p.get('story') or f"{p['tagline'][0].upper() + p['tagline'][1:]}."
+    langs = ''.join(f'<li>{e(x)}</li>' for x in p['language'])
+    details = ''.join(f'<li data-reveal>{e(x)}</li>' for x in p['details'])
+    det = f'<h3 class="mini-title">Signature details</h3><ul class="details">{details}</ul>' if p['details'] else ''
+    pal = ''
+    if p['palette']:
+        pal = f'''<section class="section d-tone__pal"><div class="container"><div class="d-tone__panel">
+    <h2 class="h3">Colour palette</h2>{swatches(p)}</div></div></section>'''
+    tone = f'''<div class="d-tone" style="{tone_style(d['bg'])}">
+<div class="container facts-wrap">{b.facts_html(p)}</div>
+<section class="section pstory">
+  <div class="container pstory__grid">
+    <div><p class="eyebrow" data-reveal>The design language</p><ul class="chips-static" data-reveal>{langs}</ul></div>
+    <div class="prose" data-reveal><p class="lead">{e(story)}</p><p class="placeholder">[PROJECT STORY: the brief, the idea behind the space and how it is used.]</p>{det}
+      <p class="d-tone__cta"><a class="btn btn--primary" href="{c.loc}contact.html">Discuss a space like this</a></p></div>
+  </div>
+</section>
+{pal}
+{gallery_d(c, p)}
+</div>'''
+    nxt_html = f'''<a class="d-next" href="{c.loc}projects/{nxt['slug']}.html" style="--bg:{nbg};--ink:{bp.ink_for(nbg)}">
   <img src="{pimg(c, nim['file'])}" width="{nim['w']}" height="{nim['h']}" alt="" loading="lazy">
   <span class="container d-next__body"><small>Next project · No. {(idx + 1) % len(PROJECTS) + 1:02d}</small><b>{e(nxt['name'])}</b><i>{b.arrow_svg()}</i></span>
 </a>'''
     rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (2, 3, 4)]
     related = f'''<section class="section d-related"><div class="container">{b.section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<ul class="d-wall d-wall--three">{''.join(tile(c, r, PROJECTS.index(r) + 1) for r in rel)}</ul></div></section>'''
-    body = back + pj_block(c, p, n, DARK, True) + gallery_d(c, p) + nxt_html + related + b.cta(c, 'Have a space in mind? Tell us its story.')
+    body = hero + tone + nxt_html + related + b.cta(c, 'Have a space in mind? Tell us its story.')
     write_d(c, f"{p['name']} | Archipixels", f"{p['name']}: {p['tagline']}. {p['kind']} by Archipixels.",
             p['card'], 'project', 'works.html', body)
 
@@ -357,7 +418,7 @@ def page_contact():
     </dl>
     <div class="d-contact__split">
       <div class="d-contact__art" data-reveal><img src="{pimg(c, v['file'])}" width="{v['w']}" height="{v['h']}" alt="Pen drawing of a three-storey villa facade by Archipixels" loading="lazy"></div>
-      <div class="d-contact__form" data-reveal>{b.form('contact')}<p class="d-contact__wa"><a class="link-arrow" href="{b.wa()}" target="_blank" rel="noopener">Or message us on WhatsApp{b.arrow_svg()}</a></p></div>
+      <div class="d-contact__form" data-reveal>{b.form('contact')}<p class="d-contact__wa"><a class="link-arrow" href="{b.wa()}" target="_blank" rel="noopener">Or message us on WhatsApp{b.arrow_svg()}</a></p><p class="d-contact__wa"><a class="link-arrow" href="{c.base}{PDF_NAME}" download>Download the portfolio (PDF, 5 MB){b.arrow_svg()}</a></p></div>
     </div>
   </div>
 </section>'''

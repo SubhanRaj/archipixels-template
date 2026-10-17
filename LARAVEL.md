@@ -27,7 +27,8 @@ The static templates in this repository are the design reference for the Archipi
 `layouts/app.blade.php` holds the head, skip link, header, footer and scripts. The generated HTML marks each partial with a `<!-- component: name -->` comment:
 
 - Shared: `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `card-work`, `palette`, `project-gallery`, `enquiry-form`.
-- Direction D adds `project-colour-section`, `project-panel`, `next-project` and `works-wall`.
+- Direction D adds `project-colour-section`, `project-panel`, `next-project`, `works-wall` and `project-tone` (the recoloured body of a project page).
+- The portfolio PDF in `assets/downloads/` goes in `public/` or a storage disk, and the download buttons link to it.
 - `theme-switcher` is for client preview only. Leave it out.
 
 ## Routes

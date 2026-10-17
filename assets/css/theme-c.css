@@ -2,6 +2,7 @@
    Direction C, Midnight Bazaar. Deep teal night, street-poster colour, hard shadows.
    ========================================================================== */
 body.theme-c {
+  --bg-rgb: 10,26,31; --text-rgb: 255,244,214;
   --bg: #0A1A1F; --surface: #112A31; --band: #0F3A44; --line: rgba(255,244,214,.22);
   --text: #FFF4D6; --muted: #BFD0CF; --accent: #F2B01E; --accent-ink: #1A1200;
   --font-display: "Rozha One", Georgia, serif; --font-body: "Karla", system-ui, sans-serif;

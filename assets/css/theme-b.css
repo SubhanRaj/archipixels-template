@@ -3,6 +3,7 @@
    The project accent is set on <body> as --lit (see build.py); default is marigold.
    ========================================================================== */
 body.theme-b {
+  --bg-rgb: 13,13,12; --text-rgb: 236,230,220;
   --bg: #0D0D0C; --surface: #141413; --band: #1A1917; --line: rgba(236,230,220,.16);
   --text: #ECE6DC; --muted: #A39E94; --accent: #E0A526; --accent-ink: #0D0D0C;
   --font-display: "Cormorant Garamond", "Times New Roman", serif; --font-body: "Hanken Grotesk", system-ui, sans-serif;

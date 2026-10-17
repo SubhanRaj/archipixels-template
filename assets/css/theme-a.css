@@ -2,6 +2,7 @@
    Direction A, Velvet Night. Theatrical, warm, gold on oxblood-black.
    ========================================================================== */
 body.theme-a {
+  --bg-rgb: 20,9,12; --text-rgb: 243,233,220;
   --bg: #14090C; --surface: #1E1115; --band: #2A0F16; --line: rgba(201,162,75,.28);
   --text: #F3E9DC; --muted: #BBA99C; --accent: #C9A24B; --accent-ink: #1A0C0F;
   --font-display: "Bodoni Moda", "Didot", Georgia, serif; --font-body: "Jost", system-ui, sans-serif;
@@ -17,7 +18,7 @@ body.theme-a {
 .theme-a .btn { border-radius: 0; box-shadow: var(--glow); }
 .theme-a .btn--primary { background: linear-gradient(135deg, #E2C275, #C9A24B 55%, #A9822F); }
 .theme-a .btn--primary:hover { box-shadow: 0 26px 60px -10px rgba(201,162,75,.5); }
-.theme-a .site-header.is-scrolled { background: color-mix(in srgb, #14090C 88%, transparent); box-shadow: 0 1px 0 var(--line), 0 12px 40px rgba(0,0,0,.45); }
+.theme-a .site-header.is-scrolled { background: rgba(20,9,12,.9); background: color-mix(in srgb, #14090C 88%, transparent); box-shadow: 0 1px 0 var(--line), 0 12px 40px rgba(0,0,0,.45); }
 
 /* gilded frames and warm drop shadows */
 .theme-a .card-work__media, .theme-a .feature-slide, .theme-a .tile__media, .theme-a .home-tile, .theme-a .hcard__media,
@@ -50,7 +51,7 @@ body.theme-a {
 .theme-a .service:hover { background: linear-gradient(180deg, rgba(201,162,75,.08), transparent); }
 .theme-a .chip.is-active { background: transparent; color: var(--accent); border-color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
 .theme-a .dots li { box-shadow: 0 0 0 1px rgba(201,162,75,.4); }
-.theme-a .swatch__dot { box-shadow: 0 24px 50px -10px color-mix(in srgb, var(--sw) 55%, black), inset 0 0 0 2px rgba(201,162,75,.35); }
+.theme-a .swatch__dot { box-shadow: 0 24px 50px -10px rgba(0,0,0,.6), inset 0 0 0 2px rgba(201,162,75,.35); box-shadow: 0 24px 50px -10px color-mix(in srgb, var(--sw) 55%, black), inset 0 0 0 2px rgba(201,162,75,.35); }
 .theme-a .panel { border: 1px solid var(--line); box-shadow: var(--shadow-card); background: linear-gradient(160deg, #241216, #190C10); }
 .theme-a .hero--a .hero__title { text-shadow: 0 8px 40px rgba(0,0,0,.6); }
 .theme-a .phero--a .phero__title { text-shadow: 0 8px 40px rgba(0,0,0,.6); }
