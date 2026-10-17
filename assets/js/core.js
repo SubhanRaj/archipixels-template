@@ -1,7 +1,7 @@
 /* ==========================================================================
    Archipixels core behaviour (theme-agnostic) + small helpers used by theme-*.js.
    Plain browser JS, no build step. Blade: include once in the layout, before the
-   theme script. Everything degrades gracefully: content is only hidden by JS.
+   theme script. Content is only hidden by JS, so the page stays readable without it.
    ========================================================================== */
 (function () {
   'use strict';

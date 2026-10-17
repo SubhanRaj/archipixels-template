@@ -74,7 +74,7 @@ Each command rebuilds only its own folders.
 - Each project page uses A's layout: a full-background hero photo, a facts row, the design language, signature details and story, a colour palette, a gallery slider with a lightbox, related projects and an enquiry call to action. Below the hero, the page takes the project's own colour from `data/portfolio.json`, and the palette sits on D's tan panel. A next-project band follows the gallery. Warehouse Studio has one photo, so its gallery has one slide and no arrows.
 - The portfolio PDF (5 MB) is at `assets/downloads/Archipixels-Portfolio.pdf`. D links it from the closing band, the contact page and the footer, and the one-page portfolio links it from the contact section, the index menu and the footer. A, B and C do not link it.
 - About, Studio and Services use A's templates and styling. The Studio page keeps one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.
-- `tools/build_d.py` builds `d/`. It imports `tools/build.py` for the shared header, footer and pages, and `tools/build_portfolio.py` for the colour helpers. `build.py` has one addition for D, the `SWITCH` list.
+- `tools/build_d.py` builds `d/`. It imports `tools/build.py` for the shared header, footer and pages, and `tools/build_portfolio.py` for the colour helpers. The `SWITCH` list in `build.py` names the directions that the preview switcher shows.
 - `assets/css/theme-d.css` and `assets/js/theme-d.js` hold the D components and motion. D also loads `theme-a.css` and `theme-a.js`, so its body class is `theme-a theme-d`.
 - D reads its photos from `portfolio/img/` and the closing logo from `assets/brand-originals/logo-stacked-light.png`.
 
@@ -119,9 +119,9 @@ docs/                    logo and preview images used by this README
 
 | File | Covers |
 |---|---|
-| [CONTEXT.md](./CONTEXT.md) | The brief, the design language of each direction, the decisions made and the open items |
+| [CONTEXT.md](./CONTEXT.md) | The brief, the design language of each direction and the decisions made |
 | [docs/claude-code-prompt.md](./docs/claude-code-prompt.md) | First message for a Claude Code session on this repository |
-| [LARAVEL.md](./LARAVEL.md) | How these files map to a Laravel app: layout, partials, routes, data |
+| [LARAVEL.md](./LARAVEL.md) | How these files map to a Laravel app: layout, partials, routes, data, and the list to settle before launch |
 | [CLAUDE.md](./CLAUDE.md) | Working rules for Claude Code, the Blade conversion plan and the Laravel build rules |
 
 ## Libraries and motion
@@ -138,7 +138,7 @@ Motion respects `prefers-reduced-motion`. Only JavaScript hides content before a
 
 ## Logo
 
-The supplied logos have a transparent white version for each dark theme in `assets/img/brand/`: horizontal in the header, stacked in the footer. The favicon and touch icon come from the mark. The white versions were derived from the supplied files, so replace them if the studio has a native white or reversed logo.
+The supplied logos have a transparent white version for each dark theme in `assets/img/brand/`: horizontal in the header, stacked in the footer. The favicon and touch icon come from the mark. The white versions are derived from the supplied files. Replace them if the studio has a native white or reversed logo.
 
 ## Laravel build
 
@@ -146,23 +146,7 @@ The templates are the design reference for the Laravel site. The Laravel project
 
 ## Before launch
 
-- Confirm the contact details. The portfolio gives `1/146, Gomti Nagar, Lucknow` and `hello@archipixels.com`. The old Wix site gave `B-2, 1222, DLF MyPad, Vibhuti Khand, Gomtinagar` and `info@archipixels.com`. The templates use the portfolio values.
-- Fill the placeholders, which show with a dashed underline: `[YEAR]`, `[AREA IN SQ FT]`, `[LOCATION]` and `[PROJECT STORY]` on each project page, `[ROLE]` and `[SHORT BIO]` for each founder, the team member cards, `[STUDIO HOURS AND HOW TO BOOK A VISIT]` on the studio page and `[TURNKEY EXAMPLES]` on the services page.
-- Write the real project stories. The text on each project page comes only from the portfolio facts.
-- Check the colour swatches. The names come from the portfolio and the hex values were estimated by eye.
-- Delete the `theme-switcher` block from the footer markup.
-- Wire the forms to a Laravel route with validation, CSRF and a mail notification. They show a thank-you message and send nothing yet.
-- Download the old-site photos. `data/legacy-projects.json` lists seven earlier Lucknow projects with Wix image ids (`https://static.wixstatic.com/media/<id>`). They appear as a text list on the works page.
-- Replace the PDF crops, which are about 1000 px wide, with original photos.
-
-Direction D and the portfolio version:
-
-- The photos are cut from the PDF and are 600 to 1,600 px wide. Replace them with the original renders for large screens.
-- Project backgrounds for Warehouse Studio, Pixel Pop and Chat House are black in the PDF. The pages use a deep green, near-black and deep blue taken from their palettes.
-- The studio and team sections use the PDF photos only. Add individual team members when the client supplies them.
-- The closing script line and the photo captions need a check on a device with web fonts loaded.
-- Direction D's About page repeats A's story, which mentions Dubai. Check it with the client.
-- A's hero caption and pagination share a flex row that squeezes the caption on narrow screens. D has its own fix in `theme-d.css`. `theme-a.css` does not have it.
+The list of what to decide, confirm or fill before launch is in [LARAVEL.md](./LARAVEL.md#before-launch).
 
 ## Hosting the preview
 

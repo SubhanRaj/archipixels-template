@@ -184,7 +184,7 @@ body.theme-d {
 .d-tone .mini-title { color: var(--muted); }
 .d-tone__cta { margin-top: 2rem; }
 .d-tone__pal { padding-top: 0; }
-.d-tone__panel { background: var(--tan); color: var(--tan-ink); padding: clamp(24px, 4vw, 52px); display: grid; gap: .6rem; justify-items: center; text-align: center; }
+.d-tone__panel { background: var(--tan); color: var(--tan-ink); padding: clamp(24px, 4vw, 52px); display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; justify-items: center; text-align: center; }
 .d-tone__panel .h3 { color: var(--tan-ink); }
 .d-tone__panel .d-swatches { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); max-width: 52rem; width: 100%; }
 .d-tone .d-gallery { background: var(--bg); }

@@ -32,12 +32,13 @@ After the summary, stop and wait. Do not change any file, run any build or start
 When I send a request, follow these rules.
 
 - Make the smallest change that does what I asked. Do not refactor, restyle or tidy anything I did not mention.
-- Never hand-edit a generated HTML file. Change the generator, the data or the stylesheet, then rebuild: `python3 tools/build.py` for A, B and C, `python3 tools/build_d.py` for D and `python3 tools/build_portfolio.py` for the portfolio. Run all three after a shared change (`core.css`, `core.js`, header, footer or `build.py`).
-- A change to `core.css`, `core.js` or `tools/build.py` reaches every version. State which versions a change touches before you make it. If I ask for a fix in one version, keep the others unchanged.
+- Never hand-edit a generated HTML file. Change the generator, the data or the stylesheet, then rebuild only the builders whose output the change touches: `python3 tools/build.py` for A, B and C, `python3 tools/build_d.py` for D and `python3 tools/build_portfolio.py` for the portfolio. A change to `build.py` also needs `build_d.py`, which imports it. A change to a stylesheet or script needs no rebuild.
+- A change to `core.css`, `core.js` or `tools/build.py` reaches every version. State the files you will edit and the versions each edit reaches before you make the change. If I ask for a fix in one version, keep the others unchanged.
 - Keep the design tokens, the markup structure and the animation rules. Content is hidden by JavaScript only right before it animates, and `prefers-reduced-motion` stays respected.
 - Add a plain fallback before any new `color-mix()`, `svh` or `dvh` value, and add `-webkit-backdrop-filter` beside `backdrop-filter`.
 - Write docs, comments, UI text and commit messages in plain present tense. Use no em dashes, no "X, not Y" contrasts, no flourish adjectives, no bold lead-in bullets and no emoji. Leave no placeholders unless they stand for content the client still owes.
-- Test a visual change in a browser at 1440, 820 and 390 pixels wide, on the home page and on at least two project pages. Check for horizontal scroll, broken images and console errors.
+- Check only the pages the change touches: one page per version, at 1440 and 390 px. Look for horizontal scroll, broken images and console errors. Run the full link and console check on all pages only when I ask for it.
+- The design of A, B and C is final. Do not change their layout, styling or content. You may fix mistakes in them: broken links, stale text in docs and comments, markup errors, bugs, and accessibility or contrast defects. A new site-wide change (a link, a button, a feature) goes into every version where it suits. Build it once in the shared source and style it with each version's existing classes. Add a rule to a theme file only when the existing classes do not cover it.
 - Update `README.md`, `CLAUDE.md` or `LARAVEL.md` when a change alters what they describe.
 - Do not commit or push unless I ask. When I ask, write one commit message in plain English and end with a short list of the files changed.
 - Do not add a build step, a framework or a new dependency. The templates stay plain HTML, CSS and JavaScript with Python generators that use only the standard library.

@@ -49,7 +49,7 @@ def write_d(c, title, desc, og, page_cls, active, body, extra=''):
     html = html.replace(css, f'<link rel="stylesheet" href="{c.base}assets/css/theme-a.css">\n{css}')
     js = f'<script src="{c.base}assets/js/theme-d.js"></script>'
     html = html.replace(js, f'<script src="{c.base}assets/js/theme-a.js"></script>\n{js}')
-    out.write_text(html)
+    out.write_text(b.add_img_dims(html))
 
 
 PDF_NAME = 'assets/downloads/Archipixels-Portfolio.pdf'
@@ -185,7 +185,7 @@ def approach(c):
       <h2 class="h2" data-split>Spaces with stories of their own.</h2>
       <p class="lead" data-reveal>We believe every space has a story waiting to be told. At Archipixels, design begins with curiosity. A curiosity about people, places, cultures and the little things that often go unnoticed.</p>
       <p data-reveal>Spaces that are layered, expressive, sometimes unexpected, but always thoughtful in their details. We create artful, expressive spaces, each with its own identity. Every project begins with a different story, and we never repeat a design.</p>
-      <p class="d-quote" data-reveal>We don’t believe every space should look a certain way. We believe it should feel a certain way and make you feel something, too.</p>
+      <p class="d-quote" data-reveal>We don't believe every space should look a certain way. We believe it should feel a certain way and make you feel something, too.</p>
     </div>
   </div>
 </section>'''
@@ -199,8 +199,8 @@ def founders(c):
     <div class="d-split__text">
       <p class="eyebrow" data-reveal>The founders</p>
       <h2 class="h2" data-split>Two minds. A thousand ideas.</h2>
-      <p class="lead" data-reveal>We’re <strong>{SITE['founders'][0]}</strong> and <strong>{SITE['founders'][1]}</strong>, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels.</p>
-      <p data-reveal>We started Archipixels in {SITE['founded']}. Our journey began in Dubai, where we gained international experience before founding Archipixels in India. Now we’re ready to take that energy worldwide.</p>
+      <p class="lead" data-reveal>We're <strong>{SITE['founders'][0]}</strong> and <strong>{SITE['founders'][1]}</strong>, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels.</p>
+      <p data-reveal>We started Archipixels in {SITE['founded']}. Our journey began in Dubai, where we gained international experience before founding Archipixels in India. Now we're ready to take that energy worldwide.</p>
       <div class="actions" data-reveal><a class="link-arrow" href="{c.loc}about.html">About us{b.arrow_svg()}</a><a class="link-arrow" href="{c.loc}team.html">The team{b.arrow_svg()}</a></div>
     </div>
     <figure class="d-split__media parallax"><img src="{pimg(c, im['file'])}" width="{im['w']}" height="{im['h']}" alt="Shivika and Abhinav, the founders of Archipixels, seated on a velvet sofa" loading="lazy"></figure>
@@ -211,7 +211,7 @@ def founders(c):
 def wall(c, projects=None, link=True):
     items = projects or PROJECTS
     lis = ''.join(tile(c, p, PROJECTS.index(p) + 1) for p in items)
-    head = b.section_head('Selected works', f'{len(PROJECTS)} projects, each with its own colours.',
+    head = b.section_head('Selected works', f'All {len(PROJECTS)} projects.',
                           (c.loc + 'works.html', 'View all works') if link else None)
     return f'''<!-- component: works-wall -->
 <section class="section d-wallsec">
@@ -221,7 +221,7 @@ def wall(c, projects=None, link=True):
 
 def closing(c):
     im = PF['fixed']['closing']
-    line = SITE['closing_line'].replace("'", '’')
+    line = SITE['closing_line']
     return f'''<!-- component: closing-line -->
 <section class="d-closing" id="contact">
   <div class="d-closing__bg"><img src="{pimg(c, im['file'])}" width="{im['w']}" height="{im['h']}" alt="" loading="lazy"></div>
@@ -243,7 +243,7 @@ def page_home():
         p = b.BY_SLUG[slug]
         spots += pj_block(c, p, PROJECTS.index(p) + 1, prev, False)
         prev = PF['projects'][slug]['bg']
-    intro = f'''<section class="section d-spotintro"><div class="container">{b.section_head('', 'A few stories, in their own colours', (c.loc + 'works.html', 'View all works'))}</div></section>'''
+    intro = f'''<section class="section d-spotintro"><div class="container">{b.section_head('', 'Three selected projects', (c.loc + 'works.html', 'View all works'))}</div></section>'''
     ld = bp.json.dumps({
         '@context': 'https://schema.org', '@type': 'Organization', 'name': SITE['brand'],
         'description': 'Architecture, interior design and experience design studio in Lucknow, India.',
@@ -342,7 +342,7 @@ def page_project(p, idx):
     story = p.get('story') or f"{p['tagline'][0].upper() + p['tagline'][1:]}."
     langs = ''.join(f'<li>{e(x)}</li>' for x in p['language'])
     details = ''.join(f'<li data-reveal>{e(x)}</li>' for x in p['details'])
-    det = f'<h3 class="mini-title">Signature details</h3><ul class="details">{details}</ul>' if p['details'] else ''
+    det = f'<h2 class="mini-title">Signature details</h2><ul class="details">{details}</ul>' if p['details'] else ''
     pal = ''
     if p['palette']:
         pal = f'''<section class="section d-tone__pal"><div class="container"><div class="d-tone__panel">

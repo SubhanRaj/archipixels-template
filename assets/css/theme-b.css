@@ -12,7 +12,7 @@ body.theme-b {
   font-weight: 300;
 }
 body.theme-b:not(.page-project) { --lit: var(--accent); }
-body.theme-b.page-project { --accent: var(--lit); --accent-ink: #0D0D0C; }
+body.theme-b.page-project { --accent: var(--lit-text, var(--lit)); --accent-ink: #0D0D0C; }
 .theme-b .display, .theme-b .h2, .theme-b .cta__title, .theme-b .hero__title, .theme-b .phero__title, .theme-b .h3 { font-weight: 300; letter-spacing: -.015em; }
 .theme-b .display { font-size: clamp(3rem, 8.4vw, 8rem); line-height: .95; }
 .theme-b .h2 { font-size: clamp(2.2rem, 5.2vw, 4.6rem); line-height: 1; }
@@ -47,7 +47,7 @@ body.theme-b.page-project { --accent: var(--lit); --accent-ink: #0D0D0C; }
 .theme-b .hscroll { background: var(--surface); }
 .theme-b .hcard--end:hover { color: var(--accent); }
 
-/* services: oversized numerals */
+/* services: larger names */
 .theme-b .service__name { font-weight: 300; font-size: 1.9rem; }
 
 /* works index list */

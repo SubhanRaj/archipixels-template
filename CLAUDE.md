@@ -2,7 +2,7 @@
 
 This repository holds static HTML, CSS and JS templates (four dark directions: A, B, C and D) for Archipixels, an architecture and interior studio in Lucknow. The website will be built in Laravel (Blade). These templates are the design reference for that build. The developer continues the work in his own local Laravel environment and in the style of his existing Laravel projects.
 
-Read `CONTEXT.md` first. It holds the brief, the design language of each direction, the decisions made so far and the open items. This file holds the working rules.
+Read `CONTEXT.md` first. It holds the brief, the design language of each direction and the decisions made so far. This file holds the working rules.
 
 The chosen direction is not decided yet. Update this paragraph when it is.
 
@@ -18,6 +18,17 @@ The templates use no JS framework and no bundler. GSAP, Swiper and GLightbox are
 - Project text comes from the portfolio. Missing facts stay as bracket placeholders such as `[YEAR]` and `[PROJECT STORY]`.
 - The site covers every kind of client. Dubai appears in the About story and on the Warehouse Studio and Chat House project pages only.
 - Logos are in `assets/img/brand/` (white, transparent, for the dark themes). Originals are in `assets/brand-originals/`.
+
+Frozen designs
+- The design of A, B and C is final. Do not change their layout, styling or content.
+- You may fix mistakes in them: broken links, stale text in docs and comments, markup errors, bugs, and accessibility or contrast defects.
+- A new site-wide change (a link, a button, a feature) goes into every version where it suits. Build it once in the shared source and style it with each version's existing classes. Add a rule to a theme file only when the existing classes do not cover it.
+
+Effort
+- Rebuild only the builders whose output the change touches.
+- Check only the pages the change touches: one page per version, at 1440 and 390 px.
+- Run the full link and console check only when the developer asks for it.
+- State the files you will edit and the versions each edit reaches before you make the change.
 
 ## Pages
 
@@ -38,7 +49,8 @@ Read `LARAVEL.md` for the mapping from these files to a Laravel app. The rules f
 ## Blade conversion plan
 
 - `layouts/app.blade.php` holds the head, header, footer and scripts. Keep the chosen direction's CSS and JS (for D, `theme-a` and `theme-d` together) and drop the rest and the `theme-switcher`.
-- The `<!-- component: name -->` comments in the generated HTML mark the partials: `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `card-work`, `palette`, `project-gallery`, `enquiry-form`. Direction D adds `project-colour-section`, `project-panel`, `next-project` and `works-wall`.
+- The `<!-- component: name -->` comments in the generated HTML mark the partials. A, B and C use `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. Direction D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, and adds `approach`, `founders`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
+- Some markup has no comment but is a partial in the same way: the work card (`.card-work` in A, B and C, `.d-tile` in D), which appears on Works and in the related-projects row, and the project hero and story block. Direction D's project page is described under Direction D below.
 - Projects become an Eloquent model with slug, name, by, tagline, kind, cats, place, lit (hex), language[], details[], palette[], card image, gallery[], story, year and area. `data/projects.json` seeds it.
 - The works filter can run on Alpine.js or Livewire using the same `data-cats` logic. `works.html#category` deep links already work in `core.js`.
 - Project pages take the body class `page-project` and set `--lit` from `$project->lit`.
@@ -47,7 +59,7 @@ Read `LARAVEL.md` for the mapping from these files to a Laravel app. The rules f
 
 ## Open items
 
-The README lists what to confirm or fill before launch.
+The Before launch section of `LARAVEL.md` lists what to confirm or fill before launch.
 
 ## Portfolio version
 
@@ -67,7 +79,8 @@ The README lists what to confirm or fill before launch.
 - `build_d.py` imports `build.py` and `build_portfolio.py` and reuses their functions. It replaces `b.write` at runtime and registers `b.THEMES['d']`, so `python3 tools/build.py` does not build D. The preview switcher in every footer lists `SWITCH` from `build.py` (A, B, C and D).
 - The body class is `theme-a theme-d`. D loads `theme-a.css` and `theme-a.js` first, then adds its own files. The A tokens apply, and D adds the colour-section components (`.d-pj`, `.d-panel`, `.d-swatches`, `.d-next`, `.d-wall`, `.d-closing`, `.d-contact*`).
 - Each project page has a gallery (`gallery_d` in `build_d.py`). It uses A's `.gallery-swiper` markup, which `core.js` starts, and lists the project's photos from `data/portfolio.json`. `theme-d.css` sizes the slides by photo height.
-- Project pages use A's hero (`phero--a`) and A's facts, story and palette markup. `page_project` in `build_d.py` wraps the sections below the hero in `.d-tone`, whose inline tokens (`tone_style`) recolour them to the project's `bg` from `data/portfolio.json`. The generator picks text colour by contrast with `ink_for`. The home page spotlights still use the colour block (`pj_block`).
+- A project page starts with A's hero (`phero--a`). `page_project` in `build_d.py` then wraps the facts row, the story block, the palette panel and the gallery in `.d-tone`, whose inline tokens (`tone_style`) recolour them to the project's `bg` from `data/portfolio.json`. The palette sits on a tan panel (`.d-tone__panel`) with gold-ringed dots. A next-project band (`.d-next`), three related tiles (`.d-tile`) and the call to action follow. The generator picks text colour by contrast with `ink_for`. None of these has a component comment.
+- The home page spotlights (`pj_block`) are three colour blocks, each a photo beside a tan panel (`.d-pj`, `.d-panel`). They have no component comment either.
 - The compressed portfolio PDF is `assets/downloads/Archipixels-Portfolio.pdf`. Replace the file with the same name to update every download button. The button label states the size, so update it in `build_d.py` and `build_portfolio.py` if the size changes.
 - Browser support: the header and veil rules keep a plain `rgba()` fallback before each `color-mix()`, and `-webkit-backdrop-filter` sits beside `backdrop-filter`, for iOS 15 Safari. Keep this pattern in new rules. `--bg-rgb` and `--text-rgb` in each theme feed the fallbacks.
 - Photos come from `portfolio/img/` and the closing logo from `assets/brand-originals/logo-stacked-light.png`. Keep both when moving D.

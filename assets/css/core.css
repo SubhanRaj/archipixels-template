@@ -156,7 +156,7 @@ p.placeholder { display: inline-block; margin-top: 1rem; }
 .hero--a .lead { margin-top: 1.5rem; max-width: 34rem; color: rgba(var(--text-rgb, 243,233,220), .8); color: color-mix(in srgb, var(--text) 80%, transparent); }
 .hero--a .hero__ui { position: relative; z-index: 2; display: flex; align-items: center; gap: 2rem; padding-bottom: 2rem; }
 .hero--a .hero__now { flex: 1; }
-.hero__pagination.swiper-pagination { position: static; display: flex; gap: 8px; width: auto; transform: none; flex: none; }
+.hero__pagination.swiper-pagination-bullets { position: static; display: flex; gap: 8px; width: auto; transform: none; flex: none; }
 .hero__pagination .swiper-pagination-bullet { width: 30px; height: 2px; background: rgba(255,255,255,.35); opacity: 1; border-radius: 0; margin: 0 !important; }
 .hero__pagination .swiper-pagination-bullet-active { background: var(--accent); }
 @media (max-width: 700px) { .hero--a .hero__pagination { display: none; } .hero--a .hero__content { padding-bottom: 4rem; } }

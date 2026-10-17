@@ -26,8 +26,10 @@ The static templates in this repository are the design reference for the Archipi
 
 `layouts/app.blade.php` holds the head, skip link, header, footer and scripts. The generated HTML marks each partial with a `<!-- component: name -->` comment:
 
-- Shared: `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `card-work`, `palette`, `project-gallery`, `enquiry-form`.
-- Direction D adds `project-colour-section`, `project-panel`, `next-project`, `works-wall` and `project-tone` (the recoloured body of a project page).
+- A, B and C: `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery`, `enquiry-form`.
+- Direction D: `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, plus `approach`, `founders`, `works-wall` and `closing-line`.
+- The work card has no comment. It is `.card-work` in A, B and C and `.d-tile` in D, and it appears on Works and in the related-projects row. The project hero and the story block (design language, story, signature details) have no comment either.
+- A Direction D project page has these parts in order, none with a comment: A's hero, a wrapper (`.d-tone`) coloured with the project's `bg` that holds the facts row, the story block, the palette on a tan panel and the gallery, a next-project band, three related tiles and the call to action. The home page spotlights are three colour blocks, each a photo beside a tan panel.
 - The portfolio PDF in `assets/downloads/` goes in `public/` or a storage disk, and the download buttons link to it.
 - `theme-switcher` is for client preview only. Leave it out.
 
@@ -61,8 +63,30 @@ Team members and services can move to database tables once the client supplies t
 
 ## Before launch
 
-- Fill the placeholders (they show with a dashed underline): `[YEAR]`, `[AREA IN SQ FT]`, `[LOCATION]`, `[PROJECT STORY]`, `[ROLE]`, `[SHORT BIO]`, `[STUDIO HOURS AND HOW TO BOOK A VISIT]` and `[TURNKEY EXAMPLES]`.
-- Confirm the contact details (see `README.md`).
-- Wire the enquiry form to a POST route with validation, CSRF, spam protection and a notification.
-- Replace the PDF crops with original photos.
-- Remove the `theme-switcher`.
+This is the one list of what to decide, confirm or fill before launch. `README.md` and `CONTEXT.md` link here.
+
+Decisions and content from the client:
+
+- The client picks a direction, or a mix. Update `CLAUDE.md` when that happens.
+- Confirm the contact details. The portfolio gives `1/146, Gomti Nagar, Lucknow` and `hello@archipixels.com`. The old Wix site gave `B-2, 1222, DLF MyPad, Vibhuti Khand, Gomtinagar` and `info@archipixels.com`. The templates use the portfolio values.
+- Fill the placeholders (they show with a dashed underline): `[YEAR]`, `[AREA IN SQ FT]`, `[LOCATION]` and `[PROJECT STORY]` on each project page, `[ROLE]` and `[SHORT BIO]` for each founder, the team member cards, `[STUDIO HOURS AND HOW TO BOOK A VISIT]` on the studio page and `[TURNKEY EXAMPLES]` on the services page.
+- Write the real project stories. The text on each project page comes only from the portfolio facts.
+- Add individual team members when the client supplies them. The studio and team sections use the PDF photos only.
+- Check the colour swatches. The names come from the portfolio and the hex values were estimated by eye.
+- Confirm the Dubai mentions in D's About page, which repeats A's story.
+
+Images:
+
+- Replace the PDF crops with original photos. The crops are about 1000 px wide in A, B and C and 600 to 1,600 px wide in D and the portfolio.
+- Download the old-site photos. `data/legacy-projects.json` lists seven earlier Lucknow projects with Wix image ids (`https://static.wixstatic.com/media/<id>`). They appear as a text list on the works page.
+
+Direction D and the portfolio version:
+
+- The PDF backgrounds for Warehouse Studio, Pixel Pop and Chat House are black. The pages use a deep green, a near-black and a deep blue taken from their palettes.
+- Check the closing script line and the photo captions on a device with web fonts loaded.
+
+Build:
+
+- Wire the enquiry forms to a POST route with validation, CSRF, spam protection and a notification. They show a thank-you message and send nothing yet.
+- Remove the `theme-switcher` block from the footer markup, the chooser page (`index.html`) and the directions that are not used.
+- Use absolute URLs for `og:image` and the JSON-LD `logo`, which are relative paths in the templates. Add `canonical`, `og:url` and `twitter:card` tags with the live domain.

@@ -1,6 +1,6 @@
 # CONTEXT.md
 
-Project context for the Archipixels website templates. Read this file at the start of a new session. It holds the brief, the design language of each direction, the decisions made so far and the open items. `CLAUDE.md` holds the working rules, `README.md` the overview and `LARAVEL.md` the Laravel mapping.
+Project context for the Archipixels website templates. Read this file at the start of a new session. It holds the brief, the design language of each direction and the decisions made so far. `CLAUDE.md` holds the working rules, `README.md` the overview and `LARAVEL.md` the Laravel mapping and the list to settle before launch.
 
 ## 1. Project
 
@@ -32,7 +32,7 @@ Studio facts (in `data/site.json`):
 - Instagram `@archipixels`, Linktree `linktr.ee/archipixels`.
 - The Homes collection is Jamboree, Ghar-Aana and Mandala Maasai (themed rental homes).
 
-Voice: confident, warm and specific. Sentences are short. The studio says it never repeats a design and that each project starts from a different story. The site covers every kind of client. Dubai appears in the About story and on the Warehouse Studio and Chat House project pages only.
+Voice: short, specific sentences. The studio says it never repeats a design and that each project starts from a different story. The site covers every kind of client. Dubai appears in the About story and on the Warehouse Studio and Chat House project pages only.
 
 ### The 19 projects
 
@@ -62,16 +62,16 @@ Seven earlier Lucknow projects are in `data/legacy-projects.json` (Wix image ids
 
 ## 3. The design idea
 
-Every direction treats an interior studio's site as a gallery that the visitor walks through. The photographs carry the page. Type is large and set in a high-contrast serif. Colour comes from the projects, and the interface stays quiet around it. All directions are dark, because the studio's work is lit, saturated and dramatic and sits best against a dark ground.
+Every direction treats the studio's site as a gallery that the visitor walks through. The photographs carry the page, the type is a large high-contrast serif and the colour comes from the projects. All directions are dark because the studio's work is saturated and lit, and it looks best against a dark ground.
 
-Principles that hold across directions:
+What holds across directions:
 
-- One strong idea per direction, applied everywhere: gold on oxblood (A), a single lit colour per project (B), street-poster colour (C), the project's own page colour (D).
-- Large display type with generous space around it. Headlines reveal word by word or line by line.
+- Each direction has one idea, used everywhere: gold on oxblood (A), one lit colour per project (B), street-poster colour (C), the project's own page colour (D).
+- Display type is large, with space around it. Headlines reveal word by word or line by line.
 - Photographs are the largest element on any screen. They sit in frames, wipe open on scroll and drift slightly as the page moves.
-- Colour swatches are a signature element. They appear as round dots, ringed in gold, with the colour's name below.
-- Motion adds to the content. Nothing waits on an animation to be readable.
-- Every project gets its own identity inside the shared frame, which mirrors the studio's claim that no design repeats.
+- Colour swatches are round dots ringed in gold, with the colour's name below.
+- Pages stay readable without the animation.
+- Each project has its own identity inside the shared layout. The studio says it never repeats a design.
 
 ## 4. Shared system
 
@@ -83,7 +83,9 @@ Principles that hold across directions:
 
 ### Components (marked by `<!-- component: name -->` comments)
 
-`site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `card-work`, `palette`, `project-gallery`, `enquiry-form`. D adds `project-colour-section`, `project-panel`, `next-project`, `works-wall` and `project-tone`.
+A, B and C use `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, and adds `approach`, `founders`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
+
+The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and the project story block have no comment. D's project page is A's hero followed by a wrapper (`.d-tone`) in the project's colour that holds the facts row, the story, the palette on a tan panel and the gallery, then a next-project band, three related tiles and the call to action. D's home page spotlights are three colour blocks, each a photo beside a tan panel.
 
 ### Header and navigation
 
@@ -102,17 +104,17 @@ Principles that hold across directions:
 
 ### Responsive and browser support
 
-- Pages are checked at 1440, 820 and 390 px wide, with no horizontal scroll.
+- Pages do not scroll horizontally at 1440, 820 or 390 px wide.
 - iOS 15 Safari lacks `color-mix()`, `svh` and unprefixed `backdrop-filter`. Each rule that uses one of them has a plain fallback before it (`rgba(var(--bg-rgb), .9)`, `vh`, `-webkit-backdrop-filter`). New rules follow the same pattern.
 
 ## 5. The directions
 
 ### A, Velvet Night (`a/`)
 
-- Idea: a theatre at night. Maximalist, gilded and warm-lit, in the spirit of the studio's most dramatic interiors.
+- Idea: a theatre at night, in the spirit of the studio's most dramatic interiors. Gold on oxblood-black, with warm lighting and ornament.
 - Palette: Night Velvet `#14090C`, surface `#1E1115`, band `#2A0F16`, Oxblood `#7A1F2E`, Antique Gold `#C9A24B`, Emerald `#1F5E4B`, Midnight Teal `#1D4F5A`, Warm Ivory `#F3EADB`. Text `#F3E9DC`, muted `#BBA99C`.
 - Type: Bodoni Moda for display (400, with italics for emphasis), Jost 300 for body. Uppercase labels with wide letter spacing.
-- Signature moves: gold hairlines that draw across the page, a fan (Art Deco) motif above the band sections, gilded frames with warm drop shadows, frames that gain a gold inset line on hover, a marquee in gold italics, a cursor-following spotlight on the hero.
+- Features: gold hairlines that draw across the page, a fan (Art Deco) motif above the band sections, gilded frames with warm drop shadows, frames that gain a gold inset line on hover, a marquee in gold italics, a cursor-following spotlight on the hero.
 - Motion: fade slideshow with a Ken Burns zoom, word-by-word headlines, parallax, a creative-effect works slider.
 - Project page: a full-background hero (the project's card photo, with a veil that fades to the page colour), a facts row (type, location, year, area), the design language as chips, the story, signature details, the palette as large gold-ringed dots, a gallery slider with a lightbox, related projects and a call to action.
 
@@ -121,7 +123,7 @@ Principles that hold across directions:
 - Idea: a darkened gallery with one light on at a time. Each project carries one accent colour (`--lit`) that tints its page.
 - Palette: `#0D0D0C` ground, surface `#141413`, band `#1A1917`, bone text `#ECE6DC`, muted `#A39E94`, default accent marigold `#E0A526`.
 - Type: Cormorant Garamond in weight 300 at very large sizes, Hanken Grotesk for body. The eyebrow label starts with a dash.
-- Signature moves: film grain over the page, a letterboxed hero stage with giant type, italic accent words, project pages with a sticky side column and a long stack of photographs.
+- Features: film grain over the page, a letterboxed hero stage with giant type, italic accent words, project pages with a sticky side column and a long stack of photographs.
 - Motion: creative-effect hero with a progress line, clip-path image reveals, a pinned horizontal scroll of featured works, a cursor-following preview on the works index.
 
 ### C, Midnight Bazaar (`c/`)
@@ -129,7 +131,7 @@ Principles that hold across directions:
 - Idea: a night market with poster colour. The studio's playful projects (a salon, a gelateria, a kachori shop) set the tone.
 - Palette: `#0A1A1F` deep teal ground, surface `#112A31`, band `#0F3A44`, cream text `#FFF4D6`, marigold `#F2B01E`, pop red `#D9252C`, blue `#1F9BC4`, terracotta `#D9702E`.
 - Type: Rozha One for display, Karla for body. Weight is heavier than A and B.
-- Signature moves: stickers that wobble, hard black offset shadows (`8px 8px 0 #000`), pill buttons with a black outline that press down on click, rounded 14 px corners, tilted photo frames on project pages.
+- Features: stickers that wobble, hard black offset shadows (`8px 8px 0 #000`), pill buttons with a black outline that press down on click, rounded 14 px corners, tilted photo frames on project pages.
 - Motion: cards-effect hero and coverflow works slider.
 - Status: the client is not pursuing C. Subhan may reuse single elements from it. Leave it untouched.
 
@@ -156,10 +158,10 @@ Principles that hold across directions:
 
 ## 6. Decisions so far
 
-- A and B are approved. Do not change them unless asked.
+- The design of A, B and C is final. Only fixes are allowed (see Frozen designs in `CLAUDE.md`).
 - C is dropped. Leave it as is, or take elements from it if one is wanted.
-- D was built to merge the one-page portfolio with A's multi-page structure and nested menu.
-- D's project page uses A's full-background hero, with the page body in the project's colour. The earlier photo-and-tan-panel block now appears only in D's home page spotlights.
+- D merges the one-page portfolio with A's multi-page structure and nested menu.
+- D's project page uses A's full-background hero, with the page body in the project's colour. The photo-and-tan-panel block appears only in D's home page spotlights.
 - Every project page in D has a gallery slider with a lightbox. Warehouse Studio has one photo, so it has no arrows.
 - The preview switcher lists A, B, C and D on every page.
 - The About submenu starts closed on mobile in every direction.
@@ -171,20 +173,16 @@ Principles that hold across directions:
 
 ## 7. Open items
 
-- The client picks a direction, or a mix. Update `CLAUDE.md` when that happens.
-- Fill the placeholders: `[YEAR]`, `[AREA IN SQ FT]`, `[LOCATION]` and `[PROJECT STORY]` on each project page, founder roles and bios, team cards, the studio hours line and the turnkey examples.
-- Confirm the address and email with the client.
-- Replace the PDF crops with original photographs, and check the swatch hex values against the real colours.
-- Wire the forms to a Laravel route with validation, CSRF, spam protection and a notification. They send nothing now.
-- Remove the preview switcher and the chooser page from the live site.
-- Confirm the Dubai mentions in D's About page with the client, since it repeats A's story.
+The list of what to decide, confirm or fill before launch is in the Before launch section of [LARAVEL.md](./LARAVEL.md#before-launch).
 
 ## 8. How to work in this repository
 
 - Pages are generated. Change the generator, the data or the stylesheet, then rebuild: `python3 tools/build.py` (A, B, C), `python3 tools/build_d.py` (D), `python3 tools/build_portfolio.py` (portfolio). The generators use only the Python standard library.
 - A change to `core.css`, `core.js`, the header, the footer or `build.py` reaches every direction.
 - Serve locally with `python3 -m http.server 8000`.
-- Test visual changes in a browser at 1440, 820 and 390 px wide, on the home page and at least two project pages. Include a light-coloured project (The Quiet Abode, Jewellery Spaces), a portrait-photo project (Archipixels Homes) and Warehouse Studio. Check for horizontal scroll, broken images and console errors.
+- Rebuild only the builders whose output the change touches. A change to `build.py` also needs `build_d.py`, which imports it. A change to a stylesheet or script needs no rebuild.
+- Check only the pages a change touches: one page per version, at 1440 and 390 px. Look for horizontal scroll, broken images and console errors. When a change touches project pages, use a light-coloured project (The Quiet Abode, Jewellery Spaces), a portrait-photo project (Archipixels Homes) or Warehouse Studio. Run the full link and console check on all pages only when the developer asks for it.
+- A, B and C are frozen. Fix mistakes in them and leave their design alone. A new site-wide change goes into every version where it suits, built once in the shared source and styled with each version's existing classes.
 - The live Laravel site is a separate project. Read that project's own `CLAUDE.md` and follow its conventions. Do not port the Python generators.
 
 ## 9. Starting a new session

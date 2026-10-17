@@ -210,7 +210,7 @@ def story():
       <p class="lead" data-reveal>We believe every space has a story waiting to be told. At Archipixels, design begins with curiosity. A curiosity about people, places, cultures and the little things that often go unnoticed.</p>
       <p data-reveal>Spaces that are layered, expressive, sometimes unexpected, but always thoughtful in their details.</p>
       <p data-reveal>We create artful, expressive spaces, each with its own identity. Every project begins with a different story, and we never repeat a design.</p>
-      <p data-reveal>We don’t believe every space should look a certain way. We believe it should feel a certain way and make you feel something, too.</p>
+      <p data-reveal>We don't believe every space should look a certain way. We believe it should feel a certain way and make you feel something, too.</p>
       <p class="signoff" data-reveal>Archipixels. Design that works.</p>
     </div>
   </div>
@@ -227,10 +227,10 @@ def founders():
       <p class="eyebrow" data-reveal>The founders</p>
       <h2 class="display" data-split>Two minds. A thousand ideas.</h2>
       <hr class="rule">
-      <p class="lead" data-reveal>We’re <strong>Shivika</strong> and <strong>Abhinav</strong>, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels. We find inspiration in the places we visit, the people we meet and the smallest details that often go unnoticed.</p>
+      <p class="lead" data-reveal>We're <strong>Shivika</strong> and <strong>Abhinav</strong>, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels. We find inspiration in the places we visit, the people we meet and the smallest details that often go unnoticed.</p>
       <p data-reveal>We started Archipixels in {SITE['founded']}. Since then, that curiosity has grown into bold spaces and unexpected ideas. Our journey began in Dubai, where we gained international experience before founding Archipixels in India.</p>
-      <p data-reveal>Now, we’re ready to take that energy worldwide. We’re looking for collaborators who share our curiosity and clients with extraordinary ambitions.</p>
-      <p class="signoff" data-reveal>Have something wild in mind? Let’s make it happen together.</p>
+      <p data-reveal>Now, we're ready to take that energy worldwide. We're looking for collaborators who share our curiosity and clients with extraordinary ambitions.</p>
+      <p class="signoff" data-reveal>Have something wild in mind? Let's make it happen together.</p>
     </div>
   </div>
 </section>
@@ -251,7 +251,7 @@ def works_intro():
   <div class="wrap">
     <header class="wall__head">
       <p class="eyebrow" data-reveal>Selected works</p>
-      <h2 class="display" data-split>{len(PROJECTS)} projects, each with its own colours.</h2>
+      <h2 class="display" data-split>All {len(PROJECTS)} projects.</h2>
       <p class="lead" data-reveal>Homes, hotels, restaurants, offices, salons and a township. Scroll on to walk through them in order, or pick one below.</p>
     </header>
     <ul class="wall">{''.join(tiles)}</ul>
@@ -394,7 +394,7 @@ def closing():
     return f"""<section class="closing" id="closing">
   <div class="closing__bg">{img(im['file'], im['w'], im['h'], '')}</div>
   <div class="closing__body">
-    <p class="closing__line" data-closing>{e(SITE['closing_line'].replace(chr(39), chr(8217)))}</p>
+    <p class="closing__line" data-closing>{e(SITE['closing_line'])}</p>
     <img class="closing__logo" src="../assets/brand-originals/logo-stacked-light.png" width="320" height="197" alt="Archipixels, design that works" loading="lazy">
   </div>
 </section>

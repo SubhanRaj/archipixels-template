@@ -3,14 +3,18 @@
 
 Run from the package root:  python3 tools/build.py
 
-Markup is deliberately plain and component-shaped (see the `<!-- component: ... -->`
+Markup is plain and component-shaped (see the `<!-- component: ... -->`
 comments) so each block maps to a Blade partial or <x-component>.
 """
 import html
 import json
+import re
 import shutil
+import struct
 from pathlib import Path
 from urllib.parse import quote
+
+from build_portfolio import contrast
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = json.loads((ROOT / 'data/site.json').read_text())
@@ -65,6 +69,38 @@ def img(c, name):
     return f'{c.base}assets/img/{name}'
 
 
+def img_size(name):
+    d = (ROOT / 'assets/img' / name).read_bytes()
+    if d[:8] == b'\x89PNG\r\n\x1a\n':
+        return struct.unpack('>II', d[16:24])
+    i = 2
+    while i < len(d):
+        m = d[i + 1]
+        if 0xC0 <= m <= 0xCF and m not in (0xC4, 0xC8, 0xCC):
+            h, w = struct.unpack('>HH', d[i + 5:i + 9])
+            return w, h
+        i += 2 + struct.unpack('>H', d[i + 2:i + 4])[0]
+
+
+def add_img_dims(page):
+    """Adds width and height to the photo tags so the browser reserves their space before they load."""
+    def repl(m):
+        if 'width=' in m['pre'] + m['post']:
+            return m[0]
+        w, h = img_size(m['name'])
+        return f'<img {m["pre"]}src="{m["src"]}" width="{w}" height="{h}"{m["post"]}>'
+    return re.sub(r'<img (?P<pre>[^>]*?)src="(?P<src>(?:\.\./)+assets/img/(?!brand/)(?P<name>[^"]+))"(?P<post>[^>]*)>', repl, page)
+
+
+def lit_text(hx, bg='#0D0D0C', need=4.5):
+    """Lightens a project colour until it reads as text on bg. Returns None when it already does."""
+    r = [int(hx[i:i + 2], 16) for i in (1, 3, 5)]
+    for step in range(21):
+        c = '#' + ''.join(f'{round(x + (255 - x) * step / 20):02X}' for x in r)
+        if contrast(c, bg) >= need:
+            return c if step else None
+
+
 def meta_line(p):
     return p['kind'] + (f" · {p['place']}" if p['place'] else '')
 
@@ -117,17 +153,19 @@ def head(c, title, desc, og, page_cls, extra=''):
 
 
 def header(c, active=''):
-    def link(h, l, on):
-        return f'<a href="{c.loc}{h}"' + (' aria-current="page"' if on else '') + f'>{e(l)}</a>'
+    # a project page is not the Works page, and a parent link is not the page itself
+    def link(h, l, on, cur='page'):
+        return f'<a href="{c.loc}{h}"' + (f' aria-current="{cur}"' if on else '') + f'>{e(l)}</a>'
+    cur = 'true' if c.rel.startswith('projects/') else 'page'
     items = ''
     for h, l, kids in NAV:
         if kids:
             sub = ''.join(f'<li>{link(kh, kl, kh == active)}</li>' for kh, kl in kids)
             on = active in [k[0] for k in kids]
             btn = f'<button class="sub-toggle" type="button" aria-expanded="false" aria-label="Show {e(l)} pages"></button>'
-            items += f'<li class="has-sub">{link(h, l, on)}{btn}<ul class="submenu">{sub}</ul></li>'
+            items += f'<li class="has-sub">{link(h, l, on, "true")}{btn}<ul class="submenu">{sub}</ul></li>'
         else:
-            items += f'<li>{link(h, l, h == active)}</li>'
+            items += f'<li>{link(h, l, h == active, cur)}</li>'
     nav = f'<ul class="site-nav__list">{items}</ul>'
     return f'''<!-- component: site-header -->
 <a class="skip-link" href="#main">Skip to content</a>
@@ -198,7 +236,7 @@ def footer(c):
 def write(c, title, desc, og, page_cls, active, body, extra=''):
     out = ROOT / c.t / c.rel
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(head(c, title, desc, og, page_cls, extra) + header(c, active) + body + footer(c))
+    out.write_text(add_img_dims(head(c, title, desc, og, page_cls, extra) + header(c, active) + body + footer(c)))
 
 
 # ------------------------------------------------------------ components ----
@@ -356,7 +394,7 @@ def featured_a(c):
     slides = []
     for s in FEATURED:
         p = BY_SLUG[s]
-        slides.append(f'''<article class="swiper-slide feature-slide">
+        slides.append(f'''<div class="swiper-slide feature-slide">
   <a class="feature-slide__media" href="{c.loc}projects/{p['slug']}.html"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="lazy"></a>
   <div class="feature-slide__body">
     <p class="card-work__meta">{e(meta_line(p))}</p>
@@ -365,7 +403,7 @@ def featured_a(c):
     {dots(p)}
     <a class="link-arrow" href="{c.loc}projects/{p['slug']}.html">View project{arrow_svg()}</a>
   </div>
-</article>''')
+</div>''')
     return f'''<!-- component: featured-works (A, creative-effect slider) -->
 <section class="section featured featured--a">
   <div class="container">{section_head('', 'Hospitality, cafés, residences, workplaces', (c.loc + 'works.html', 'View all works'))}</div>
@@ -398,13 +436,13 @@ def featured_c(c):
     slides = []
     for s in FEATURED:
         p = BY_SLUG[s]
-        slides.append(f'''<article class="swiper-slide feature-card">
+        slides.append(f'''<div class="swiper-slide feature-card">
   <a href="{c.loc}projects/{p['slug']}.html">
     <div class="feature-card__media"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="lazy"></div>
     <span class="sticker sticker--yellow feature-card__tag">{e(p['kind'])}</span>
     <h3 class="feature-card__title">{e(p['name'])}</h3>
   </a>
-</article>''')
+</div>''')
     return f'''<!-- component: featured-works (C, coverflow slider) -->
 <section class="section featured featured--c">
   <div class="container">{section_head('', 'Pick a story', (c.loc + 'works.html', 'View all works'))}</div>
@@ -696,6 +734,7 @@ def page_works(t):
 </section>
 <section class="section works">
   <div class="container">
+    <h2 class="sr-only">All projects</h2>
     <!-- component: filter-bar -->
     <div class="filters" role="group" aria-label="Filter projects">{chips}<span class="filters__count" data-count aria-live="polite">{len(PROJECTS)} projects</span></div>
     {listing}
@@ -771,7 +810,7 @@ def page_project(t, p, idx):
         sw = ''.join(f'<li class="swatch" style="--sw:{hx}" data-reveal><span class="swatch__dot"></span><span class="swatch__name">{e(n)}</span></li>' for n, hx in p['palette'])
         pal = f'''<!-- component: palette -->
 <section class="section surface palette"><div class="container">{section_head('', 'Colour palette')}<ul class="palette__list">{sw}</ul></div></section>'''
-    det = f'<h3 class="mini-title">Signature details</h3><ul class="details">{details}</ul>' if p['details'] else ''
+    det = f'<h2 class="mini-title">Signature details</h2><ul class="details">{details}</ul>' if p['details'] else ''
     body_story = f'''<section class="section pstory">
   <div class="container pstory__grid">
     <div><p class="eyebrow" data-reveal>The design language</p><ul class="chips-static" data-reveal>{langs}</ul></div>
@@ -783,12 +822,13 @@ def page_project(t, p, idx):
 <section class="section gallery">
   <div class="container">{section_head('', 'Gallery', None)}</div>
   <div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>
-  <div class="container gallery__ui">{ui_arrows('gallery-prev', 'gallery-next')}</div>
+  {f'<div class="container gallery__ui">{ui_arrows("gallery-prev", "gallery-next")}</div>' if len(gal_imgs) > 1 else ''}
 </section>'''
     rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (1, 2, 3)]
     related = f'''<section class="section related"><div class="container">{section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<div class="grid-works grid-works--three">{''.join(card_work(c, r) for r in rel)}</div></div></section>'''
     body = hero + body_story + pal + gallery + related + cta(c, 'Have a space in mind? Tell us its story.')
-    style = f'<style>body.page-project{{--lit:{p["lit"]}}}</style>\n'
+    lt = lit_text(p['lit']) if t == 'b' else None   # B uses --lit as text colour on near-black
+    style = f'<style>body.page-project{{--lit:{p["lit"]}' + (f';--lit-text:{lt}' if lt else '') + '}</style>\n'
     write(c, f"{p['name']} | Archipixels", f"{p['name']}: {p['tagline']}. {p['kind']} by Archipixels.", p['card'], 'project', 'works.html', body, style)
 
 
