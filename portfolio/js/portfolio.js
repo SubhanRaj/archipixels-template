@@ -25,6 +25,14 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  /* back to site: return to the version the visitor came from */
+  var back = $('.top__site');
+  try {
+    var from = new URL(doc.referrer);
+    var m = back && from.origin === location.origin && from.pathname.match(/^(.*?\/)(a|b|c|d)\/[^/]*/);
+    if (m) { back.href = m[1] + m[2] + '/index.html'; }
+  } catch (err) { /* no referrer: the link keeps its default */ }
+
   /* index overlay */
   var ix = $('#index');
   var ixBtn = $('.top__index');

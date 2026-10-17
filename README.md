@@ -67,12 +67,12 @@ Each command rebuilds only its own folders.
 
 ## Direction D
 
-`d/` merges the one-page portfolio with the multi-page structure and style of Direction A. The header menu is Works, About (with About us and Team below it), Studio, Services and Contact.
+`d/` merges the one-page portfolio with the multi-page structure and style of Direction A. The header menu is Works, About (with About us and Team below it), Studio, Services, Portfolio and Contact. Portfolio opens the one-page portfolio in every version.
 
 - Home has a hero slideshow, the approach, the founders, three spotlight projects in their own colours, the works wall and the closing line.
 - Works is a filterable wall of all 19 projects.
 - Each project page uses A's layout: a full-background hero photo, a facts row, the design language, signature details and story, a colour palette, a gallery slider with a lightbox, related projects and an enquiry call to action. Below the hero, the page takes the project's own colour from `data/portfolio.json`, and the palette sits on D's tan panel. A next-project band follows the gallery. Warehouse Studio has one photo, so its gallery has one slide and no arrows.
-- The portfolio PDF (5 MB) is at `assets/downloads/Archipixels-Portfolio.pdf`. D links it from the closing band, the contact page and the footer, and the one-page portfolio links it from the contact section, the index menu and the footer. A, B and C do not link it.
+- The portfolio PDF (5 MB) is at `assets/downloads/Archipixels-Portfolio.pdf`. Every version has one "Get our portfolio" link in the footer, which opens the PDF in a new tab. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar, and it offers the PDF from the contact section, the index menu and the footer.
 - About, Studio and Services use A's templates and styling. The Studio page keeps one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.
 - `tools/build_d.py` builds `d/`. It imports `tools/build.py` for the shared header, footer and pages, and `tools/build_portfolio.py` for the colour helpers. The `SWITCH` list in `build.py` names the directions that the preview switcher shows.
 - `assets/css/theme-d.css` and `assets/js/theme-d.js` hold the D components and motion. D also loads `theme-a.css` and `theme-a.js`, so its body class is `theme-a theme-d`.

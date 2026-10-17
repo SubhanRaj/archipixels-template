@@ -138,6 +138,7 @@ def header():
     <a href="#contact">Contact</a>
   </nav>
   <div class="top__tools">
+    <a class="top__site" href="../index.html" aria-label="Back to site"><span aria-hidden="true">&larr;</span><span class="top__site-label">Back to site</span></a>
     <a class="top__ig" href="{e(SITE['instagram'])}" target="_blank" rel="noopener" aria-label="Archipixels on Instagram">{ICON_IG}</a>
     <button class="top__index" type="button" aria-expanded="false" aria-controls="index">
       <span class="top__index-label">Index</span><i aria-hidden="true"></i>
@@ -161,7 +162,7 @@ def index_overlay():
     <p class="eyebrow">Selected works</p>
     <ol class="ix__list">{''.join(rows)}</ol>
     <ul class="ix__more">
-      <li><a href="#studio">Studio</a></li><li><a href="#team">Team</a></li><li><a href="#contact">Contact</a></li><li><a href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download PDF</a></li>
+      <li><a href="#studio">Studio</a></li><li><a href="#team">Team</a></li><li><a href="#contact">Contact</a></li><li><a href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download portfolio</a></li>
     </ul>
   </div>
 </div>
@@ -379,7 +380,7 @@ def contact():
         <div class="enquiry__row">
           <button class="btn" type="submit">Send enquiry</button>
           <a class="btn btn--line" href="{e(wa)}" target="_blank" rel="noopener">Message on WhatsApp</a>
-          <a class="btn btn--line" href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download PDF (5 MB)</a>
+          <a class="btn btn--line" href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download portfolio</a>
         </div>
         <p class="enquiry__note" role="status" aria-live="polite"></p>
       </form>
@@ -404,7 +405,7 @@ def closing():
 def footer():
     return f"""<footer class="foot">
   <p>© {datetime.date.today().year} Archipixels. Architecture, interiors and experiences. {e(SITE['address'])}.</p>
-  <p><a href="{e(SITE['instagram'])}" target="_blank" rel="noopener">Instagram</a> · <a href="{e(SITE['linktree'])}" target="_blank" rel="noopener">Linktree</a> · <a href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download PDF</a> · <a href="#cover">Back to top</a></p>
+  <p><a href="{e(SITE['instagram'])}" target="_blank" rel="noopener">Instagram</a> · <a href="{e(SITE['linktree'])}" target="_blank" rel="noopener">Linktree</a> · <a href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download portfolio</a> · <a href="#cover">Back to top</a></p>
 </footer>
 """
 

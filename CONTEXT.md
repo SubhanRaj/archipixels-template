@@ -89,7 +89,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 
 ### Header and navigation
 
-- Menu: Works, About (About us, Team), Studio, Services, Contact. The list is `NAV` in `tools/build.py`.
+- Menu: Works, About (About us, Team), Studio, Services, Portfolio, Contact. Portfolio opens the one-page portfolio, which shows the PDF as a web page that reads the same on every platform. The PDF opens from one "Get our portfolio" link in every footer. The list is `NAV` in `tools/build.py`.
 - Desktop: the About submenu opens on hover or focus.
 - Up to 1100 px: the menu is a full-width drawer. The About submenu starts closed and opens with the chevron `.sub-toggle` button.
 - The header is transparent over the hero with a soft top scrim, and turns solid with a blur once the page scrolls.
@@ -144,7 +144,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Works: a filterable wall of all 19 projects, each tile with its colour as a bottom edge.
 - Project page: A's layout and hero, then everything below the hero is recoloured to the project's own colour. `tone_style()` in `tools/build_d.py` derives the surface, band, line, muted and accent tokens from the project's `bg`, and picks light or dark text by contrast. The palette sits on a tan panel with gold-ringed dots. The gallery shows every photo of the project. A next-project band and three related tiles follow.
 - Motion: photos wipe open and drift on scroll, tan panels and swatches enter in sequence, the closing line writes itself out.
-- Download: a "Download portfolio (PDF, 5 MB)" button in the closing band, a link on the contact page and a footer link. The file is `assets/downloads/Archipixels-Portfolio.pdf`.
+- Portfolio links: the footer of every version has one link, "Get our portfolio", in the place of the menu's Portfolio entry. It opens the PDF in a new tab, in the browser viewer on desktop and the phone's own PDF handling on mobile. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar. It returns to the version the visitor came from. The file is `assets/downloads/Archipixels-Portfolio.pdf`.
 - Technical: `tools/build_d.py` builds it. Body class `theme-a theme-d`.
 
 ### One-page portfolio (`portfolio/`)
@@ -168,7 +168,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - The chooser page (`index.html`) lists five versions, with a favicon and share tags that assume `archipixels-template.pages.dev`.
 - The README follows the layout of Subhan's other repositories (centred logo, badges, preview image).
 - `_headers` stays in the root. It blocks search engines on the preview, which an HTTP header does for every file type, including images and PDFs.
-- The portfolio PDF is compressed to 5 MB and linked from D and the one-page portfolio only.
+- The portfolio PDF is compressed to 5 MB. Every version links it from the footer, and the one-page portfolio and D link it in more places.
 - Writing rules for docs, comments and UI text: plain present tense, no em dashes, no "X, not Y" contrasts, no flourish adjectives, no bold lead-ins on bullets, no emoji in headings, no leftover placeholders unless they stand for content the client still owes.
 
 ## 7. Open items

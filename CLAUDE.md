@@ -70,6 +70,7 @@ The Before launch section of `LARAVEL.md` lists what to confirm or fill before l
 - Photos live in `portfolio/img/`. Add a project by adding it to `data/projects.json` and `data/portfolio.json`, then rebuild.
 - Motion follows the same rule as the directions: JavaScript hides content right before animating it, and `prefers-reduced-motion` turns the motion off.
 - Studio and team come after the projects on purpose, as the client asked.
+- The top bar has a Back to site link. `portfolio.js` points it at the version the visitor came from (read from the referrer) and otherwise at `../index.html`, which is the chooser in the templates.
 
 ## Direction D
 
@@ -81,7 +82,7 @@ The Before launch section of `LARAVEL.md` lists what to confirm or fill before l
 - Each project page has a gallery (`gallery_d` in `build_d.py`). It uses A's `.gallery-swiper` markup, which `core.js` starts, and lists the project's photos from `data/portfolio.json`. `theme-d.css` sizes the slides by photo height.
 - A project page starts with A's hero (`phero--a`). `page_project` in `build_d.py` then wraps the facts row, the story block, the palette panel and the gallery in `.d-tone`, whose inline tokens (`tone_style`) recolour them to the project's `bg` from `data/portfolio.json`. The palette sits on a tan panel (`.d-tone__panel`) with gold-ringed dots. A next-project band (`.d-next`), three related tiles (`.d-tile`) and the call to action follow. The generator picks text colour by contrast with `ink_for`. None of these has a component comment.
 - The home page spotlights (`pj_block`) are three colour blocks, each a photo beside a tan panel (`.d-pj`, `.d-panel`). They have no component comment either.
-- The compressed portfolio PDF is `assets/downloads/Archipixels-Portfolio.pdf`. Replace the file with the same name to update every download button. The button label states the size, so update it in `build_d.py` and `build_portfolio.py` if the size changes.
+- The compressed portfolio PDF is `assets/downloads/Archipixels-Portfolio.pdf`. Replace the file with the same name to update every download button. The links read "Get our portfolio", open the PDF in a new tab and do not state a file size or format. The one-page portfolio's own buttons read "Download portfolio".
 - Browser support: the header and veil rules keep a plain `rgba()` fallback before each `color-mix()`, and `-webkit-backdrop-filter` sits beside `backdrop-filter`, for iOS 15 Safari. Keep this pattern in new rules. `--bg-rgb` and `--text-rgb` in each theme feed the fallbacks.
 - Photos come from `portfolio/img/` and the closing logo from `assets/brand-originals/logo-stacked-light.png`. Keep both when moving D.
 - About, Studio and Services are A's pages with D's header and footer. The Studio page has one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.

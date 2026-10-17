@@ -45,12 +45,13 @@ The static templates in this repository are the design reference for the Archipi
 | `/works` | Works, filterable, with `#category` deep links |
 | `/works/{slug}` | Project page (19 projects) |
 | `/contact` | Contact and enquiry form |
+| `/portfolio` | The one-page portfolio: the PDF as a web page that reads the same on every platform, with a button for the PDF download |
 
 ## Data
 
 Project fields: slug, name, by, tagline, kind, cats[], place, lit (hex), language[], details[], palette[] (name and hex), card image, gallery[], story, year and area. Direction D also uses a background colour (`bg`), a layout name and a photo list with captions per project, from `data/portfolio.json`.
 
-Studio details, founders, contact details, services and the closing line are in `data/site.json`. The menu (Works, About with About us and Team, Studio, Services, Contact) is the `NAV` list in `tools/build.py`. Seven earlier Lucknow projects are in `data/legacy-projects.json` with Wix image ids.
+Studio details, founders, contact details, services and the closing line are in `data/site.json`. The menu (Works, About with About us and Team, Studio, Services, Portfolio, Contact) is the `NAV` list in `tools/build.py`. Seven earlier Lucknow projects are in `data/legacy-projects.json` with Wix image ids.
 
 Team members and services can move to database tables once the client supplies the content.
 
@@ -89,4 +90,5 @@ Build:
 
 - Wire the enquiry forms to a POST route with validation, CSRF, spam protection and a notification. They show a thank-you message and send nothing yet.
 - Remove the `theme-switcher` block from the footer markup, the chooser page (`index.html`) and the directions that are not used.
+- Point the Back to site link on the portfolio page (`../index.html` in the templates) at the home route.
 - Use absolute URLs for `og:image` and the JSON-LD `logo`, which are relative paths in the templates. Add `canonical`, `og:url` and `twitter:card` tags with the live domain.

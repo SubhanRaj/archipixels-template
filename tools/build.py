@@ -33,10 +33,13 @@ THEMES = {
 }
 
 # (href, label, children). Children render as a submenu under their parent.
+PORTFOLIO = '../portfolio/index.html'   # the one-page portfolio, relative to the theme folder like the other hrefs
+PDF_FILE = 'assets/downloads/Archipixels-Portfolio.pdf'   # relative to the package root
 NAV = [('works.html', 'Works', []),
        ('about.html', 'About', [('about.html', 'About us'), ('team.html', 'Team')]),
        ('studio.html', 'Studio', []),
        ('services.html', 'Services', []),
+       (PORTFOLIO, 'Portfolio', []),
        ('contact.html', 'Contact', [])]
 
 
@@ -188,7 +191,9 @@ SWITCH = ['a', 'b', 'c', 'd']
 
 
 def footer(c):
-    links = ''.join(f'<li><a href="{c.loc}{h}">{e(l)}</a></li>' for h, l in nav_flat())
+    # the menu's Portfolio item shows the web page, so the footer's entry opens the PDF
+    pdf = f'<li><a href="{c.base}{PDF_FILE}" target="_blank" rel="noopener">Get our portfolio</a></li>'
+    links = ''.join(pdf if h == PORTFOLIO else f'<li><a href="{c.loc}{h}">{e(l)}</a></li>' for h, l in nav_flat())
     sw = ''.join(
         f'<a href="{c.base}{k}/{c.rel}"' + (' aria-current="true"' if k == c.t else '') + f'>{k.upper()}</a>'
         for k in SWITCH)

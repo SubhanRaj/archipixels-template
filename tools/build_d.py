@@ -43,8 +43,6 @@ def write_d(c, title, desc, og, page_cls, active, body, extra=''):
     out.parent.mkdir(parents=True, exist_ok=True)
     html = b.head(c, title, desc, og, page_cls, extra) + b.header(c, active) + body + b.footer(c)
     html = html.replace('<body class="theme-d ', '<body class="theme-a theme-d ')
-    html = html.replace('</a></li></ul>\n    </div>\n  </div>\n  <div class="container site-footer__base">',
-                        f'</a></li><li><a href="{c.base}{PDF_NAME}" download>Portfolio PDF</a></li></ul>\n    </div>\n  </div>\n  <div class="container site-footer__base">')
     css = f'<link rel="stylesheet" href="{c.base}assets/css/theme-d.css">'
     html = html.replace(css, f'<link rel="stylesheet" href="{c.base}assets/css/theme-a.css">\n{css}')
     js = f'<script src="{c.base}assets/js/theme-d.js"></script>'
@@ -53,11 +51,11 @@ def write_d(c, title, desc, og, page_cls, active, body, extra=''):
 
 
 PDF_NAME = 'assets/downloads/Archipixels-Portfolio.pdf'
-PDF_LABEL = 'Download portfolio (PDF, 5 MB)'
+PDF_LABEL = 'Get our portfolio'
 
 
 def pdf_link(c, cls='btn btn--outline', label=PDF_LABEL):
-    return f'<a class="{cls}" href="{c.base}{PDF_NAME}" download>{label}</a>'
+    return f'<a class="{cls}" href="{c.base}{PDF_NAME}" target="_blank" rel="noopener">{label}</a>'
 
 
 b.write = write_d   # About, Studio and Services call build.write
@@ -418,7 +416,7 @@ def page_contact():
     </dl>
     <div class="d-contact__split">
       <div class="d-contact__art" data-reveal><img src="{pimg(c, v['file'])}" width="{v['w']}" height="{v['h']}" alt="Pen drawing of a three-storey villa facade by Archipixels" loading="lazy"></div>
-      <div class="d-contact__form" data-reveal>{b.form('contact')}<p class="d-contact__wa"><a class="link-arrow" href="{b.wa()}" target="_blank" rel="noopener">Or message us on WhatsApp{b.arrow_svg()}</a></p><p class="d-contact__wa"><a class="link-arrow" href="{c.base}{PDF_NAME}" download>Download the portfolio (PDF, 5 MB){b.arrow_svg()}</a></p></div>
+      <div class="d-contact__form" data-reveal>{b.form('contact')}<p class="d-contact__wa"><a class="link-arrow" href="{b.wa()}" target="_blank" rel="noopener">Or message us on WhatsApp{b.arrow_svg()}</a></p><p class="d-contact__wa"><a class="link-arrow" href="{c.base}{PDF_NAME}" target="_blank" rel="noopener">Get our portfolio{b.arrow_svg()}</a></p></div>
     </div>
   </div>
 </section>'''
