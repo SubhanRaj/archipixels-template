@@ -1,0 +1,835 @@
+#!/usr/bin/env python3
+"""Generates the three static template sets (a/, b/, c/) from data/*.json.
+
+Run from the package root:  python3 tools/build.py
+
+Markup is deliberately plain and component-shaped (see the `<!-- component: ... -->`
+comments) so each block maps to a Blade partial or <x-component>.
+"""
+import html
+import json
+import shutil
+from pathlib import Path
+from urllib.parse import quote
+
+ROOT = Path(__file__).resolve().parent.parent
+SITE = json.loads((ROOT / 'data/site.json').read_text())
+PROJECTS = json.loads((ROOT / 'data/projects.json').read_text())
+LEGACY = json.loads((ROOT / 'data/legacy-projects.json').read_text())['projects']
+BY_SLUG = {p['slug']: p for p in PROJECTS}
+e = html.escape
+
+THEMES = {
+    'a': dict(name='Velvet Night', color='#14090C',
+              fonts='https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap'),
+    'b': dict(name='Gallery Noir', color='#0D0D0C',
+              fonts='https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Hanken+Grotesk:wght@300;400;500&display=swap'),
+    'c': dict(name='Midnight Bazaar', color='#0A1A1F',
+              fonts='https://fonts.googleapis.com/css2?family=Rozha+One&family=Karla:wght@400;500;700&display=swap'),
+}
+
+# (href, label, children). Children render as a submenu under their parent.
+NAV = [('works.html', 'Works', []),
+       ('about.html', 'About', [('about.html', 'About us'), ('team.html', 'Team')]),
+       ('studio.html', 'Studio', []),
+       ('services.html', 'Services', []),
+       ('contact.html', 'Contact', [])]
+
+
+def nav_flat():
+    out = []
+    for h, l, kids in NAV:
+        out.append((h, l))
+        out.extend((kh, kl) for kh, kl in kids if kh != h)
+    return out
+HERO_SLIDES = ['helios-maximus', 'the-deco-grand', 'hons-grey-opera', 'the-heritage-mosaic', 'house-of-narula']
+FEATURED = ['the-deco-grand', 'chihiro', 'hons-grey-opera', 'house-of-narula', 'warehouse-studio', 'mio-marito-gelato', 'kesarwani-residence']
+FILTERS = [('all', 'All'), ('hospitality', 'Hospitality'), ('cafes', 'Cafés'), ('retail', 'Retail'),
+           ('residential', 'Residential'), ('workplace', 'Workplace'), ('homes', 'Homes')]
+
+
+class Ctx:
+    def __init__(self, t, rel):
+        self.t = t
+        self.rel = rel
+        self.depth = rel.count('/')
+        self.loc = '../' * self.depth          # from this page to the theme folder root
+        self.base = '../' * (self.depth + 1)   # from this page to the package root
+
+
+def wa(msg_key='whatsapp_message_general'):
+    return f"https://wa.me/{SITE['whatsapp_number']}?text={quote(SITE[msg_key], safe='')}"
+
+
+def img(c, name):
+    return f'{c.base}assets/img/{name}'
+
+
+def meta_line(p):
+    return p['kind'] + (f" · {p['place']}" if p['place'] else '')
+
+
+def dots(p):
+    if not p['palette']:
+        return ''
+    items = ''.join(f'<li style="--sw:{hx}" title="{e(n)}"></li>' for n, hx in p['palette'])
+    return f'<ul class="dots" aria-label="Colour palette">{items}</ul>'
+
+
+def arrow_svg():
+    return '<svg viewBox="0 0 24 12" width="24" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 6h22M17 1l5 5-5 5"/></svg>'
+
+
+def placeholder(txt):
+    return f'<span class="placeholder">{e(txt)}</span>'
+
+
+# ---------------------------------------------------------------- shell ----
+
+def head(c, title, desc, og, page_cls, extra=''):
+    t = THEMES[c.t]
+    b = c.base
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{e(title)}</title>
+<meta name="description" content="{e(desc)}">
+<meta name="theme-color" content="{t['color']}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:image" content="{b}assets/img/{og}">
+<link rel="icon" type="image/png" sizes="48x48" href="{b}assets/img/brand/favicon-48.png">
+<link rel="icon" type="image/png" sizes="256x256" href="{b}assets/img/brand/favicon.png">
+<link rel="apple-touch-icon" href="{b}assets/img/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{t['fonts']}">
+<link rel="stylesheet" href="{b}assets/vendor/swiper-bundle.min.css">
+<link rel="stylesheet" href="{b}assets/vendor/glightbox.min.css">
+<link rel="stylesheet" href="{b}assets/css/core.css">
+<link rel="stylesheet" href="{b}assets/css/theme-{c.t}.css">
+{extra}</head>
+<body class="theme-{c.t} page-{page_cls}">
+'''
+
+
+def header(c, active=''):
+    def link(h, l, on):
+        return f'<a href="{c.loc}{h}"' + (' aria-current="page"' if on else '') + f'>{e(l)}</a>'
+    items = ''
+    for h, l, kids in NAV:
+        if kids:
+            sub = ''.join(f'<li>{link(kh, kl, kh == active)}</li>' for kh, kl in kids)
+            on = active in [k[0] for k in kids]
+            items += f'<li class="has-sub">{link(h, l, on)}<ul class="submenu">{sub}</ul></li>'
+        else:
+            items += f'<li>{link(h, l, h == active)}</li>'
+    nav = f'<ul class="site-nav__list">{items}</ul>'
+    return f'''<!-- component: site-header -->
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <a class="brand" href="{c.loc}index.html"><img src="{c.base}assets/img/brand/logo-horizontal-white.png" alt="Archipixels, design that works" width="184" height="38"></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Menu</span><span class="nav-toggle__bars" aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary">{nav}</nav>
+    <a class="btn btn--primary site-header__cta" href="{wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a>
+  </div>
+</header>
+<main id="main">
+'''
+
+
+# Directions shown in the preview switcher. D is built by build_d.py.
+SWITCH = ['a', 'b', 'c', 'd']
+
+
+def footer(c):
+    links = ''.join(f'<li><a href="{c.loc}{h}">{e(l)}</a></li>' for h, l in nav_flat())
+    sw = ''.join(
+        f'<a href="{c.base}{k}/{c.rel}"' + (' aria-current="true"' if k == c.t else '') + f'>{k.upper()}</a>'
+        for k in SWITCH)
+    return f'''</main>
+<!-- component: site-footer -->
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a class="brand brand--stacked" href="{c.loc}index.html"><img src="{c.base}assets/img/brand/logo-stacked-white.png" alt="Archipixels, design that works" width="190" height="117" loading="lazy"></a>
+      <p>{e(SITE['descriptor'])}</p>
+    </div>
+    <div>
+      <h2 class="footer-title">Explore</h2>
+      <ul class="footer-list">{links}</ul>
+    </div>
+    <div>
+      <h2 class="footer-title">Contact</h2>
+      <address class="footer-list">
+        <a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a>
+        <span>{e(SITE['phone_note'])}</span>
+        <a href="mailto:{SITE['email']}">{SITE['email']}</a>
+        <span>{e(SITE['address'])}</span>
+      </address>
+    </div>
+    <div>
+      <h2 class="footer-title">Follow</h2>
+      <ul class="footer-list"><li><a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram {SITE['instagram_handle']}</a></li><li><a href="{SITE['linktree']}" target="_blank" rel="noopener">Linktree</a></li></ul>
+    </div>
+  </div>
+  <div class="container site-footer__base"><small>© 2026 Archipixels. {e(SITE['sign_off'])}</small></div>
+</footer>
+<!-- component: theme-switcher (client preview only, remove for production) -->
+<nav class="theme-switcher" aria-label="Design direction preview"><span>Direction</span>{sw}</nav>
+<script src="{c.base}assets/vendor/gsap.min.js"></script>
+<script src="{c.base}assets/vendor/ScrollTrigger.min.js"></script>
+<script src="{c.base}assets/vendor/swiper-bundle.min.js"></script>
+<script src="{c.base}assets/vendor/glightbox.min.js"></script>
+<script src="{c.base}assets/js/core.js"></script>
+<script src="{c.base}assets/js/theme-{c.t}.js"></script>
+</body>
+</html>
+'''
+
+
+def write(c, title, desc, og, page_cls, active, body, extra=''):
+    out = ROOT / c.t / c.rel
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(head(c, title, desc, og, page_cls, extra) + header(c, active) + body + footer(c))
+
+
+# ------------------------------------------------------------ components ----
+
+def section_head(eyebrow, title, link=None, split=True):
+    s = ' data-split' if split else ''
+    lk = f'<a class="link-arrow" href="{link[0]}">{e(link[1])}{arrow_svg()}</a>' if link else ''
+    return f'''<header class="section-head">
+  <div>{f'<p class="eyebrow" data-reveal>{e(eyebrow)}</p>' if eyebrow else ''}<h2 class="h2"{s}>{e(title)}</h2></div>{lk}
+</header>'''
+
+
+def card_work(c, p, hidden_cats=True):
+    cats = ' '.join(p['cats'])
+    return f'''<article class="card-work tilt" data-cats="{cats}" data-reveal>
+  <a class="card-work__link" href="{c.loc}projects/{p['slug']}.html">
+    <div class="card-work__media"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="lazy"></div>
+    <div class="card-work__body">
+      <p class="card-work__meta">{e(meta_line(p))}</p>
+      <h3 class="card-work__title">{e(p['name'])}</h3>
+      <p class="card-work__tag">{e(p['tagline'])}</p>
+      {dots(p)}
+    </div>
+  </a>
+</article>'''
+
+
+def index_row(c, p):
+    cats = ' '.join(p['cats'])
+    return f'''<li class="index-row" data-cats="{cats}" data-img="{img(c, p['card'])}" style="--lit:{p['lit']}">
+  <a href="{c.loc}projects/{p['slug']}.html">
+    <img class="index-row__thumb" src="{img(c, p['card'])}" alt="" loading="lazy">
+    <span class="index-row__name">{e(p['name'])}</span>
+    <span class="index-row__kind">{e(p['kind'])}</span>
+    <span class="index-row__place">{e(p['place'])}</span>
+    {dots(p)}
+  </a>
+</li>'''
+
+
+def marquee(items):
+    one = ''.join(f'<span>{e(n)}</span><i aria-hidden="true"></i>' for n in items)
+    return f'''<div class="marquee" aria-hidden="true"><div class="marquee__skew"><div class="marquee__track">{one}{one}</div></div></div>'''
+
+
+def ui_arrows(prev_cls, next_cls):
+    return f'''<div class="slider-arrows">
+  <button class="slider-arrow {prev_cls}" type="button" aria-label="Previous"><svg viewBox="0 0 24 12" width="24" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M24 6H2M7 1L2 6l5 5"/></svg></button>
+  <button class="slider-arrow {next_cls}" type="button" aria-label="Next"><svg viewBox="0 0 24 12" width="24" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 6h22M17 1l5 5-5 5"/></svg></button>
+</div>'''
+
+
+def hero_slides(c):
+    out = []
+    for s in HERO_SLIDES:
+        p = BY_SLUG[s]
+        out.append(f'''<div class="swiper-slide" data-title="{e(p['name'])}" data-meta="{e(meta_line(p))}" data-href="{c.loc}projects/{p['slug']}.html">
+  <img class="hero__img" src="{img(c, p['card'])}" alt="" {'loading="eager"' if s == HERO_SLIDES[0] else 'loading="lazy"'}>
+</div>''')
+    return '\n'.join(out)
+
+
+def hero_a(c):
+    return f'''<!-- component: hero-slideshow (A) -->
+<section class="hero hero--a" aria-label="Introduction">
+  <div class="swiper hero-swiper"><div class="swiper-wrapper">
+{hero_slides(c)}
+  </div></div>
+  <div class="hero__veil"></div>
+  <div class="hero__spot" aria-hidden="true"></div>
+  <div class="container hero__content">
+    <p class="eyebrow" data-reveal>{e(SITE['descriptor'])}</p>
+    <h1 class="hero__title" data-split>{e(SITE['tagline'])}</h1>
+    <p class="lead" data-reveal>An architecture and interior design studio in Lucknow, for clients with extraordinary ambitions.</p>
+    <div class="actions" data-reveal>
+      <a class="btn btn--primary" href="{c.loc}works.html">See selected works</a>
+      <a class="link-arrow" href="{c.loc}about.html">About the studio{arrow_svg()}</a>
+    </div>
+  </div>
+  <div class="container hero__ui">
+    <div class="hero__now"><span class="hero__now-meta"></span><a class="hero__now-title" href="#"></a></div>
+    <div class="hero__pagination" aria-hidden="true"></div>
+    {ui_arrows('hero-prev', 'hero-next')}
+  </div>
+</section>
+{marquee([BY_SLUG[s]['name'] for s in FEATURED])}'''
+
+
+def hero_b(c):
+    return f'''<!-- component: hero-slideshow (B) -->
+<section class="hero hero--b" aria-label="Introduction">
+  <div class="container hero__top">
+    <p class="eyebrow" data-reveal>{e(SITE['descriptor'])}</p>
+    <h1 class="hero__title" data-split>{e(SITE['tagline'])}</h1>
+  </div>
+  <div class="hero__stage">
+    <div class="swiper hero-swiper"><div class="swiper-wrapper">
+{hero_slides(c)}
+    </div></div>
+    <div class="container hero__ui">
+      <div class="hero__now"><span class="hero__now-meta"></span><a class="hero__now-title" href="#"></a></div>
+      <div class="hero__counter" aria-hidden="true"><b data-current>01</b><span>/</span><span data-total>05</span></div>
+      <div class="hero__progress" aria-hidden="true"><i></i></div>
+      {ui_arrows('hero-prev', 'hero-next')}
+    </div>
+  </div>
+  <div class="container hero__bottom">
+    <p class="lead" data-reveal>An architecture and interior design studio in Lucknow, for clients with extraordinary ambitions.</p>
+    <div class="actions" data-reveal>
+      <a class="btn btn--primary" href="{c.loc}works.html">See selected works</a>
+      <a class="link-arrow" href="{c.loc}about.html">About the studio{arrow_svg()}</a>
+    </div>
+  </div>
+</section>'''
+
+
+def hero_c(c):
+    cards = []
+    for s in HERO_SLIDES:
+        p = BY_SLUG[s]
+        cards.append(f'''<div class="swiper-slide" data-title="{e(p['name'])}" data-meta="{e(meta_line(p))}" data-href="{c.loc}projects/{p['slug']}.html">
+  <img class="hero__img" src="{img(c, p['card'])}" alt="" loading="eager"><span class="deck-label">{e(p['name'])}</span>
+</div>''')
+    return f'''<!-- component: hero-slideshow (C) -->
+<section class="hero hero--c" aria-label="Introduction">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <div class="sticker-row" data-reveal>
+        <span class="sticker sticker--yellow">Since {SITE['founded']}</span>
+        <span class="sticker sticker--red">Lucknow, India</span>
+        <span class="sticker sticker--blue">Never repeats a design</span>
+      </div>
+      <h1 class="hero__title" data-split>{e(SITE['tagline'])}</h1>
+      <p class="lead" data-reveal>An architecture and interior design studio in Lucknow, for clients with extraordinary ambitions.</p>
+      <div class="actions" data-reveal>
+        <a class="btn btn--primary" href="{c.loc}works.html">See selected works</a>
+        <a class="btn btn--ghost" href="{c.loc}about.html">About the studio</a>
+      </div>
+    </div>
+    <div class="hero__deck">
+      <div class="swiper hero-swiper"><div class="swiper-wrapper">
+{''.join(cards)}
+      </div></div>
+      <div class="hero__ui">
+        <div class="hero__now"><span class="hero__now-meta"></span><a class="hero__now-title" href="#"></a></div>
+        {ui_arrows('hero-prev', 'hero-next')}
+      </div>
+    </div>
+  </div>
+</section>
+{marquee(['Spaces with stories', 'Maximalist', 'Playful', 'Theatrical', 'Eclectic', 'Immersive', 'Never the same twice'])}'''
+
+
+def featured_a(c):
+    slides = []
+    for s in FEATURED:
+        p = BY_SLUG[s]
+        slides.append(f'''<article class="swiper-slide feature-slide">
+  <a class="feature-slide__media" href="{c.loc}projects/{p['slug']}.html"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="lazy"></a>
+  <div class="feature-slide__body">
+    <p class="card-work__meta">{e(meta_line(p))}</p>
+    <h3 class="feature-slide__title">{e(p['name'])}</h3>
+    <p class="card-work__tag">{e(p['tagline'])}</p>
+    {dots(p)}
+    <a class="link-arrow" href="{c.loc}projects/{p['slug']}.html">View project{arrow_svg()}</a>
+  </div>
+</article>''')
+    return f'''<!-- component: featured-works (A, creative-effect slider) -->
+<section class="section featured featured--a">
+  <div class="container">{section_head('', 'Hospitality, cafés, residences, workplaces', (c.loc + 'works.html', 'View all works'))}</div>
+  <div class="container">
+    <div class="swiper feature-swiper"><div class="swiper-wrapper">{''.join(slides)}</div></div>
+    <div class="feature-ui"><div class="feature-fraction" aria-hidden="true"><b data-current>01</b> / <span data-total>07</span></div>{ui_arrows('feature-prev', 'feature-next')}</div>
+  </div>
+</section>'''
+
+
+def featured_b(c):
+    cards = []
+    for s in FEATURED:
+        p = BY_SLUG[s]
+        cards.append(f'''<article class="hcard">
+  <a href="{c.loc}projects/{p['slug']}.html">
+    <div class="hcard__media"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="lazy"></div>
+    <p class="card-work__meta">{e(meta_line(p))}</p>
+    <h3 class="hcard__title">{e(p['name'])}</h3>
+  </a>
+</article>''')
+    return f'''<!-- component: featured-works (B, pinned horizontal scroll) -->
+<section class="hscroll">
+  <div class="container hscroll__head">{section_head('', 'Seven spaces, seven stories', (c.loc + 'works.html', 'View all works'))}</div>
+  <div class="hscroll__track">{''.join(cards)}<a class="hcard hcard--end" href="{c.loc}works.html"><span>All works</span>{arrow_svg()}</a></div>
+</section>'''
+
+
+def featured_c(c):
+    slides = []
+    for s in FEATURED:
+        p = BY_SLUG[s]
+        slides.append(f'''<article class="swiper-slide feature-card">
+  <a href="{c.loc}projects/{p['slug']}.html">
+    <div class="feature-card__media"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="lazy"></div>
+    <span class="sticker sticker--yellow feature-card__tag">{e(p['kind'])}</span>
+    <h3 class="feature-card__title">{e(p['name'])}</h3>
+  </a>
+</article>''')
+    return f'''<!-- component: featured-works (C, coverflow slider) -->
+<section class="section featured featured--c">
+  <div class="container">{section_head('', 'Pick a story', (c.loc + 'works.html', 'View all works'))}</div>
+  <div class="swiper feature-swiper"><div class="swiper-wrapper">{''.join(slides)}</div></div>
+  <div class="container feature-ui">{ui_arrows('feature-prev', 'feature-next')}</div>
+</section>'''
+
+
+FEATURED_FN = {'a': featured_a, 'b': featured_b, 'c': featured_c}
+HERO_FN = {'a': hero_a, 'b': hero_b, 'c': hero_c}
+
+
+def intro(c):
+    return f'''<!-- component: intro -->
+<section class="section intro">
+  <div class="container intro__grid">
+    <h2 class="h2" data-split>Design begins with curiosity.</h2>
+    <div class="intro__copy" data-reveal>
+      <p class="lead">A curiosity about people, places, cultures and the little things that often go unnoticed. Spaces that are layered, expressive, sometimes unexpected, but always thoughtful in their details.</p>
+      <a class="link-arrow" href="{c.loc}about.html">About the studio{arrow_svg()}</a>
+    </div>
+  </div>
+</section>'''
+
+
+def services(c):
+    items = ''.join(f'''<li class="service" data-reveal><h3 class="service__name">{e(s['name'])}</h3><p class="service__text">{e(s['text'])}</p></li>''' for s in SITE['services'])
+    return f'''<!-- component: services -->
+<section class="section services">
+  <div class="container">
+    {section_head('', 'What we design and build', (c.loc + 'services.html', 'All services'))}
+    <ul class="services__list">{items}</ul>
+  </div>
+</section>'''
+
+
+def range_band(c):
+    cats = [('Hotels and lounges', 'hospitality'), ('Cafés and restaurants', 'cafes'), ('Residences', 'residential'), ('Offices and workplaces', 'workplace'), ('Salons and retail', 'retail'), ('Themed homes', 'homes')]
+    lis = ''.join(f'<li><a class="link-arrow" href="{c.loc}works.html#{k}">{e(n)}{arrow_svg()}</a></li>' for n, k in cats)
+    return f'''<!-- component: range-band (project types, links into the filtered works page) -->
+<section class="section band range">
+  <div class="container range__grid">
+    <div class="range__copy">
+      <h2 class="h2" data-split>One point of view, many different stories.</h2>
+      <p class="lead" data-reveal>From hotels and lounges to homes, cafés and offices, every project begins with a different story, and we never repeat a design.</p>
+      <ul class="range__list" data-reveal>{lis}</ul>
+    </div>
+    <figure class="range__media parallax"><img src="{img(c, 'deco-room.jpg')}" alt="A guest room at The Deco Grand with a sculpted headboard and jewel tones" loading="lazy"><figcaption>The Deco Grand · Hotel</figcaption></figure>
+  </div>
+</section>'''
+
+
+def homes(c):
+    tiles = ''.join(f'''<li class="home-tile tilt" data-reveal><img src="{img(c, h['img'])}" alt="{e(h['name'])}, an Archipixels Homes themed rental" loading="lazy"><span>{e(h['name'])}</span></li>''' for h in SITE['homes_collection'])
+    return f'''<!-- component: homes-and-experiences -->
+<section class="section homes">
+  <div class="container homes__grid">
+    <div class="homes__copy">
+      <h2 class="h2" data-split>We create experiences, and run a few of our own.</h2>
+      <p class="lead" data-reveal>Our café and themed rental homes bring our ideas to life, giving us firsthand insight into designing places people love to visit and stay in.</p>
+      <div class="actions" data-reveal>
+        <a class="link-arrow" href="{c.loc}projects/archipixels-homes.html">The homes collection{arrow_svg()}</a>
+        <a class="link-arrow" href="{c.loc}projects/chihiro.html">Chihiro, our bakehouse{arrow_svg()}</a>
+      </div>
+    </div>
+    <ul class="homes__tiles">{tiles}</ul>
+  </div>
+</section>'''
+
+
+def studio(c):
+    return f'''<!-- component: studio-teaser -->
+<section class="section surface studio">
+  <div class="container studio__grid">
+    <figure class="studio__portrait parallax"><img src="{img(c, 'founders.jpg')}" alt="Shivika and Abhinav, founders of Archipixels, seated in a velvet lounge" loading="lazy"></figure>
+    <div class="studio__copy">
+      <h2 class="h2" data-split>Two minds. A thousand ideas.</h2>
+      <p class="lead" data-reveal>We're {SITE['founders'][0]} and {SITE['founders'][1]}, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels.</p>
+      <div class="studio__team parallax"><img src="{img(c, 'team.jpg')}" alt="The Archipixels team gathered around a coffee table" loading="lazy"></div>
+      <div class="actions"><a class="link-arrow" href="{c.loc}about.html">About us{arrow_svg()}</a><a class="link-arrow" href="{c.loc}team.html">The team{arrow_svg()}</a></div>
+    </div>
+  </div>
+</section>'''
+
+
+def cta(c, title=None, key='whatsapp_message_general'):
+    title = title or SITE['closing_line']
+    return f'''<!-- component: cta-band -->
+<section class="section band cta" id="contact">
+  <div class="container cta__grid">
+    <h2 class="cta__title" data-split>{e(title)}</h2>
+    <div class="cta__side" data-reveal>
+      <a class="btn btn--light" href="{wa(key)}" target="_blank" rel="noopener">Chat on WhatsApp</a>
+      <address>
+        <span>{SITE['email']}</span>
+        <span>{SITE['phone_display']} · {e(SITE['phone_note'])}</span>
+        <span>{e(SITE['address'])}</span>
+      </address>
+    </div>
+  </div>
+</section>'''
+
+
+def form(prefix, with_type=True):
+    typ = ''
+    if with_type:
+        typ = f'''<div class="field-row">
+    <div class="field"><label for="{prefix}-type">Project type</label><select id="{prefix}-type"><option>Hotel or hospitality</option><option>Café or restaurant</option><option>Villa or residence</option><option>Workplace</option><option>Retail or salon</option><option>Something else</option></select></div>
+    <div class="field"><label for="{prefix}-city">City</label><input id="{prefix}-city" name="city" type="text" autocomplete="address-level2"></div>
+  </div>'''
+    return f'''<!-- component: enquiry-form (demo only, wire to a Laravel route) -->
+<form class="form" data-demo-form action="#" method="post" novalidate>
+  <div class="field-row">
+    <div class="field"><label for="{prefix}-first">First name</label><input id="{prefix}-first" name="first_name" type="text" autocomplete="given-name" required></div>
+    <div class="field"><label for="{prefix}-last">Last name</label><input id="{prefix}-last" name="last_name" type="text" autocomplete="family-name"></div>
+  </div>
+  <div class="field"><label for="{prefix}-email">Email</label><input id="{prefix}-email" name="email" type="email" autocomplete="email" required></div>
+  {typ}
+  <div class="field"><label for="{prefix}-msg">The story so far</label><textarea id="{prefix}-msg" name="message" rows="4" placeholder="A few lines about the space"></textarea></div>
+  <button class="btn btn--primary" type="submit">Send enquiry</button>
+  <p class="form__thanks" role="status" hidden>Thanks for submitting! We will reply on WhatsApp or email.</p>
+</form>'''
+
+
+# ----------------------------------------------------------------- pages ----
+
+def page_home(t):
+    c = Ctx(t, 'index.html')
+    ld = json.dumps({
+        '@context': 'https://schema.org', '@type': 'Organization', 'name': SITE['brand'],
+        'description': 'Architecture, interior design and experience design studio in Lucknow, India.',
+        'logo': 'assets/img/brand/logo-stacked-white.png', 'telephone': SITE['phone_tel'], 'email': SITE['email'],
+        'address': {'@type': 'PostalAddress', 'streetAddress': '1/146, Gomti Nagar', 'addressLocality': 'Lucknow', 'addressCountry': 'IN'},
+        'sameAs': [SITE['instagram']]}, indent=2)
+    body = HERO_FN[t](c) + intro(c) + FEATURED_FN[t](c) + services(c) + range_band(c) + homes(c) + studio(c) + cta(c)
+    write(c, 'Archipixels | Architecture and interiors, Lucknow',
+          'Archipixels is an architecture and interior design studio in Lucknow. Hotels, cafés, residences, workplaces and themed stays.',
+          'helios.jpg', 'home', '', body, f'<script type="application/ld+json">\n{ld}\n</script>\n')
+
+
+def page_about(t):
+    c = Ctx(t, 'about.html')
+    values = [('Every space has a story', 'We believe every space has a story waiting to be told. Design begins with curiosity about people, places and cultures.'),
+              ('Every design is new', 'Every project begins with a different story, so every space gets an identity of its own.'),
+              ('Feeling comes first', 'A space should feel a certain way and make you feel something, too. How it looks follows from that.')]
+    vals = ''.join(f'<li class="value" data-reveal><h3>{e(a)}</h3><p>{e(b)}</p></li>' for a, b in values)
+    body = f'''<!-- component: page-hero -->
+<section class="page-hero">
+  <div class="container page-hero__grid">
+    <div><p class="eyebrow" data-reveal>About Archipixels</p><h1 class="display" data-split>Two minds. A thousand ideas.</h1>
+    <p class="lead" data-reveal>Architecture, interiors and experiences from a studio in Lucknow, founded in {SITE['founded']}.</p></div>
+    <figure class="page-hero__media parallax"><img src="{img(c, 'founders.jpg')}" alt="Shivika and Abhinav, founders of Archipixels, seated in a velvet lounge" loading="eager"></figure>
+  </div>
+</section>
+<div class="container"><dl class="facts facts--three" data-reveal>
+  <div><dt>Founded</dt><dd>{SITE['founded']}</dd></div>
+  <div><dt>Founders</dt><dd>{SITE['founders'][0]} and {SITE['founders'][1]}</dd></div>
+  <div><dt>Studio</dt><dd>Gomti Nagar, Lucknow</dd></div>
+</dl></div>
+<section class="section story">
+  <div class="container story__grid">
+    <blockquote class="pullquote" data-reveal>Every space has a story waiting to be told.</blockquote>
+    <div class="prose" data-reveal>
+      <p>We're {SITE['founders'][0]} and {SITE['founders'][1]}, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels. We find inspiration in the places we visit, the people we meet and the smallest details that often go unnoticed.</p>
+      <p>We started Archipixels in {SITE['founded']}. Our journey began in Dubai, where we gained international experience before founding Archipixels in India. Now we're ready to take that energy worldwide. We're looking for collaborators who share our curiosity and clients with extraordinary ambitions.</p>
+    </div>
+  </div>
+</section>
+<section class="section surface values">
+  <div class="container">{section_head('', 'How we think')}<ul class="values__list">{vals}</ul></div>
+</section>
+<section class="section">
+  <div class="container more-links">
+    <a class="more-link" href="{c.loc}studio.html" data-reveal><span>The studio</span><b>See where we work</b>{arrow_svg()}</a>
+    <a class="more-link" href="{c.loc}team.html" data-reveal><span>The team</span><b>Meet the Archipixels family</b>{arrow_svg()}</a>
+    <a class="more-link" href="{c.loc}services.html" data-reveal><span>Services</span><b>What we design and build</b>{arrow_svg()}</a>
+  </div>
+</section>
+{cta(c)}'''
+    write(c, 'About us | Archipixels', 'Archipixels is an architecture and interior design studio founded in 2018 by Shivika and Abhinav in Lucknow.', 'founders.jpg', 'about', 'about.html', body)
+
+
+def page_studio(t):
+    c = Ctx(t, 'studio.html')
+    shots = [('studio.jpg', 'The Archipixels studio lounge'), ('studio-detail.jpg', 'A velvet-draped corner of the studio'), ('team.jpg', 'The team gathered around a coffee table')]
+    gal = ''.join(f'<li class="studio-mosaic__item parallax"><a class="glightbox" href="{img(c, f)}" data-gallery="studio" data-title="{e(cap)}"><img src="{img(c, f)}" alt="{e(cap)}" loading="{"eager" if i == 0 else "lazy"}"></a></li>' for i, (f, cap) in enumerate(shots))
+    body = f'''<section class="page-hero page-hero--simple">
+  <div class="container">
+    <p class="eyebrow" data-reveal>The studio</p>
+    <h1 class="display" data-split>Artful, maximalist and unafraid to experiment.</h1>
+    <p class="lead" data-reveal>Our studio is an expression of who we are. It reflects the freedom we find in design, the joy of creating beyond convention and our belief that thoughtful maximalism can be as welcoming as it is memorable.</p>
+  </div>
+</section>
+<section class="section studio-gallery">
+  <div class="container"><ul class="studio-mosaic">{gal}</ul></div>
+</section>
+<section class="section surface visit">
+  <div class="container story__grid">
+    <h2 class="h2" data-split>Visit the studio</h2>
+    <div class="prose" data-reveal>
+      <address class="contact-list">
+        <span>{e(SITE['address'])}</span>
+        <a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a>
+        <a href="mailto:{SITE['email']}">{SITE['email']}</a>
+      </address>
+      <p>{placeholder('[STUDIO HOURS AND HOW TO BOOK A VISIT]')}</p>
+      <div class="actions"><a class="btn btn--primary" href="{wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a><a class="link-arrow" href="{c.loc}contact.html">Contact page{arrow_svg()}</a></div>
+    </div>
+  </div>
+</section>
+{homes(c)}{cta(c)}'''
+    write(c, 'The studio | Archipixels', 'The Archipixels studio in Gomti Nagar, Lucknow: an artful, maximalist space that reflects how the team designs.', 'studio.jpg', 'studio', 'studio.html', body)
+
+
+def page_team(t):
+    c = Ctx(t, 'team.html')
+    founders = ''.join(f'''<li class="founder" data-reveal><h3>{e(n)}</h3><p class="founder__role">{placeholder('[ROLE]')}</p><p>{placeholder('[SHORT BIO: two or three lines on background and what each person leads.]')}</p></li>''' for n in SITE['founders'])
+    members = ''.join('''<li class="member" data-reveal><div class="member__photo"><span>Photo</span></div><h3>[NAME]</h3><p>[ROLE]</p></li>''' for _ in range(4))
+    body = f'''<section class="page-hero">
+  <div class="container page-hero__grid">
+    <div><p class="eyebrow" data-reveal>Our team</p><h1 class="display" data-split>The Archipixels family.</h1>
+    <p class="lead" data-reveal>We believe that when people are valued, supported and given love, they create their best work. We are more than a team; we are the Archipixels family, growing together, celebrating every milestone and standing by one another through every challenge.</p></div>
+    <figure class="page-hero__media parallax"><img src="{img(c, 'team.jpg')}" alt="The Archipixels team gathered around a coffee table" loading="eager"></figure>
+  </div>
+</section>
+<section class="section surface">
+  <div class="container founders">
+    <figure class="founders__media parallax"><img src="{img(c, 'founders.jpg')}" alt="Shivika and Abhinav, founders of Archipixels" loading="lazy"></figure>
+    <div class="founders__copy">
+      <h2 class="h2" data-split>The founders</h2>
+      <ul class="founders__list">{founders}</ul>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">{section_head('', 'The people behind the projects')}
+    <ul class="team-grid">{members}</ul>
+  </div>
+</section>
+<section class="section band">
+  <div class="container story__grid">
+    <blockquote class="pullquote" data-reveal>The best ideas rarely happen in isolation.</blockquote>
+    <div class="prose" data-reveal><p>We are looking for collaborators who share our curiosity, and clients with extraordinary ambitions.</p><div class="actions"><a class="btn btn--light" href="{c.loc}contact.html">Get in touch</a></div></div>
+  </div>
+</section>'''
+    write(c, 'The team | Archipixels', 'Meet the Archipixels team, led by founders Shivika and Abhinav in Lucknow.', 'team.jpg', 'team', 'team.html', body)
+
+
+def page_services(t):
+    c = Ctx(t, 'services.html')
+    rows_data = [
+        ('Architecture', 'deco-facade.jpg', 'The Deco Grand, a hotel facade in Art Deco style', ['the-deco-grand', 'the-heritage-mosaic', 'shreeya-vista-homes', 'warehouse-studio']),
+        ('Interior design', 'narula.jpg', 'A drawing room at House of Narula with ornate ceilings', ['house-of-narula', 'danzeria-by-danbro', 'hons-grey-opera', 'kesarwani-residence', 'pixel-pop']),
+        ('Space planning', 'buttercup.jpg', 'Buttercup Bungalow, planned as distinct zones', ['buttercup-bungalow', 'shreeya-vista-homes', 'ksmb-marketing-office']),
+        ('Turnkey projects', 'warehouse.jpg', 'Warehouse Studio, built from concept to completion', []),
+    ]
+    text = {s['name']: s['text'] for s in SITE['services']}
+    rows = ''
+    for name, im, alt, slugs in rows_data:
+        links = ''.join(f'<li><a class="link-arrow" href="{c.loc}projects/{sl}.html">{e(BY_SLUG[sl]["name"])}{arrow_svg()}</a></li>' for sl in slugs)
+        extra = f'<p class="service-row__label">Examples</p><ul class="service-row__links">{links}</ul>' if links else f'<p>{placeholder("[TURNKEY EXAMPLES: projects delivered from design to handover.]")}</p>'
+        rows += f'''<article class="service-row">
+  <figure class="service-row__media parallax"><img src="{img(c, im)}" alt="{e(alt)}" loading="lazy"></figure>
+  <div class="service-row__copy" data-reveal><h2 class="h2">{e(name)}</h2><p class="lead">{e(text[name])}</p>{extra}</div>
+</article>'''
+    body = f'''<section class="page-hero page-hero--simple">
+  <div class="container"><p class="eyebrow" data-reveal>Services</p><h1 class="display" data-split>What we design and build.</h1>
+  <p class="lead" data-reveal>Hotels, cafés, residences, workplaces and themed stays, each with an identity of its own.</p></div>
+</section>
+<section class="services-rows"><div class="container">{rows}</div></section>
+{cta(c)}'''
+    write(c, 'Services | Archipixels', 'Architecture, interior design, space planning and turnkey projects by Archipixels in Lucknow.', 'narula.jpg', 'services', 'services.html', body)
+
+
+def page_works(t):
+    c = Ctx(t, 'works.html')
+    chips = ''.join(f'<button class="chip{" is-active" if k == "all" else ""}" type="button" data-filter="{k}" aria-pressed="{"true" if k == "all" else "false"}">{e(l)}</button>' for k, l in FILTERS)
+    if t == 'b':
+        listing = f'<ul class="index-list">{"".join(index_row(c, p) for p in PROJECTS)}</ul>'
+    else:
+        listing = f'<div class="grid-works">{"".join(card_work(c, p) for p in PROJECTS)}</div>'
+    legacy = ''.join(f'<li><span class="legacy__name">{e(x["name"])}</span><span class="legacy__meta">{e(x["type"])} · {e(x["location"])}</span><span class="legacy__year">{e(x["year"])}</span></li>' for x in LEGACY)
+    body = f'''<section class="page-hero page-hero--simple">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Selected works</p>
+    <h1 class="display" data-split>Spaces that make you feel something.</h1>
+    <p class="lead" data-reveal>Every project begins with a different story, and we never repeat a design.</p>
+  </div>
+</section>
+<section class="section works">
+  <div class="container">
+    <!-- component: filter-bar -->
+    <div class="filters" role="group" aria-label="Filter projects">{chips}<span class="filters__count" data-count aria-live="polite">{len(PROJECTS)} projects</span></div>
+    {listing}
+  </div>
+</section>
+<section class="section surface legacy">
+  <div class="container">{section_head('', 'Earlier work in Lucknow')}
+    <ul class="legacy__list" data-reveal>{legacy}</ul>
+  </div>
+</section>
+{cta(c)}'''
+    write(c, 'Selected works | Archipixels', 'Hotels, cafés, residences, workplaces and themed stays by Archipixels.', 'deco-facade.jpg', 'works', 'works.html', body)
+
+
+def facts_html(p):
+    loc = e(p['place']) if p['place'] else placeholder('[LOCATION]')
+    return f'''<dl class="facts">
+  <div><dt>Type</dt><dd>{e(p['kind'])}</dd></div>
+  <div><dt>Location</dt><dd>{loc}</dd></div>
+  <div><dt>Year</dt><dd>{placeholder('[YEAR]')}</dd></div>
+  <div><dt>Area</dt><dd>{placeholder('[AREA IN SQ FT]')}</dd></div>
+</dl>'''
+
+
+def page_project(t, p, idx):
+    c = Ctx(t, f"projects/{p['slug']}.html")
+    gal_imgs = [p['card']] + p['gallery']
+    by = f'<p class="phero__by">by {e(p["by"])}</p>' if p['by'] else ''
+    if t == 'a':
+        hero = f'''<section class="phero phero--a">
+  <div class="phero__media parallax"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="eager"></div>
+  <div class="phero__veil"></div>
+  <div class="container phero__content">
+    <a class="back" href="{c.loc}works.html">All selected works</a>
+    <p class="eyebrow">{e(meta_line(p))}</p>
+    <h1 class="phero__title" data-split>{e(p['name'])}</h1>{by}
+    <p class="phero__tag">{e(p['tagline'])}</p>
+  </div>
+</section>
+<div class="container facts-wrap">{facts_html(p)}</div>'''
+    elif t == 'b':
+        stack = ''.join(f'<figure class="reveal-img"><img src="{img(c, f)}" alt="{e(p["name"])}, view {i + 1}" loading="{"eager" if i == 0 else "lazy"}"></figure>' for i, f in enumerate(gal_imgs))
+        hero = f'''<section class="phero phero--b">
+  <div class="container phero__grid">
+    <div class="phero__side">
+      <a class="back" href="{c.loc}works.html">All selected works</a>
+      <p class="eyebrow">{e(meta_line(p))}</p>
+      <h1 class="phero__title" data-split>{e(p['name'])}</h1>{by}
+      <p class="phero__tag">{e(p['tagline'])}</p>
+      {facts_html(p)}
+    </div>
+    <div class="phero__stack">{stack}</div>
+  </div>
+</section>'''
+    else:
+        hero = f'''<section class="phero phero--c">
+  <div class="container phero__grid">
+    <div class="phero__copy">
+      <a class="back" href="{c.loc}works.html">All selected works</a>
+      <div class="sticker-row"><span class="sticker sticker--yellow">{e(p['kind'])}</span>{f'<span class="sticker sticker--red">{e(p["place"])}</span>' if p['place'] else ''}</div>
+      <h1 class="phero__title" data-split>{e(p['name'])}</h1>{by}
+      <p class="phero__tag">{e(p['tagline'])}</p>
+    </div>
+    <figure class="phero__frame tilt"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="eager"></figure>
+  </div>
+  <div class="container facts-wrap">{facts_html(p)}</div>
+</section>'''
+    story = p.get('story') or f"{p['tagline'][0].upper() + p['tagline'][1:]}."
+    langs = ''.join(f'<li>{e(x)}</li>' for x in p['language'])
+    details = ''.join(f'<li data-reveal>{e(x)}</li>' for x in p['details'])
+    pal = ''
+    if p['palette']:
+        sw = ''.join(f'<li class="swatch" style="--sw:{hx}" data-reveal><span class="swatch__dot"></span><span class="swatch__name">{e(n)}</span></li>' for n, hx in p['palette'])
+        pal = f'''<!-- component: palette -->
+<section class="section surface palette"><div class="container">{section_head('', 'Colour palette')}<ul class="palette__list">{sw}</ul></div></section>'''
+    det = f'<h3 class="mini-title">Signature details</h3><ul class="details">{details}</ul>' if p['details'] else ''
+    body_story = f'''<section class="section pstory">
+  <div class="container pstory__grid">
+    <div><p class="eyebrow" data-reveal>The design language</p><ul class="chips-static" data-reveal>{langs}</ul></div>
+    <div class="prose" data-reveal><p class="lead">{e(story)}</p><p class="placeholder">[PROJECT STORY: the brief, the idea behind the space and how it is used.]</p>{det}</div>
+  </div>
+</section>'''
+    slides = ''.join(f'<div class="swiper-slide"><a class="glightbox" href="{img(c, f)}" data-gallery="project" data-title="{e(p["name"])}"><img src="{img(c, f)}" alt="{e(p["name"])}, view {i + 1}" loading="lazy"></a></div>' for i, f in enumerate(gal_imgs))
+    gallery = f'''<!-- component: project-gallery (Swiper + GLightbox) -->
+<section class="section gallery">
+  <div class="container">{section_head('', 'Gallery', None)}</div>
+  <div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>
+  <div class="container gallery__ui">{ui_arrows('gallery-prev', 'gallery-next')}</div>
+</section>'''
+    rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (1, 2, 3)]
+    related = f'''<section class="section related"><div class="container">{section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<div class="grid-works grid-works--three">{''.join(card_work(c, r) for r in rel)}</div></div></section>'''
+    body = hero + body_story + pal + gallery + related + cta(c, 'Have a space in mind? Tell us its story.')
+    style = f'<style>body.page-project{{--lit:{p["lit"]}}}</style>\n'
+    write(c, f"{p['name']} | Archipixels", f"{p['name']}: {p['tagline']}. {p['kind']} by Archipixels.", p['card'], 'project', 'works.html', body, style)
+
+
+def page_contact(t):
+    c = Ctx(t, 'contact.html')
+    body = f'''<section class="page-hero page-hero--simple">
+  <div class="container"><p class="eyebrow" data-reveal>Contact</p><h1 class="display" data-split>Have something wild in mind?</h1></div>
+</section>
+<section class="section">
+  <div class="container enquire__grid">
+    <div class="contact-card" data-reveal>
+      <h2 class="h3">Studio</h2>
+      <address class="contact-list">
+        <span>{e(SITE['address'])}</span>
+        <a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a><span>{e(SITE['phone_note'])}</span>
+        <a href="mailto:{SITE['email']}">{SITE['email']}</a>
+        <a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram {SITE['instagram_handle']}</a>
+      </address>
+      <a class="btn btn--primary" href="{wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    </div>
+    <div class="panel" data-reveal>{form('contact')}</div>
+  </div>
+</section>'''
+    write(c, 'Contact | Archipixels', 'Contact Archipixels in Gomti Nagar, Lucknow, by WhatsApp, phone or email.', 'studio.jpg', 'contact', 'contact.html', body)
+
+
+def main():
+    for t in THEMES:
+        out = ROOT / t
+        if out.exists():
+            shutil.rmtree(out)
+        page_home(t)
+        page_about(t)
+        page_studio(t)
+        page_team(t)
+        page_services(t)
+        page_works(t)
+        page_contact(t)
+        for i, p in enumerate(PROJECTS):
+            page_project(t, p, i)
+    print('built', sum(1 for _ in ROOT.glob('[abc]/**/*.html')), 'pages')
+
+
+if __name__ == '__main__':
+    main()

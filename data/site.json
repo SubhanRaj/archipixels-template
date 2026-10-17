@@ -1,0 +1,69 @@
+{
+  "brand": "Archipixels",
+  "wordmark": "ARCHIPIXELS",
+  "tagline": "Spaces with stories of their own.",
+  "descriptor": "Architecture · Interiors · Experiences",
+  "sign_off": "Design that works.",
+  "closing_line": "Let's create something the world hasn't seen yet!",
+  "founded": 2018,
+  "founders": [
+    "Shivika",
+    "Abhinav"
+  ],
+  "phone_display": "+91 99996 60533",
+  "phone_tel": "+919999660533",
+  "phone_note": "WhatsApp",
+  "whatsapp_number": "919999660533",
+  "whatsapp_message_general": "Hi Archipixels! I came across your work and I have a space in mind that needs a story. Can we talk?",
+  "email": "hello@archipixels.com",
+  "email_alt_old_site": "info@archipixels.com",
+  "address": "1/146, Gomti Nagar, Lucknow, India",
+  "address_alt_old_site": "B-2, 1222, DLF MyPad, Vibhuti Khand, Gomtinagar, Lucknow, 226010",
+  "confirm_with_client": [
+    "address",
+    "email"
+  ],
+  "instagram": "https://www.instagram.com/archipixels/",
+  "instagram_handle": "@archipixels",
+  "linktree": "https://linktr.ee/archipixels",
+  "services": [
+    {
+      "name": "Architecture",
+      "text": "Buildings and townships with a point of view, from hotel facades to a 144-residence community."
+    },
+    {
+      "name": "Interior design",
+      "text": "Residences, restaurants, cafés, offices and salons, each with an identity of its own."
+    },
+    {
+      "name": "Space planning",
+      "text": "Layouts and zones that make a space feel the way it should."
+    },
+    {
+      "name": "Turnkey projects",
+      "text": "One studio from first sketch to handover."
+    }
+  ],
+  "homes_collection": [
+    {
+      "name": "Jamboree",
+      "img": "homes-1.jpg"
+    },
+    {
+      "name": "Ghar-Aana",
+      "img": "homes-2.jpg"
+    },
+    {
+      "name": "Mandala Maasai",
+      "img": "homes-3.jpg"
+    }
+  ],
+  "placeholders_to_fill": [
+    "[YEAR]",
+    "[AREA IN SQ FT]",
+    "[PROJECT STORY]",
+    "[CONFIRM] approvals partner",
+    "[CONFIRM] site supervision"
+  ],
+  "logo_note": "Logo files live in assets/img/brand (white transparent versions for the dark themes) and assets/brand-originals (files as supplied)."
+}

@@ -1,0 +1,562 @@
+{
+ "fixed": {
+  "cover": {
+   "file": "cover.jpg",
+   "w": 1672,
+   "h": 941
+  },
+  "intro": {
+   "file": "intro.jpg",
+   "w": 1300,
+   "h": 1889
+  },
+  "founders": {
+   "file": "founders.jpg",
+   "w": 1300,
+   "h": 1949
+  },
+  "team": {
+   "file": "team.jpg",
+   "w": 1800,
+   "h": 1200
+  },
+  "studio1": {
+   "file": "studio-1.jpg",
+   "w": 1800,
+   "h": 1201
+  },
+  "studio2": {
+   "file": "studio-2.jpg",
+   "w": 1000,
+   "h": 1500
+  },
+  "studio3": {
+   "file": "studio-3.jpg",
+   "w": 576,
+   "h": 768
+  },
+  "contact": {
+   "file": "contact-villa.jpg",
+   "w": 1400,
+   "h": 911
+  },
+  "closing": {
+   "file": "closing.jpg",
+   "w": 1555,
+   "h": 1012
+  },
+  "villa": {
+   "file": "villa.png",
+   "w": 1200,
+   "h": 781
+  }
+ },
+ "projects": {
+  "helios-maximus": {
+   "bg": "#3C0C36",
+   "swatches": [
+    "#830015",
+    "#00343D",
+    "#B48731",
+    "#3C0D36"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "helios-maximus-1.jpg",
+     "w": 1600,
+     "h": 1200,
+     "caption": ""
+    },
+    {
+     "file": "helios-maximus-2.jpg",
+     "w": 647,
+     "h": 485,
+     "caption": ""
+    }
+   ]
+  },
+  "archipixels-homes": {
+   "bg": "#A34927",
+   "swatches": null,
+   "layout": "triptych",
+   "images": [
+    {
+     "file": "archipixels-homes-1.jpg",
+     "w": 360,
+     "h": 855,
+     "caption": "Jamboree"
+    },
+    {
+     "file": "archipixels-homes-2.jpg",
+     "w": 370,
+     "h": 537,
+     "caption": "Ghar-Aana"
+    },
+    {
+     "file": "archipixels-homes-3.jpg",
+     "w": 346,
+     "h": 855,
+     "caption": "Mandala Maasai"
+    }
+   ]
+  },
+  "chihiro": {
+   "bg": "#93954C",
+   "swatches": [
+    "#B5BB7B",
+    "#394A33",
+    "#EEDEC5",
+    "#6A3E1F"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "chihiro-1.jpg",
+     "w": 557,
+     "h": 401,
+     "caption": ""
+    },
+    {
+     "file": "chihiro-2.jpg",
+     "w": 1035,
+     "h": 484,
+     "caption": ""
+    },
+    {
+     "file": "chihiro-3.jpg",
+     "w": 459,
+     "h": 401,
+     "caption": ""
+    }
+   ]
+  },
+  "warehouse-studio": {
+   "bg": "#0D1F1A",
+   "swatches": [
+    "#00311D",
+    "#97020B",
+    "#853B14",
+    "#1D1D1D"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "warehouse-studio-1.jpg",
+     "w": 1254,
+     "h": 1254,
+     "caption": ""
+    }
+   ]
+  },
+  "the-deco-grand": {
+   "bg": "#373321",
+   "swatches": null,
+   "layout": null,
+   "images": [
+    {
+     "file": "the-deco-grand-1.jpg",
+     "w": 1280,
+     "h": 764,
+     "caption": ""
+    },
+    {
+     "file": "the-deco-grand-2.jpg",
+     "w": 1024,
+     "h": 623,
+     "caption": ""
+    },
+    {
+     "file": "the-deco-grand-3.jpg",
+     "w": 1280,
+     "h": 853,
+     "caption": "Material moodboard"
+    }
+   ]
+  },
+  "the-heritage-mosaic": {
+   "bg": "#6C5242",
+   "swatches": null,
+   "layout": null,
+   "images": [
+    {
+     "file": "the-heritage-mosaic-1.jpg",
+     "w": 1254,
+     "h": 1254,
+     "caption": ""
+    },
+    {
+     "file": "the-heritage-mosaic-2.jpg",
+     "w": 1024,
+     "h": 683,
+     "caption": ""
+    }
+   ]
+  },
+  "hons-grey-opera": {
+   "bg": "#423931",
+   "swatches": [
+    "#1F2937",
+    "#847B71",
+    "#A88137",
+    "#3F3830"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "hons-grey-opera-1.jpg",
+     "w": 1330,
+     "h": 959,
+     "caption": ""
+    },
+    {
+     "file": "hons-grey-opera-2.jpg",
+     "w": 1383,
+     "h": 922,
+     "caption": ""
+    }
+   ]
+  },
+  "bajpayee-kachori-bhandar": {
+   "bg": "#38627E",
+   "swatches": [
+    "#FBB500",
+    "#D74714",
+    "#015235",
+    "#00A1C3"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "bajpayee-kachori-bhandar-1.jpg",
+     "w": 1011,
+     "h": 553,
+     "caption": ""
+    },
+    {
+     "file": "bajpayee-kachori-bhandar-2.jpg",
+     "w": 1011,
+     "h": 317,
+     "caption": ""
+    }
+   ]
+  },
+  "buttercup-bungalow": {
+   "bg": "#3E2109",
+   "swatches": [
+    "#4C230E",
+    "#012C1B",
+    "#4A000D",
+    "#9F682A"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "buttercup-bungalow-1.jpg",
+     "w": 576,
+     "h": 437,
+     "caption": ""
+    },
+    {
+     "file": "buttercup-bungalow-2.jpg",
+     "w": 535,
+     "h": 437,
+     "caption": ""
+    },
+    {
+     "file": "buttercup-bungalow-3.jpg",
+     "w": 576,
+     "h": 438,
+     "caption": ""
+    },
+    {
+     "file": "buttercup-bungalow-4.jpg",
+     "w": 535,
+     "h": 429,
+     "caption": ""
+    }
+   ]
+  },
+  "danzeria-by-danbro": {
+   "bg": "#580007",
+   "swatches": [
+    "#4F0414",
+    "#023421",
+    "#EFE1CD",
+    "#653518"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "danzeria-by-danbro-1.jpg",
+     "w": 1036,
+     "h": 509,
+     "caption": ""
+    },
+    {
+     "file": "danzeria-by-danbro-2.jpg",
+     "w": 553,
+     "h": 374,
+     "caption": ""
+    },
+    {
+     "file": "danzeria-by-danbro-3.jpg",
+     "w": 462,
+     "h": 374,
+     "caption": ""
+    }
+   ]
+  },
+  "ksmb-marketing-office": {
+   "bg": "#3B3737",
+   "swatches": [
+    "#F1E6D2",
+    "#121312",
+    "#365067",
+    "#B28138"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "ksmb-marketing-office-1.jpg",
+     "w": 1014,
+     "h": 541,
+     "caption": ""
+    },
+    {
+     "file": "ksmb-marketing-office-2.jpg",
+     "w": 605,
+     "h": 328,
+     "caption": ""
+    },
+    {
+     "file": "ksmb-marketing-office-3.jpg",
+     "w": 396,
+     "h": 328,
+     "caption": ""
+    }
+   ]
+  },
+  "mio-marito-gelato": {
+   "bg": "#AD2C03",
+   "swatches": [
+    "#F3EADD",
+    "#6BA4D9",
+    "#C84A37",
+    "#CB9A49"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "mio-marito-gelato-1.jpg",
+     "w": 374,
+     "h": 335,
+     "caption": ""
+    },
+    {
+     "file": "mio-marito-gelato-2.jpg",
+     "w": 374,
+     "h": 281,
+     "caption": ""
+    },
+    {
+     "file": "mio-marito-gelato-3.jpg",
+     "w": 374,
+     "h": 244,
+     "caption": ""
+    },
+    {
+     "file": "mio-marito-gelato-4.jpg",
+     "w": 639,
+     "h": 937,
+     "caption": ""
+    }
+   ]
+  },
+  "pixel-pop": {
+   "bg": "#120F12",
+   "swatches": [
+    "#ECE0CD",
+    "#121212",
+    "#FBBE01",
+    "#C20019"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "pixel-pop-1.jpg",
+     "w": 1011,
+     "h": 543,
+     "caption": ""
+    },
+    {
+     "file": "pixel-pop-2.jpg",
+     "w": 1011,
+     "h": 324,
+     "caption": ""
+    }
+   ]
+  },
+  "chat-house-dubai": {
+   "bg": "#0B2A38",
+   "swatches": [
+    "#008BB2",
+    "#FCC000",
+    "#E00011",
+    "#D89E5A"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "chat-house-dubai-1.jpg",
+     "w": 1020,
+     "h": 435,
+     "caption": ""
+    },
+    {
+     "file": "chat-house-dubai-2.jpg",
+     "w": 1020,
+     "h": 434,
+     "caption": ""
+    }
+   ]
+  },
+  "jewellery-spaces": {
+   "bg": "#96A4AA",
+   "swatches": null,
+   "layout": null,
+   "images": [
+    {
+     "file": "jewellery-spaces-1.jpg",
+     "w": 1022,
+     "h": 420,
+     "caption": "Hritik Agarwal Jewellery Store"
+    },
+    {
+     "file": "jewellery-spaces-2.jpg",
+     "w": 1022,
+     "h": 371,
+     "caption": "Lala Jugal Kishore, Taj Mahal, Lucknow"
+    }
+   ]
+  },
+  "shreeya-vista-homes": {
+   "bg": "#5C3D28",
+   "swatches": null,
+   "layout": null,
+   "images": [
+    {
+     "file": "shreeya-vista-homes-1.jpg",
+     "w": 1014,
+     "h": 541,
+     "caption": ""
+    },
+    {
+     "file": "shreeya-vista-homes-2.jpg",
+     "w": 1014,
+     "h": 331,
+     "caption": ""
+    }
+   ]
+  },
+  "house-of-narula": {
+   "bg": "#515036",
+   "swatches": [
+    "#AAC1D4",
+    "#727A64",
+    "#F2E2CC",
+    "#B98F4F"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "house-of-narula-1.jpg",
+     "w": 1014,
+     "h": 526,
+     "caption": ""
+    },
+    {
+     "file": "house-of-narula-2.jpg",
+     "w": 564,
+     "h": 348,
+     "caption": ""
+    },
+    {
+     "file": "house-of-narula-3.jpg",
+     "w": 431,
+     "h": 348,
+     "caption": ""
+    }
+   ]
+  },
+  "kesarwani-residence": {
+   "bg": "#5C3D28",
+   "swatches": [
+    "#697255",
+    "#F4E4CD",
+    "#7C4321",
+    "#9C3F2A"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "kesarwani-residence-1.jpg",
+     "w": 1034,
+     "h": 440,
+     "caption": ""
+    },
+    {
+     "file": "kesarwani-residence-2.jpg",
+     "w": 1034,
+     "h": 440,
+     "caption": ""
+    }
+   ]
+  },
+  "the-quiet-abode": {
+   "bg": "#E1D0C5",
+   "swatches": [
+    "#F3E3CC",
+    "#CCB79E",
+    "#AE9B85",
+    "#A77346"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "the-quiet-abode-1.jpg",
+     "w": 989,
+     "h": 448,
+     "caption": ""
+    },
+    {
+     "file": "the-quiet-abode-2.jpg",
+     "w": 989,
+     "h": 420,
+     "caption": ""
+    }
+   ]
+  }
+ },
+ "cover_slides": [
+  {
+   "file": "cover.jpg",
+   "label": "Helios Maximus"
+  },
+  {
+   "project": "the-deco-grand",
+   "i": 0,
+   "label": "The Deco Grand"
+  },
+  {
+   "project": "hons-grey-opera",
+   "i": 1,
+   "label": "Hons, Grey Opera"
+  },
+  {
+   "project": "warehouse-studio",
+   "i": 0,
+   "label": "Warehouse Studio"
+  }
+ ]
+}

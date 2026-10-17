@@ -1,0 +1,76 @@
+/* ==========================================================================
+   Direction B, Gallery Noir. Near-black, bone type, one "lit" colour per project.
+   The project accent is set on <body> as --lit (see build.py); default is marigold.
+   ========================================================================== */
+body.theme-b {
+  --bg: #0D0D0C; --surface: #141413; --band: #1A1917; --line: rgba(236,230,220,.16);
+  --text: #ECE6DC; --muted: #A39E94; --accent: #E0A526; --accent-ink: #0D0D0C;
+  --font-display: "Cormorant Garamond", "Times New Roman", serif; --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --radius: 0; --shadow-card: none;
+  --gutter: clamp(18px, 3.4vw, 56px); --maxw: 1480px;
+  font-weight: 300;
+}
+body.theme-b:not(.page-project) { --lit: var(--accent); }
+body.theme-b.page-project { --accent: var(--lit); --accent-ink: #0D0D0C; }
+.theme-b .display, .theme-b .h2, .theme-b .cta__title, .theme-b .hero__title, .theme-b .phero__title, .theme-b .h3 { font-weight: 300; letter-spacing: -.015em; }
+.theme-b .display { font-size: clamp(3rem, 8.4vw, 8rem); line-height: .95; }
+.theme-b .h2 { font-size: clamp(2.2rem, 5.2vw, 4.6rem); line-height: 1; }
+.theme-b .hero__title em, .theme-b .h2 em, .theme-b .display em { font-style: italic; color: var(--accent); }
+.theme-b .eyebrow { font-size: .72rem; letter-spacing: .3em; color: var(--muted); }
+.theme-b .eyebrow::before { content: "\2014\00a0\00a0"; color: var(--accent); }
+.theme-b .btn { border-radius: 0; }
+.theme-b .btn--primary { background: var(--text); color: var(--bg); }
+.theme-b .btn--primary:hover { background: var(--accent); color: var(--accent-ink); }
+.theme-b .link-arrow:hover { color: var(--accent); }
+.theme-b .site-header { mix-blend-mode: normal; }
+.theme-b .site-header.is-scrolled { background: rgba(13,13,12,.82); }
+
+/* film grain */
+.theme-b::after { content: ""; position: fixed; inset: -50%; z-index: 120; pointer-events: none; opacity: .09; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(6) infinite; }
+@keyframes grain { 0% { transform: translate(0,0); } 20% { transform: translate(-3%,2%); } 40% { transform: translate(2%,-3%); } 60% { transform: translate(-2%,-1%); } 80% { transform: translate(3%,3%); } 100% { transform: translate(0,0); } }
+
+/* hero: stage letterboxed, giant type */
+.theme-b .hero--b .hero__title { max-width: 14ch; }
+.theme-b .hero--b .hero__stage { box-shadow: 0 0 0 1px var(--line); }
+.theme-b .hero__img { filter: contrast(1.04); }
+.theme-b .hero--b .swiper-slide img { transform: scale(1.12); }
+
+/* cards: borderless, caption below */
+.theme-b .card-work__media { aspect-ratio: 4 / 5; }
+.theme-b .card-work__title { font-weight: 300; font-size: 1.8rem; }
+.theme-b .card-work__meta { color: var(--muted); }
+.theme-b .hcard__media img, .theme-b .card-work__media img { filter: grayscale(.35) contrast(1.02); transition: filter .6s, transform 1s var(--ease); }
+.theme-b .hcard a:hover img, .theme-b .card-work__link:hover img { filter: none; }
+.theme-b .hscroll { background: var(--surface); }
+.theme-b .hcard--end:hover { color: var(--accent); }
+
+/* services: oversized numerals */
+.theme-b .service__name { font-weight: 300; font-size: 1.9rem; }
+
+/* works index list */
+.theme-b .index-row__name { font-weight: 300; transition: transform .5s var(--ease), letter-spacing .5s; }
+.theme-b .index-row a:hover .index-row__name { font-style: italic; }
+.theme-b .index-row a { padding-block: 1.4rem; }
+.theme-b .chip { border-radius: 0; border: 0; border-bottom: 1px solid transparent; padding-inline: .2rem; margin-right: 1rem; }
+.theme-b .chip.is-active { background: none; color: var(--text); border-bottom-color: var(--accent); }
+
+/* project pages */
+.theme-b .phero--b .phero__title { font-size: clamp(2.8rem, 6.4vw, 6rem); }
+.theme-b .phero--b .phero__title { color: var(--text); }
+.theme-b .reveal-img { background: var(--surface); }
+.theme-b .facts dd { font-weight: 400; }
+.theme-b .palette { background: var(--surface); }
+.theme-b .swatch__dot { border-radius: 0; aspect-ratio: 4 / 5; max-width: none; width: 100%; box-shadow: none; }
+.theme-b .details li::before { border-radius: 50%; transform: none; width: 6px; height: 6px; top: 1.15rem; }
+.theme-b .chips-static li { border-radius: 0; border-color: var(--lit); color: var(--text); }
+.theme-b .cta__title { font-size: clamp(2.6rem, 7vw, 6.4rem); line-height: .98; font-style: italic; }
+.theme-b .section.band { background: var(--band); }
+.theme-b .marquee { border: 0; }
+.theme-b .range__media, .theme-b .studio__portrait, .theme-b .page-hero__media { filter: none; }
+.theme-b .panel { background: transparent; border: 1px solid var(--line); }
+.theme-b .mosaic__item img, .theme-b .page-hero__media img { filter: grayscale(.25); }
+.theme-b .home-tile span { font-weight: 300; }
+.theme-b .theme-switcher { mix-blend-mode: normal; }
+@media (prefers-reduced-motion: reduce) { .theme-b::after { animation: none; } }

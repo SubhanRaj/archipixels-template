@@ -1,0 +1,73 @@
+/* ==========================================================================
+   Direction C, Midnight Bazaar. Deep teal night, street-poster colour, hard shadows.
+   ========================================================================== */
+body.theme-c {
+  --bg: #0A1A1F; --surface: #112A31; --band: #0F3A44; --line: rgba(255,244,214,.22);
+  --text: #FFF4D6; --muted: #BFD0CF; --accent: #F2B01E; --accent-ink: #1A1200;
+  --font-display: "Rozha One", Georgia, serif; --font-body: "Karla", system-ui, sans-serif;
+  --radius: 14px; --shadow-card: 8px 8px 0 #000; --pop: #D9252C; --blue: #1F9BC4; --terra: #D9702E;
+  font-weight: 400;
+}
+.theme-c .display, .theme-c .h2, .theme-c .hero__title, .theme-c .cta__title, .theme-c .phero__title { font-weight: 400; letter-spacing: 0; }
+.theme-c .hero__title em, .theme-c .h2 em { font-style: normal; color: var(--accent); }
+.theme-c .eyebrow { display: inline-block; padding: .3rem .8rem; background: var(--pop); color: #fff; letter-spacing: .16em; font-weight: 700; transform: rotate(-1.5deg); }
+.theme-c .btn { border-radius: 999px; border: 2px solid #000; box-shadow: 4px 4px 0 #000; font-weight: 700; transition: transform .12s, box-shadow .12s, background .2s; }
+.theme-c .btn:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 #000; }
+.theme-c .btn:active { transform: translate(4px,4px); box-shadow: 0 0 0 #000; }
+.theme-c .btn--ghost { background: transparent; border-color: var(--text); box-shadow: 4px 4px 0 var(--text); color: var(--text); }
+.theme-c .btn--light { background: var(--accent); color: #1A1200; }
+.theme-c .link-arrow { border-bottom: 2px solid var(--accent); font-weight: 700; }
+.theme-c .site-header.is-scrolled { background: rgba(10,26,31,.92); box-shadow: 0 3px 0 #000; }
+.theme-c .site-nav a { font-weight: 700; }
+.theme-c .site-nav a::after { height: 3px; background: var(--accent); border-radius: 3px; }
+
+/* stickers wobble (animated in theme-c.js) */
+.theme-c .sticker { border: 2px solid #000; box-shadow: 3px 3px 0 #000; border-radius: 8px; transform: rotate(var(--r, -3deg)); }
+.theme-c .sticker:nth-child(2) { --r: 2.5deg; } .theme-c .sticker:nth-child(3) { --r: -1.5deg; }
+
+/* poster cards with hard shadows */
+.theme-c .card-work__media, .theme-c .feature-card__media, .theme-c .tile__media, .theme-c .home-tile,
+.theme-c .phero__frame, .theme-c .studio__portrait, .theme-c .range__media, .theme-c .page-hero__media, .theme-c .mosaic__item, .theme-c .hcard__media {
+  border: 3px solid #000; border-radius: var(--radius); box-shadow: var(--shadow-card); }
+.theme-c .card-work__link { display: block; transition: transform .2s var(--ease); }
+.theme-c .card-work__link:hover { transform: translate(-3px,-3px) rotate(-.4deg); }
+.theme-c .card-work__link:hover .card-work__media { box-shadow: 11px 11px 0 #000; }
+.theme-c .card-work__body { padding-top: 1.3rem; }
+.theme-c .card-work__meta { color: var(--text); background: var(--blue); display: inline-block; padding: .15rem .55rem; color: #06222c; font-weight: 700; border-radius: 6px; }
+.theme-c .card-work__title { font-weight: 400; font-size: 1.6rem; }
+.theme-c .feature-card__title { font-weight: 400; }
+.theme-c .dots li { box-shadow: 0 0 0 2px #000; width: 14px; height: 14px; }
+.theme-c .swatch__dot { border: 3px solid #000; box-shadow: 6px 6px 0 #000; }
+.theme-c .panel { border: 3px solid #000; box-shadow: var(--shadow-card); background: var(--surface); }
+.theme-c .field input, .theme-c .field select, .theme-c .field textarea { border: 2px solid var(--line); border-radius: 10px; padding: .75rem .9rem; background: rgba(0,0,0,.18); }
+.theme-c .field input:focus, .theme-c .field select:focus, .theme-c .field textarea:focus { border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); }
+.theme-c .chip { border: 2px solid #000; border-radius: 999px; background: var(--surface); color: var(--text); font-weight: 700; box-shadow: 3px 3px 0 #000; }
+.theme-c .chip.is-active { background: var(--accent); color: #1A1200; transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+.theme-c .chips-static li { border: 2px solid #000; border-radius: 999px; background: var(--surface); font-weight: 700; box-shadow: 3px 3px 0 #000; }
+.theme-c .details li::before { background: var(--accent); border-radius: 50%; transform: none; }
+
+/* checkerboard dividers */
+.theme-c .section.band::before, .theme-c .site-footer::before, .theme-c .section.surface::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 18px;
+  background: repeating-conic-gradient(#000 0 25%, var(--accent) 0 50%) 0 0 / 36px 36px; }
+.theme-c .site-footer { position: relative; border-top: 0; padding-top: calc(clamp(3rem, 6vw, 5rem) + 18px); }
+.theme-c .section.band, .theme-c .section.surface { padding-top: calc(clamp(4.5rem, 10vw, 9rem) + 10px); }
+
+.theme-c .marquee { background: var(--accent); color: #1A1200; border: 0; border-block: 3px solid #000; padding-block: .9rem; }
+.theme-c .marquee__skew { transform-origin: center; }
+.theme-c .marquee__track i { background: #000; border-radius: 50%; transform: none; }
+.theme-c .service { border-color: var(--line); }
+.theme-c .service__name { font-weight: 400; }
+.theme-c .step::before { color: var(--accent); }
+.theme-c .hero--c .hero-swiper .swiper-slide { border: 3px solid #000; box-shadow: 8px 8px 0 #000; background: var(--surface); }
+.theme-c .deck-label { border: 2px solid #000; box-shadow: 3px 3px 0 #000; background: var(--accent); color: #1A1200; border-radius: 6px; }
+.theme-c .hero--c .hero__title { text-shadow: 4px 4px 0 #000; }
+.theme-c .cta__title { text-shadow: 4px 4px 0 #000; }
+.theme-c .phero__title { text-shadow: 4px 4px 0 #000; }
+.theme-c .slider-arrow { border: 2px solid #000; border-radius: 50%; background: var(--accent); color: #1A1200; box-shadow: 3px 3px 0 #000; }
+.theme-c .slider-arrow:hover { background: var(--text); }
+.theme-c .home-tile span { background: #000; padding: .6rem .8rem; font-weight: 400; }
+.theme-c .placeholder { color: var(--accent); }
+.theme-c .theme-switcher { border: 2px solid #000; box-shadow: 3px 3px 0 #000; }
+.theme-c .gallery-swiper .swiper-slide { border: 3px solid #000; border-radius: var(--radius); box-shadow: var(--shadow-card); }
+.theme-c .gallery-swiper { padding-block: 1rem 1.4rem; }
+.theme-c .index-preview { display: none; }
