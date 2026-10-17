@@ -124,7 +124,8 @@ def header(c, active=''):
         if kids:
             sub = ''.join(f'<li>{link(kh, kl, kh == active)}</li>' for kh, kl in kids)
             on = active in [k[0] for k in kids]
-            items += f'<li class="has-sub">{link(h, l, on)}<ul class="submenu">{sub}</ul></li>'
+            btn = f'<button class="sub-toggle" type="button" aria-expanded="false" aria-label="Show {e(l)} pages"></button>'
+            items += f'<li class="has-sub">{link(h, l, on)}{btn}<ul class="submenu">{sub}</ul></li>'
         else:
             items += f'<li>{link(h, l, h == active)}</li>'
     nav = f'<ul class="site-nav__list">{items}</ul>'
