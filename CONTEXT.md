@@ -6,7 +6,7 @@ Project context for the Archipixels website templates. Read this file at the sta
 
 - Client: Archipixels, an architecture and interior design studio in Gomti Nagar, Lucknow. Founded in 2018 by Shivika and Abhinav, who started in Dubai before founding the studio in India. The studio now wants to take its work abroad.
 - Developer: Subhan, who leads the agency and IT side. He reviews the templates with the client, then builds the live site in Laravel (Blade) in his own local environment and style.
-- Deliverable in this repository: four complete multi-page directions (A, B, C, D), a one-page portfolio and a chooser page. All of them use the same 19 projects and the same copy.
+- Deliverable in this repository: four complete multi-page directions (A, B, C, D), a one-page portfolio and a chooser page. All of them use the same 23 projects and the same copy.
 - Live preview: https://archipixels-template.pages.dev (Cloudflare Pages, no build step, a Pages Functions middleware blocks the dev files, `_headers` sets `X-Robots-Tag: noindex, nofollow`). The repository is `SubhanRaj/archipixels-template`.
 - The live site goes in a different folder and a different repository (`archipixels`). This repository stays the design reference.
 
@@ -37,7 +37,7 @@ Studio facts (in `data/site.json`):
 
 Voice: short, specific sentences. The studio says it never repeats a design and that each project starts from a different story. The site covers every kind of client. Dubai appears in the About story and on the Warehouse Studio and Chat House project pages only.
 
-### The 19 projects
+### The 23 projects
 
 | Project | Kind | Accent (`lit`, used by A, B and C) | Page colour (`bg`, used by D and the portfolio) |
 |---|---|---|---|
@@ -60,8 +60,12 @@ Voice: short, specific sentences. The studio says it never repeats a design and 
 | House of Narula | Residence | `#7FA8D6` | `#515036` |
 | Kesarwani Residence | Residence | `#C25C3A` | `#5C3D28` |
 | The Quiet Abode | Residence | `#C99B5B` | `#E1D0C5` |
+| Poddar Mansion | Residence | `#D4A24C` | `#0A0A0A` |
+| Mr. Singh's Dwelling | Residence | `#7FA3C7` | `#243544` |
+| House of Mishra's | Residence | `#C2576E` | `#3E1C1E` |
+| House of Agarwal's | Residence | `#D9A066` | `#5A331B` |
 
-Seven earlier Lucknow projects are in `data/legacy-projects.json` (Wix image ids) and appear as a text list on the works page in A, B and C.
+Seven earlier works are in `data/legacy-projects.json`, with their photos in `assets/img/earlier/` (downloaded from the old Wix site and compressed). The Works page lists them under "Our earlier works" in all four directions, and each has a detail page (`earlier/<slug>.html`). More can be added in the data file with photos named `<slug>-1.jpg`, `<slug>-2.jpg` and so on.
 
 ## 3. The design idea
 
@@ -145,7 +149,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Palette: A's tokens, plus tan `#C3A17E` with tan ink `#1B100A` (the panels) and gold `#D8A93A`. Each project adds its own page colour.
 - Type: Bodoni Moda and Jost (as A), plus Herr Von Muellerhoff, a script face used for the closing line.
 - Home: hero slideshow (A's, with the headline on two lines on wide screens), the approach (titled "Design begins with curiosity.", because the hero already carries the studio line), the founders with A's team photo strip, three spotlight projects in their own colours (Helios Maximus, Chihiro, Mio Marito Gelato), the works wall, services and the closing line with the studio logo.
-- Works: a filterable wall of all 19 projects, each tile with its colour as a bottom edge.
+- Works: a filterable wall of all 23 projects, each tile with its colour as a bottom edge.
 - Project page: A's page on the black background, in this order: hero, facts row, gallery slider, design language and story, palette. The slider lists the project's single-shot photos from `data/portfolio.json`. It has no visible heading (the heading stays in the page for screen readers and search engines) and its arrows sit on its left and right edges. A next-project band in the next project's colour follows the palette, then three related tiles in the same tile grid as the works wall. The related tiles stack one per row at 640 px and below.
 - Motion: photos wipe open and drift on scroll, tan panels and swatches enter in sequence, the closing line writes itself out.
 - Portfolio links: the footer of every version has one link, "Get our portfolio", in the place of the menu's Portfolio entry. It opens the PDF in a new tab, in the browser viewer on desktop and the phone's own PDF handling on mobile. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar. It returns to the version the visitor came from. The file is `assets/downloads/Archipixels-Portfolio.pdf`.
@@ -154,7 +158,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 
 ### One-page portfolio (`portfolio/`)
 
-- Idea: the PDF as one scroll, in its original order. Cover slideshow, approach, founders, a wall of the 19 projects, then 19 project sections, then studio, team, contact with a form and WhatsApp button, and the closing line. Studio and team come after the projects because the client asked for that order.
+- Idea: the PDF as one scroll, in its original order. Cover slideshow, approach, founders, a wall of the 23 projects, then 23 project sections, then studio, team, contact with a form and WhatsApp button, and the closing line. Studio and team come after the projects because the client asked for that order.
 - Palette: burgundy `#591524` and deep burgundy `#2A0B13`, brown `#5C3D28`, cover brown `#321B13`, tan `#C3A17E`, cream `#F6EFE6`, gold `#D8A93A`.
 - Type: Playfair Display for display, Cormorant Garamond for body serif, Jost for labels and Herr Von Muellerhoff for the script.
 - Navigation: a small top bar with Works, Studio, Team, Contact and an Index button that opens a full-screen project list. A counter shows the current project number.
@@ -176,7 +180,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Each version has its own `404.html` (built by `build.py` and `build_d.py`), and the root has a fallback `404.html` (built from `tools/root-404.tpl`). Cloudflare Pages serves the nearest one, so `/a/missing` shows A's page. The pages use root-relative paths because they are served at the missing URL.
 - `functions/_middleware.js` and `_routes.json` stay in the root. They return 404 on the preview for `tools/`, `data/` and every `.md`, `.py` and `.pyc` file. A page that needs a new file of one of those types has to move it out of the blocked set.
 - `_headers` stays in the root. It blocks search engines on the preview, which an HTTP header does for every file type, including images and PDFs.
-- The portfolio PDF is compressed to 5 MB. Every version links it from the footer, and the one-page portfolio and D link it in more places.
+- The portfolio PDF is compressed to 10.6 MB (from 122 MB; 100 dpi, JPEG, no visible loss at screen size). Every version links it from the footer, and the one-page portfolio and D link it in more places.
 - Writing rules for docs, comments and UI text: plain present tense, no em dashes, no "X, not Y" contrasts, no flourish adjectives, no bold lead-ins on bullets, no emoji in headings, no leftover placeholders unless they stand for content the client still owes.
 
 ## 7. Open items

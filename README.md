@@ -9,7 +9,7 @@
 
 **Static design templates for the Archipixels architecture and interior studio, Lucknow**
 
-Four complete website directions (A, B, C and D) and a one-page portfolio, built from the studio's PDF portfolio with the same 19 projects and the same content in each. The client reviews them in the browser, picks one, and the site is then built in Laravel (Blade).
+Four complete website directions (A, B, C and D) and a one-page portfolio, built from the studio's PDF portfolio with the same 23 projects and the same content in each. The client reviews them in the browser, picks one, and the site is then built in Laravel (Blade).
 
 [![HTML5](https://img.shields.io/badge/HTML5-static-E34F26?logo=html5&logoColor=white)](#folder-layout)
 [![CSS3](https://img.shields.io/badge/CSS3-tokens-1572B6?logo=css3&logoColor=white)](#folder-layout)
@@ -29,7 +29,7 @@ Four complete website directions (A, B, C and D) and a one-page portfolio, built
 ## What is in the package
 
 - Every footer links Instagram, LinkedIn and Facebook with icons, the address (to Google Maps) and WhatsApp. The Contact pages of A and D show `@archipixels`, and the three icons fade in on hover.
-- Directions A, B, C and D, each with 34 pages: Home, About, Studio, Team, Services, Works, Contact, one page for each of the 19 projects and one profile page for each of the 8 team members (the 2 founders and 6 placeholders). Each version also has its own `404.html`. The root has a fallback `404.html` for every other address, and Cloudflare Pages serves the nearest one.
+- Directions A, B, C and D, each with 45 pages: Home, About, Studio, Team, Services, Works, Contact, one page for each of the 23 projects, one page for each of the 7 earlier works and one profile page for each of the 8 team members (the 2 founders and 6 placeholders). Each version also has its own `404.html`. The root has a fallback `404.html` for every other address, and Cloudflare Pages serves the nearest one.
 - A one-page portfolio version, which is the PDF portfolio as a single scrolling page.
 - A chooser page (`index.html`) that links to every version, and a small switcher at the bottom left of each page that opens the same page in another direction.
 - Mood boards for each direction and for the portfolio version in `moodboards/`.
@@ -71,9 +71,9 @@ Each command rebuilds only its own folders.
 `d/` merges the one-page portfolio with the multi-page structure and style of Direction A. The header menu is Works, About (with About us and Team below it), Studio, Services, Portfolio and Contact. Portfolio opens the one-page portfolio in every version.
 
 - Home has a hero slideshow, the approach, the founders with the team photo strip, three spotlight projects in their own colours, the works wall and the closing line.
-- Works is a filterable wall of all 19 projects.
+- Works is a filterable wall of all 23 projects, followed by "Our earlier works": seven earlier projects, each linking to its own page with a photo slider (`earlier/<slug>.html`, from `data/legacy-projects.json`). An incomplete last row of a project wall is centred.
 - Each project page uses A's layout: a full-background hero photo, a facts row, the design language, signature details and story, a colour palette, a gallery slider with a lightbox, related projects and an enquiry call to action. D uses the same page on the black background with the gallery moved up under the facts row (no visible heading, arrows on the slider's edges), and puts a next-project band after the palette. Warehouse Studio has one photo, so its gallery has one slide and no arrows.
-- The portfolio PDF (5 MB) is at `assets/downloads/Archipixels-Portfolio.pdf`. Every version has one "Get our portfolio" link in the footer, which opens the PDF in a new tab. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar, and it offers the PDF from the contact section, the index menu and the footer.
+- The portfolio PDF (10.6 MB, 31 pages) is at `assets/downloads/Archipixels-Portfolio.pdf`. Every version has one "Get our portfolio" link in the footer, which opens the PDF in a new tab. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar, and it offers the PDF from the contact section, the index menu and the footer.
 - About, Studio and Services use A's templates and styling. The Studio page has an "Inside the studio" gallery slider and a map card that loads Google Maps after a click. It keeps one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.
 - `tools/build_d.py` builds `d/`. It imports `tools/build.py` for the shared header, footer and pages, and `tools/build_portfolio.py` for the colour helpers. The `SWITCH` list in `build.py` names the directions that the preview switcher shows.
 - `assets/css/theme-d.css` and `assets/js/theme-d.js` hold the D components and motion. D also loads `theme-a.css` and `theme-a.js`, so its body class is `theme-a theme-d`.
@@ -81,7 +81,7 @@ Each command rebuilds only its own folders.
 
 ## One-page portfolio
 
-`portfolio/index.html` follows the order of the PDF: cover slideshow, approach, founders, a wall of all 19 projects, the 19 project sections (each in the background colour of its PDF page, with a tan panel, colour swatches, design language and signature details), studio, team, contact with an enquiry form and a WhatsApp button, and the closing line.
+`portfolio/index.html` follows the order of the PDF: cover slideshow, approach, founders, a wall of the 23 projects, the 23 project sections (each in the background colour of its PDF page, with a tan panel, colour swatches, design language and signature details), studio, team, contact with an enquiry form and a WhatsApp button, and the closing line.
 
 - `portfolio/css/portfolio.css` and `portfolio/js/portfolio.js` hold the styling and motion.
 - `portfolio/img/` holds the photos cut from the PDF.
@@ -92,8 +92,9 @@ Each command rebuilds only its own folders.
 - `index.html`
 - `about.html`, `studio.html`, `team.html`, `services.html`
 - `team/<slug>.html`, a profile page for each person in `data/team.json`. The Team page shows the members in a swipeable carousel that links to them
-- `works.html`, a filterable list of 19 projects plus a text list of earlier Lucknow work
-- `projects/<slug>.html`, 19 project pages
+- `works.html`, a filterable list of 23 projects plus the list of earlier works
+- `projects/<slug>.html`, 23 project pages
+- `earlier/<slug>.html`, 7 pages for the earlier works
 - `contact.html`
 
 ## Folder layout

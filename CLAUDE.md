@@ -18,6 +18,10 @@ The templates use no JS framework and no bundler. GSAP, Swiper and GLightbox are
 - JavaScript hides content before an animation (`gsap.set`). CSS never does. Keep it that way, and keep the `prefers-reduced-motion` handling.
 - Project text comes from the portfolio. Missing facts stay as bracket placeholders such as `[YEAR]` and `[PROJECT STORY]`.
 - The site covers every kind of client. Dubai appears in the About story and on the Warehouse Studio and Chat House project pages only.
+- Project walls (the D home and Works walls, the Works grid in A, B and C, and the portfolio's wall) are flex rows: four columns on desktop, three on tablet and two on phones (A, B and C: three, two and one). On tablet and desktop an incomplete last row is centred, so there is no empty cell at the end whatever the number of projects. Do not turn them back into CSS grids.
+- The home page and Works headings do not state a project count ("Our projects.", not "All 23 projects."), and the earlier work is called "Our earlier works" with no place name. Each earlier work has a detail page, `earlier/<slug>.html` (`page_earlier` in `build.py`, shared by all four directions), built from `data/legacy-projects.json`. Photos are in `assets/img/earlier/` and the page leaves out any fact or paragraph that is empty in the data.
+- Project photos are cropped at their native pixels from the slide collages in the client's PDF or PowerPoint (`assets/portfolio/`, ignored by git) and saved as JPEG quality 90 with no chroma subsampling. The PDF has no larger originals for the collage slides, so a photo cannot be larger than its crop.
+- A palette entry in `data/projects.json` is `[name, hex]` or `[name, hex, "swatches/<file>.jpg"]`. The third item is a photo of the material (marble, slate, bronze), cut from the swatch images in the PowerPoint, and `swatch_bg` in `build.py` (also used by `build_d.py` and `build_portfolio.py`) puts it on the circle. The four newest projects have them. B shows the photo in its rectangle.
 - Logos are in `assets/img/brand/` (white, transparent, for the dark themes). Originals are in `assets/brand-originals/`.
 
 Frozen designs
@@ -35,7 +39,7 @@ Effort
 
 ## Pages
 
-Home, About, Studio, Team, Services, Works, Contact, one page per project (19) and one profile page per team member (`team/<slug>.html`, from `data/team.json`). Each direction builds all of them, plus a `404.html` with root-relative paths, because Cloudflare Pages serves it at the missing URL. `build.py` also writes the root `404.html` from `tools/root-404.tpl`.
+Home, About, Studio, Team, Services, Works, Contact, one page per project (23), one detail page per earlier work (`earlier/<slug>.html`, from `data/legacy-projects.json`) and one profile page per team member (`team/<slug>.html`, from `data/team.json`). Each direction builds all of them, plus a `404.html` with root-relative paths, because Cloudflare Pages serves it at the missing URL. `build.py` also writes the root `404.html` from `tools/root-404.tpl`.
 
 ## Laravel build
 
@@ -45,7 +49,7 @@ The Laravel app lives in its own repository, `SubhanRaj/archipixels`, at `~/Site
 - The Laravel project is where the site lives. Before writing Laravel code, read that project's own `CLAUDE.md`, `composer.json`, routes and existing folder layout, and follow its conventions for structure, naming, formatting, testing and front-end tooling. Where the project has no convention for something, ask the developer before choosing.
 - Do not assume PHP, Laravel, database or Livewire versions. Take them from the project.
 - The Python generators (`tools/build*.py`) exist only to produce the templates. Blade views and partials replace them. Do not port the generators.
-- `data/*.json` is seed data. `site.json` holds the studio details, `projects.json` the 19 projects, `portfolio.json` the Direction D and portfolio colours, swatches and photo lists, and `legacy-projects.json` the earlier Lucknow work.
+- `data/*.json` is seed data. `site.json` holds the studio details, `projects.json` the 23 projects, `portfolio.json` the Direction D and portfolio colours, swatches and photo lists, and `legacy-projects.json` the earlier works (a project, its local photos in `assets/img/earlier/` and its text).
 - Keep the design tokens, the markup structure and the motion rules when moving a direction. Copy the CSS and JS into the app's `public/assets/`. The app has no build step.
 - Remove the `theme-switcher` block, the unused directions and `index.html` (the chooser) from the app.
 - The forms need a POST route, validation, CSRF protection, spam protection and a notification before launch.
@@ -78,7 +82,7 @@ The Before launch section of `LARAVEL.md` lists what to confirm or fill before l
 
 ## Direction D
 
-`d/` merges the one-page portfolio with the multi-page approach of Direction A. It has 34 pages plus the 404 and the same nested menu as the other directions (About holds About us and Team).
+`d/` merges the one-page portfolio with the multi-page approach of Direction A. It has 45 pages plus the 404 and the same nested menu as the other directions (About holds About us and Team).
 
 - Generate it with `python3 tools/build_d.py`. The sources are the generator, `assets/css/theme-d.css`, `assets/js/theme-d.js` and `data/*.json`. Do not edit the HTML.
 - `build_d.py` imports `build.py` and `build_portfolio.py` and reuses their functions. It replaces `b.write` at runtime and registers `b.THEMES['d']`, so `python3 tools/build.py` does not build D. The preview switcher in every footer lists `SWITCH` from `build.py` (A, B, C and D).
@@ -86,7 +90,7 @@ The Before launch section of `LARAVEL.md` lists what to confirm or fill before l
 - A Direction D project page is A's page with the gallery moved up. `page_project` in `build_d.py` calls `project_hero_a`, `project_gallery` (with `inline=True`), `project_story` and `project_palette` from `build.py`, in that order, so the black background, palette and slider follow A's classes. The gallery lists the project's photos from `data/portfolio.json`, which are single shots where A's list has collages. With `inline`, the "Gallery" heading is visually hidden (`sr-only`, kept for screen readers and search engines) and the arrows sit on the slider's left and right edges (`.gallery--inline`, `.gallery__stage` in `theme-d.css`). `theme-d.css` also trims the padding above the gallery and above the story. The page has no colour wrapper. A next-project band (`.d-next`, in the next project's colour from `data/portfolio.json`) and three related tiles (`.d-tile` in `.d-wall--three`) follow the palette, then the call to action. The related row is three across and one per row at 640 px and below. None of these has a component comment.
 - The home hero is A's (`hero_a` in `build.py`), called with D's marquee names. `hero--d` in `theme-d.css` keeps the headline on two lines from 760 px up.
 - The home page spotlights (`pj_block`) are three colour blocks, each a photo beside a tan panel (`.d-pj`, `.d-panel`). They have no component comment either. From 1001 px up, `theme-d.css` trims the panel's spacing and makes the photo fill the row height (cropped, not stretched), so neither column has empty space.
-- The compressed portfolio PDF is `assets/downloads/Archipixels-Portfolio.pdf`. Replace the file with the same name to update every download button. The links read "Get our portfolio", open the PDF in a new tab and do not state a file size or format. The one-page portfolio's own buttons read "Download portfolio".
+- The compressed portfolio PDF is `assets/downloads/Archipixels-Portfolio.pdf` (10.6 MB, 31 pages). Replace the file with the same name to update every download button. The full-size PDF and PowerPoint from the client sit in `assets/portfolio/`, which git ignores; compress a new PDF with Ghostscript at 100 dpi (`-dPassThroughJPEGImages=false -dColorImageResolution=100`, JPEG `QFactor` 0.76, 2x2 chroma sampling), and take project photos from the slide collages (crop each photo from the slide image in the PowerPoint's `ppt/media`). The links read "Get our portfolio", open the PDF in a new tab and do not state a file size or format. The one-page portfolio's own buttons read "Download portfolio".
 - Browser support: the header and veil rules keep a plain `rgba()` fallback before each `color-mix()`, and `-webkit-backdrop-filter` sits beside `backdrop-filter`, for iOS 15 Safari. Keep this pattern in new rules. `--bg-rgb` and `--text-rgb` in each theme feed the fallbacks.
 - Photos come from `portfolio/img/` and the closing logo from `assets/brand-originals/logo-stacked-light.png`. Keep both when moving D.
 - The Contact page layout (facts row, pen drawing, form) is shared with A. Its rules are `.contact-facts`, `.contact-split`, `.contact-art` and `.contact-wa` in `theme-a.css`, built by `contact_split` in `build.py`. D adds the portfolio link under the form.
