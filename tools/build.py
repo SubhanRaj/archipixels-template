@@ -120,7 +120,7 @@ def meta_line(p):
 def dots(p):
     if not p['palette']:
         return ''
-    items = ''.join(f'<li style="--sw:{hx}" title="{e(n)}"></li>' for n, hx in p['palette'])
+    items = ''.join(f'<li style="--sw:{hx}" title="{e(n)}"></li>' for n, hx, *_ in p['palette'])
     return f'<ul class="dots" aria-label="Colour palette">{items}</ul>'
 
 
@@ -806,6 +806,56 @@ def page_services(t):
     write(c, 'Services | Archipixels', 'Architecture, interior design, space planning and turnkey projects by Archipixels in Lucknow.', 'narula.jpg', 'services', 'services.html', body)
 
 
+def legacy_list(c, items):
+    """Earlier works as a list of links to their detail pages (earlier/<slug>.html)."""
+    def row(x):
+        meta = ' · '.join(v for v in (x['type'], x['location']) if v)
+        return (f'<li><a href="{c.loc}earlier/{x["slug"]}.html"><span class="legacy__name">{e(x["name"])}</span>'
+                f'<span class="legacy__meta">{e(meta)}</span><span class="legacy__year">{e(x["year"])}{arrow_svg()}</span></a></li>')
+    return f'<ul class="legacy__list" data-reveal>{"".join(row(x) for x in items)}</ul>'
+
+
+def legacy_section(c):
+    """The Our earlier works block at the foot of the Works page. Add a project in data/legacy-projects.json and it appears here."""
+    return f'''<section class="section surface legacy" id="earlier">
+  <div class="container">{section_head('', 'Our earlier works')}
+    {legacy_list(c, LEGACY)}
+  </div>
+</section>'''
+
+
+def page_earlier(t, x):
+    """Detail page of an earlier work: header, facts, photo slider and the paragraphs from data/legacy-projects.json.
+    Shared by all four directions. Facts and paragraphs that are not known yet are left out, not filled with placeholders."""
+    c = Ctx(t, f"earlier/{x['slug']}.html")
+    srcs = [f"{c.base}assets/img/earlier/{f}" for f in x['images']]
+    facts = [('Type', x['type']), ('Location', x['location']), ('Year', x['year'])]
+    facts = ''.join(f'<div><dt>{k}</dt><dd>{e(v)}</dd></div>' for k, v in facts if v)
+    lead = f'<p class="lead" data-reveal>{e(x["summary"])}</p>' if x['summary'] and not x['story'] else ''
+    story = ''.join(f'<p{" class=\"lead\"" if k == 0 else ""}>{e(para)}</p>' for k, para in enumerate(x['story']))
+    prose = f'<section class="section"><div class="container"><div class="prose" data-reveal>{story}</div></div></section>' if story else ''
+    i = LEGACY.index(x)
+    more = [LEGACY[(i + k) % len(LEGACY)] for k in (1, 2, 3) if len(LEGACY) > k]
+    body = f'''<section class="page-hero page-hero--simple">
+  <div class="container">
+    <a class="back" href="{c.loc}works.html#earlier">Our earlier works</a>
+    <p class="eyebrow" data-reveal>{e(x['category'])} · {e(x['type'])}</p>
+    <h1 class="display" data-split>{e(x['name'])}</h1>
+    {lead}
+  </div>
+</section>
+<div class="container">{f'<dl class="facts facts--three" data-reveal>{facts}</dl>' if facts else ''}</div>
+{gallery_slider(c, x['name'], srcs, inline=(t == 'd'), group='earlier')}
+{prose}
+<section class="section surface legacy">
+  <div class="container">{section_head('', 'More earlier works', (c.loc + 'works.html#earlier', 'All works'))}
+    {legacy_list(c, more)}
+  </div>
+</section>
+{cta(c, 'Have a space in mind? Tell us its story.')}'''
+    write(c, f"{x['name']} | Archipixels", f"{x['name']}, {x['type'].lower()}{' in ' + x['location'] if x['location'] else ''}. An earlier project by Archipixels.", f"earlier/{x['images'][0]}", 'earlier', 'works.html', body)
+
+
 def page_works(t):
     c = Ctx(t, 'works.html')
     chips = ''.join(f'<button class="chip{" is-active" if k == "all" else ""}" type="button" data-filter="{k}" aria-pressed="{"true" if k == "all" else "false"}">{e(l)}</button>' for k, l in FILTERS)
@@ -813,7 +863,6 @@ def page_works(t):
         listing = f'<ul class="index-list">{"".join(index_row(c, p) for p in PROJECTS)}</ul>'
     else:
         listing = f'<div class="grid-works">{"".join(card_work(c, p) for p in PROJECTS)}</div>'
-    legacy = ''.join(f'<li><span class="legacy__name">{e(x["name"])}</span><span class="legacy__meta">{e(x["type"])} · {e(x["location"])}</span><span class="legacy__year">{e(x["year"])}</span></li>' for x in LEGACY)
     body = f'''<section class="page-hero page-hero--simple">
   <div class="container">
     <p class="eyebrow" data-reveal>Selected works</p>
@@ -829,11 +878,7 @@ def page_works(t):
     {listing}
   </div>
 </section>
-<section class="section surface legacy">
-  <div class="container">{section_head('', 'Earlier work in Lucknow')}
-    <ul class="legacy__list" data-reveal>{legacy}</ul>
-  </div>
-</section>
+{legacy_section(c)}
 {cta(c)}'''
     write(c, 'Selected works | Archipixels', 'Hotels, cafés, residences, workplaces and themed stays by Archipixels.', 'deco-facade.jpg', 'works', 'works.html', body)
 
@@ -877,10 +922,15 @@ def project_story(p):
 </section>'''
 
 
-def project_palette(p):
+def swatch_bg(c, x):
+    # a palette entry may carry a photo of the material (marble, slate, bronze) as its third item
+    return f'background-image:url({img(c, x[2])})' if len(x) > 2 else ''
+
+
+def project_palette(c, p):
     if not p['palette']:
         return ''
-    sw = ''.join(f'<li class="swatch" style="--sw:{hx}" data-reveal><span class="swatch__dot"></span><span class="swatch__name">{e(n)}</span></li>' for n, hx in p['palette'])
+    sw = ''.join(f'<li class="swatch" style="--sw:{x[1]}" data-reveal><span class="swatch__dot" style="{swatch_bg(c, x)}"></span><span class="swatch__name">{e(x[0])}</span></li>' for x in p['palette'])
     return f'''<!-- component: palette -->
 <section class="section surface palette"><div class="container">{section_head('', 'Colour palette')}<ul class="palette__list">{sw}</ul></div></section>'''
 
@@ -960,7 +1010,7 @@ def page_project(t, p, idx):
   </div>
   <div class="container facts-wrap">{facts_html(p)}</div>
 </section>'''
-    body_story, pal, gallery = project_story(p), project_palette(p), project_gallery(c, p)
+    body_story, pal, gallery = project_story(p), project_palette(c, p), project_gallery(c, p)
     rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (1, 2, 3)]
     related = f'''<section class="section related"><div class="container">{section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<div class="grid-works grid-works--three">{''.join(card_work(c, r) for r in rel)}</div></div></section>'''
     body = hero + body_story + pal + gallery + related + cta(c, 'Have a space in mind? Tell us its story.')
@@ -1071,6 +1121,8 @@ def main():
         page_404(t)
         for i, p in enumerate(PROJECTS):
             page_project(t, p, i)
+        for x in LEGACY:
+            page_earlier(t, x)
     page_404_root()
     print('built', sum(1 for _ in ROOT.glob('[abc]/**/*.html')), 'pages')
 
