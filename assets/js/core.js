@@ -96,6 +96,21 @@
     new Swiper(el, { slidesPerView: 'auto', spaceBetween: 24, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.team-prev', nextEl: '.team-next' } });
   });
 
+  /* ---- map card: the Google map loads on click, so the page sets no Google cookies until then ---- */
+  AP.$$('.map-card__stage').forEach(function (stage) {
+    var btn = AP.$('.map-card__load', stage);
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var f = d.createElement('iframe');
+      f.src = stage.getAttribute('data-map-src');
+      f.title = 'Map showing the Archipixels studio in Gomti Nagar, Lucknow';
+      f.loading = 'lazy'; f.allowFullscreen = true; f.referrerPolicy = 'strict-origin-when-cross-origin';
+      stage.appendChild(f);
+      stage.classList.add('is-loaded');
+      AP.$('.map-card__veil', stage).hidden = true;
+    });
+  });
+
   /* ---- helpers for theme scripts ---- */
 
   /* wraps each word of [data-split] elements in .word > span */

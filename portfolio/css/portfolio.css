@@ -71,6 +71,7 @@ strong { font-weight: 600; }
 .top__site:hover { color: var(--gold); }
 .top__ig { display: grid; place-items: center; width: 34px; height: 34px; color: var(--cream); transition: color 0.3s; }
 .top__ig:hover { color: var(--gold); }
+.top__social { display: flex; align-items: center; gap: 0.1rem; }
 .top__index { background: none; border: 1px solid var(--line); padding: 0.7rem 1rem; display: inline-flex; align-items: center; gap: 0.7rem; cursor: pointer; transition: border-color 0.3s, background 0.3s; }
 .top__index:hover { border-color: var(--gold); }
 .top__index i { width: 16px; height: 7px; border-block: 1px solid currentColor; display: block; }
@@ -243,6 +244,12 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 .contact a { text-decoration: none; background: linear-gradient(var(--gold), var(--gold)) 0 100% / 0 1px no-repeat; transition: background-size 0.5s var(--ease), color 0.3s; }
 .contact a:hover { background-size: 100% 1px; color: #fff; }
 .contact .ig { display: inline-flex; align-items: center; gap: 0.6rem; }
+.social-reveal { display: grid; gap: 0.8rem; justify-items: center; }
+.social-row { display: flex; justify-content: center; gap: 0.9rem; opacity: 0; transform: translateY(-6px); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
+.social-reveal:hover .social-row, .social-reveal:focus-within .social-row { opacity: 1; transform: none; }
+@media (hover: none) { .social-row { opacity: 1; transform: none; } }
+.social-row a { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid rgba(216, 169, 58, 0.45); border-radius: 50%; background: none; transition: color 0.3s, border-color 0.3s; }
+.social-row a:hover { color: var(--gold); border-color: var(--gold); box-shadow: 0 0 18px rgba(216, 169, 58, 0.35); }
 .contact__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 112px); align-items: center; }
 .enquiry { display: grid; gap: 1.2rem; }
 .enquiry__title { font: italic 500 1.5rem var(--display); margin: 0 0 0.4rem; }
@@ -256,6 +263,7 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 .btn--line { background: transparent; color: var(--cream); border-color: rgba(246, 239, 230, 0.5); }
 .enquiry__note { min-height: 1.5em; margin: 0; font-style: italic; color: var(--gold); }
 .contact__art { width: 100%; opacity: 0.95; }
+.contact__art img { width: 100%; height: auto; }
 
 /* ---------- closing and footer ---------- */
 
@@ -293,6 +301,7 @@ a.glightbox:focus-visible { outline-offset: 5px; }
   body { font-size: 1.15rem; }
   .top__brand img { height: 30px; }
   .top__index-label, .top__site-label { display: none; }
+  .top__ig--more { display: none; }
   .top__site { padding-inline: 0.4rem; font-size: 1.1rem; }
   .top__index { padding: 0.8rem; }
   .project--duo .shot:nth-child(2) { grid-column: 2 / 7; }

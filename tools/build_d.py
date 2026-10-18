@@ -203,7 +203,7 @@ def closing(c):
   <div class="container d-closing__body">
     <p class="d-closing__line" data-closing>{e(line)}</p>
     <img class="d-closing__logo" src="{c.base}assets/brand-originals/logo-stacked-light.png" width="260" height="160" alt="Archipixels, design that works" loading="lazy">
-    <div class="actions"><a class="btn btn--primary" href="{b.wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a><a class="btn btn--dark" href="{c.loc}contact.html">Contact page</a>{pdf_link(c)}</div>
+    <div class="actions"><a class="btn btn--primary" href="{b.wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a><a class="btn btn--dark" href="{c.loc}contact.html">Contact us</a>{pdf_link(c)}</div>
   </div>
 </section>'''
 
@@ -222,7 +222,7 @@ def page_home():
     ld = bp.json.dumps({
         '@context': 'https://schema.org', '@type': 'Organization', 'name': SITE['brand'],
         'description': 'Architecture, interior design and experience design studio in Lucknow, India.',
-        'telephone': SITE['phone_tel'], 'email': SITE['email'], 'sameAs': [SITE['instagram']],
+        'telephone': SITE['phone_tel'], 'email': SITE['email'], 'sameAs': [u for _, u, _ in b.social_links()],
         'address': {'@type': 'PostalAddress', 'streetAddress': '1/146, Gomti Nagar', 'addressLocality': 'Lucknow', 'addressCountry': 'IN'}}, indent=2)
     body = hero_d(c) + approach(c) + founders(c) + intro + spots + wall(c) + b.services(c) + closing(c)
     write_d(c, 'Archipixels | Architecture and interiors, Lucknow',

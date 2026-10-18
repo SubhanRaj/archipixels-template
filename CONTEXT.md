@@ -29,7 +29,10 @@ Studio facts (in `data/site.json`):
 - Closing line: "Let's create something the world hasn't seen yet!"
 - Services: Architecture, Interior design, Space planning, Turnkey projects.
 - Contact (from the portfolio): `hello@archipixels.com`, `+91 99996 60533` (WhatsApp), `1/146, Gomti Nagar, Lucknow`. The old Wix site gave a different address and `info@archipixels.com`. The client confirms both.
-- Instagram `@archipixels`, Linktree `linktr.ee/archipixels`.
+- Social profiles: Instagram `@archipixels`, LinkedIn `linkedin.com/company/archipixels` and Facebook `facebook.com/archipixels`. Linktree is not shown anywhere, because it is a link-sharing page and not a social network. The footer's Follow column lists the three with icons. On the Contact page of A and D, the Social fact shows `@archipixels`, and the three icons fade in on hover (always visible on touch screens). B and C list the links in their contact card. The portfolio page has the icons in its header (LinkedIn and Facebook hide on phones), contact row and footer line. The addresses are `instagram`, `linkedin` and `facebook` in `data/site.json`, and `social_links()` in `build.py` feeds the footer, the contact page and the structured data `sameAs`.
+- Link labels say "Contact us", never "Contact page".
+- The footer's address links to the Google Maps place page (`maps_url`) and its WhatsApp line opens the chat, both in a new tab. The portfolio page's contact address and footer address do the same, and it has no map. Its contact row works like A's: `@archipixels`, with the three icons fading in on hover.
+- The pen drawing beside the portfolio's contact form keeps its proportions (`.contact__art img { height: auto }`). A scan of every page in A, B, C, D and the portfolio at 1440 and 390 px found no other distorted image.
 - The Homes collection is Jamboree, Ghar-Aana and Mandala Maasai (themed rental homes).
 
 Voice: short, specific sentences. The studio says it never repeats a design and that each project starts from a different story. The site covers every kind of client. Dubai appears in the About story and on the Warehouse Studio and Chat House project pages only.
@@ -164,6 +167,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - C is not the current pick, and its design is unchanged. It receives every site-wide update, and elements from it can be reused.
 - D merges the one-page portfolio with A's multi-page structure and nested menu.
 - D's project page uses A's full-background hero on the black background. The photo-and-tan-panel block appears only in D's home page spotlights, where the photo fills the same height as the panel.
+- The Studio page in every direction has an "Inside the studio" gallery slider (the project gallery's component) and a Visit the studio section with a map card. The Google map loads after a click so no Google cookies are set on arrival. The Contact page only links its address to Google Maps.
 - Every project page in D has a gallery slider with a lightbox. Warehouse Studio has one photo, so it has no arrows.
 - The preview switcher lists A, B, C and D on every page.
 - The About submenu starts closed on mobile in every direction.

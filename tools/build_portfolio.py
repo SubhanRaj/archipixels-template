@@ -88,7 +88,7 @@ def head():
         "email": SITE["email"],
         "telephone": SITE["phone_tel"],
         "url": "https://archipixels.com/",
-        "sameAs": [SITE["instagram"]],
+        "sameAs": [SITE["instagram"], SITE["linkedin"], SITE["facebook"]],
         "address": {"@type": "PostalAddress", "streetAddress": "1/146, Gomti Nagar", "addressLocality": "Lucknow", "addressCountry": "IN"},
     }
     return f"""<!doctype html>
@@ -118,6 +118,14 @@ def head():
 
 # ---------------------------------------------------------------- chrome
 
+ICON_LI = (
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<rect x="3" y="3" width="18" height="18" rx="3.500"/><path d="M8 10.500V16M8 7.800v.01M11.500 16v-5.500M11.500 13c0-1.600 1-2.600 2.400-2.600 1.500 0 2.100 1 2.100 2.500V16"/></svg>'
+)
+ICON_FB = (
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<circle cx="12" cy="12" r="9"/><path d="M13.200 20.900v-6.700h2.200l.4-2.600h-2.600V9.900c0-.8.400-1.300 1.400-1.300h1.300V6.400c-.5-.1-1.200-.2-2-.2-2 0-3.300 1.200-3.300 3.400v2h-2.200v2.600h2.200v6.700"/></svg>'
+)
 ICON_IG = (
     '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'
     '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>'
@@ -139,7 +147,11 @@ def header():
   </nav>
   <div class="top__tools">
     <a class="top__site" href="../index.html" aria-label="Back to site"><span aria-hidden="true">&larr;</span><span class="top__site-label">Back to site</span></a>
-    <a class="top__ig" href="{e(SITE['instagram'])}" target="_blank" rel="noopener" aria-label="Archipixels on Instagram">{ICON_IG}</a>
+    <span class="top__social">
+      <a class="top__ig" href="{e(SITE['instagram'])}" target="_blank" rel="noopener" aria-label="Archipixels on Instagram">{ICON_IG}</a>
+      <a class="top__ig top__ig--more" href="{e(SITE['linkedin'])}" target="_blank" rel="noopener" aria-label="Archipixels on LinkedIn">{ICON_LI}</a>
+      <a class="top__ig top__ig--more" href="{e(SITE['facebook'])}" target="_blank" rel="noopener" aria-label="Archipixels on Facebook">{ICON_FB}</a>
+    </span>
     <button class="top__index" type="button" aria-expanded="false" aria-controls="index">
       <span class="top__index-label">Index</span><i aria-hidden="true"></i>
     </button>
@@ -357,7 +369,7 @@ def team():
 def contact():
     v = fixed("villa")
     wa = "https://wa.me/{}?text={}".format(SITE["whatsapp_number"], urllib.parse.quote(SITE["whatsapp_message_general"]))
-    maps = "https://www.google.com/maps/search/?api=1&query=" + urllib.parse.quote(SITE["address"])
+    maps = SITE["maps_url"]
     return f"""<section class="band band--brown contact" id="contact">
   <div class="wrap">
     <div class="contact__head">
@@ -368,7 +380,8 @@ def contact():
         <div><dt>E-mail</dt><dd><a href="mailto:{e(SITE['email'])}">{e(SITE['email'])}</a></dd></div>
         <div><dt>Phone</dt><dd><a href="tel:{e(SITE['phone_tel'])}">{e(SITE['phone_display'])}</a> <span>{e(SITE['phone_note'])}</span></dd></div>
         <div><dt>Address</dt><dd><a href="{e(maps)}" target="_blank" rel="noopener">{e(SITE['address'])}</a></dd></div>
-        <div><dt>Social</dt><dd><a class="ig" href="{e(SITE['instagram'])}" target="_blank" rel="noopener">{ICON_IG}<span>{e(SITE['instagram_handle'])}</span></a></dd></div>
+        <div><dt>Social</dt><dd class="social-reveal"><a href="{e(SITE['instagram'])}" target="_blank" rel="noopener">{e(SITE['instagram_handle'])}</a>
+        <div class="social-row"><a href="{e(SITE['instagram'])}" target="_blank" rel="noopener" aria-label="Archipixels on Instagram">{ICON_IG}</a><a href="{e(SITE['linkedin'])}" target="_blank" rel="noopener" aria-label="Archipixels on LinkedIn">{ICON_LI}</a><a href="{e(SITE['facebook'])}" target="_blank" rel="noopener" aria-label="Archipixels on Facebook">{ICON_FB}</a></div></dd></div>
       </dl>
     <div class="contact__split">
       <div class="contact__art">{img(v['file'], v['w'], v['h'], 'Pen drawing of a three-storey villa facade by Archipixels')}</div>
@@ -404,8 +417,8 @@ def closing():
 
 def footer():
     return f"""<footer class="foot">
-  <p>© {datetime.date.today().year} Archipixels. Architecture, interiors and experiences. {e(SITE['address'])}.</p>
-  <p><a href="{e(SITE['instagram'])}" target="_blank" rel="noopener">Instagram</a> · <a href="{e(SITE['linktree'])}" target="_blank" rel="noopener">Linktree</a> · <a href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download portfolio</a> · <a href="#cover">Back to top</a></p>
+  <p>© {datetime.date.today().year} Archipixels. Architecture, interiors and experiences. <a href="{e(SITE['maps_url'])}" target="_blank" rel="noopener">{e(SITE['address'])}</a>.</p>
+  <p><a href="{e(SITE['instagram'])}" target="_blank" rel="noopener">Instagram</a> · <a href="{e(SITE['linkedin'])}" target="_blank" rel="noopener">LinkedIn</a> · <a href="{e(SITE['facebook'])}" target="_blank" rel="noopener">Facebook</a> · <a href="../assets/downloads/Archipixels-Portfolio.pdf" download>Download portfolio</a> · <a href="#cover">Back to top</a></p>
 </footer>
 """
 

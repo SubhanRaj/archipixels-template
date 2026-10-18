@@ -14,7 +14,7 @@ import struct
 from pathlib import Path
 from urllib.parse import quote
 
-from build_portfolio import PF, contrast
+from build_portfolio import PF, contrast, ICON_IG, ICON_LI, ICON_FB
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = json.loads((ROOT / 'data/site.json').read_text())
@@ -128,6 +128,17 @@ def arrow_svg():
     return '<svg viewBox="0 0 24 12" width="24" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 6h22M17 1l5 5-5 5"/></svg>'
 
 
+def social_links():
+    """The studio's social profiles as (name, address, icon). Instagram first."""
+    return [('Instagram', SITE['instagram'], ICON_IG), ('LinkedIn', SITE['linkedin'], ICON_LI), ('Facebook', SITE['facebook'], ICON_FB)]
+
+
+def social_icons(cls='social-icons'):
+    """A row of icon-only links to the social profiles."""
+    items = ''.join(f'<a href="{u}" target="_blank" rel="noopener" aria-label="Archipixels on {n}">{i}</a>' for n, u, i in social_links())
+    return f'<div class="{cls}">{items}</div>'
+
+
 def placeholder(txt):
     return f'<span class="placeholder">{e(txt)}</span>'
 
@@ -206,6 +217,7 @@ def footer(c):
     sw = ''.join(
         f'<a href="{c.base}{k}/{c.rel}"' + (' aria-current="true"' if k == c.t else '') + f'>{k.upper()}</a>'
         for k in SWITCH)
+    follow = ''.join(f'<li><a href="{u}" target="_blank" rel="noopener">{ic}<span>{n}</span></a></li>' for n, u, ic in social_links())
     return f'''</main>
 <!-- component: site-footer -->
 <footer class="site-footer">
@@ -222,14 +234,14 @@ def footer(c):
       <h2 class="footer-title">Contact</h2>
       <address class="footer-list">
         <a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a>
-        <span>{e(SITE['phone_note'])}</span>
+        <a href="{wa()}" target="_blank" rel="noopener">{e(SITE['phone_note'])}</a>
         <a href="mailto:{SITE['email']}">{SITE['email']}</a>
-        <span>{e(SITE['address'])}</span>
+        <a href="{e(SITE['maps_url'])}" target="_blank" rel="noopener">{e(SITE['address'])}</a>
       </address>
     </div>
     <div>
       <h2 class="footer-title">Follow</h2>
-      <ul class="footer-list"><li><a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram {SITE['instagram_handle']}</a></li><li><a href="{SITE['linktree']}" target="_blank" rel="noopener">Linktree</a></li></ul>
+      <ul class="footer-list footer-list--social">{follow}</ul>
     </div>
   </div>
   <div class="container site-footer__base"><small>© 2026 Archipixels. {e(SITE['sign_off'])}</small></div>
@@ -591,7 +603,7 @@ def page_home(t):
         'description': 'Architecture, interior design and experience design studio in Lucknow, India.',
         'logo': 'assets/img/brand/logo-stacked-white.png', 'telephone': SITE['phone_tel'], 'email': SITE['email'],
         'address': {'@type': 'PostalAddress', 'streetAddress': '1/146, Gomti Nagar', 'addressLocality': 'Lucknow', 'addressCountry': 'IN'},
-        'sameAs': [SITE['instagram']]}, indent=2)
+        'sameAs': [u for _, u, _ in social_links()]}, indent=2)
     body = HERO_FN[t](c) + intro(c) + FEATURED_FN[t](c) + services(c) + range_band(c) + homes(c) + studio(c) + cta(c)
     write(c, 'Archipixels | Architecture and interiors, Lucknow',
           'Archipixels is an architecture and interior design studio in Lucknow. Hotels, cafés, residences, workplaces and themed stays.',
@@ -654,9 +666,10 @@ def page_studio(t):
 <section class="section studio-gallery">
   <div class="container"><ul class="studio-mosaic">{gal}</ul></div>
 </section>
+{gallery_slider(c, 'The Archipixels studio', [f'{c.base}portfolio/img/{f}' for f in ('studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg')], heading='Inside the studio', group='studio-slider')}
 <section class="section surface visit">
   <div class="container story__grid">
-    <h2 class="h2" data-split>Visit the studio</h2>
+    <div class="visit__map"><h2 class="h2" data-split>Visit the studio</h2>{map_card(c)}</div>
     <div class="prose" data-reveal>
       <address class="contact-list">
         <span>{e(SITE['address'])}</span>
@@ -664,7 +677,7 @@ def page_studio(t):
         <a href="mailto:{SITE['email']}">{SITE['email']}</a>
       </address>
       <p>{placeholder('[STUDIO HOURS AND HOW TO BOOK A VISIT]')}</p>
-      <div class="actions"><a class="btn btn--primary" href="{wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a><a class="link-arrow" href="{c.loc}contact.html">Contact page{arrow_svg()}</a></div>
+      <div class="actions"><a class="btn btn--primary" href="{wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a><a class="link-arrow" href="{c.loc}contact.html">Contact us{arrow_svg()}</a></div>
     </div>
   </div>
 </section>
@@ -872,27 +885,46 @@ def project_palette(p):
 <section class="section surface palette"><div class="container">{section_head('', 'Colour palette')}<ul class="palette__list">{sw}</ul></div></section>'''
 
 
-def project_gallery(c, p, srcs=None, inline=False):
-    """A's gallery slider. `srcs` lists image addresses to show instead of the card and gallery photos.
+def gallery_slider(c, name, srcs, inline=False, heading='Gallery', group='project'):
+    """A Swiper slider of photos that open in the lightbox. `srcs` lists image addresses and `name` is their title and alt text.
     With `inline`, the heading is visually hidden (it stays for screen readers and search engines) and the
-    arrows sit on the left and right edges of the slider. Direction D uses it."""
-    srcs = srcs or [img(c, f) for f in [p['card']] + p['gallery']]
-    gal_imgs = srcs
-    slides = ''.join(f'<div class="swiper-slide"><a class="glightbox" href="{src}" data-gallery="project" data-title="{e(p["name"])}"><img src="{src}" alt="{e(p["name"])}, view {i + 1}" loading="lazy"></a></div>' for i, src in enumerate(srcs))
+    arrows sit on the left and right edges of the slider. Direction D's project page uses it."""
+    slides = ''.join(f'<div class="swiper-slide"><a class="glightbox" href="{src}" data-gallery="{group}" data-title="{e(name)}"><img src="{src}" alt="{e(name)}, view {i + 1}" loading="lazy"></a></div>' for i, src in enumerate(srcs))
     swiper = f'<div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>'
     if inline:
-        arrows = ui_arrows("gallery-prev", "gallery-next") if len(gal_imgs) > 1 else ''
+        arrows = ui_arrows("gallery-prev", "gallery-next") if len(srcs) > 1 else ''
         return f'''<!-- component: project-gallery (Swiper + GLightbox) -->
 <section class="section gallery gallery--inline">
-  <h2 class="sr-only">{e(p['name'])}, gallery</h2>
+  <h2 class="sr-only">{e(name)}, {e(heading.lower())}</h2>
   <div class="gallery__stage">{swiper}{arrows}</div>
 </section>'''
     return f'''<!-- component: project-gallery (Swiper + GLightbox) -->
 <section class="section gallery">
-  <div class="container">{section_head('', 'Gallery', None)}</div>
+  <div class="container">{section_head('', heading, None)}</div>
   {swiper}
-  {f'<div class="container gallery__ui">{ui_arrows("gallery-prev", "gallery-next")}</div>' if len(gal_imgs) > 1 else ''}
+  {f'<div class="container gallery__ui">{ui_arrows("gallery-prev", "gallery-next")}</div>' if len(srcs) > 1 else ''}
 </section>'''
+
+
+def project_gallery(c, p, srcs=None, inline=False):
+    """A's project gallery. `srcs` lists image addresses to show instead of the card and gallery photos."""
+    return gallery_slider(c, p['name'], srcs or [img(c, f) for f in [p['card']] + p['gallery']], inline)
+
+
+def map_card(c):
+    """The studio on a map. The Google map loads only after a click, so a visit to the page sets no Google cookies.
+    Without JavaScript the link under it opens Google Maps."""
+    return f'''<!-- component: map-card (the embed loads on click) -->
+<div class="map-card" data-reveal>
+  <div class="map-card__stage" data-map-src="{e(SITE['maps_embed'])}">
+    <div class="map-card__veil">
+      <svg class="map-card__pin" viewBox="0 0 24 32" width="30" height="40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 31C12 31 2 19.5 2 12a10 10 0 0 1 20 0c0 7.500-10 19-10 19Z"/><circle cx="12" cy="12" r="3.600"/></svg>
+      <b>Archipixels</b><span>{e(SITE['address'])}</span>
+      <button class="btn btn--ghost map-card__load" type="button">Show the map</button>
+    </div>
+  </div>
+  <a class="link-arrow" href="{e(SITE['maps_url'])}" target="_blank" rel="noopener">Open in Google Maps{arrow_svg()}</a>
+</div>'''
 
 
 def page_project(t, p, idx):
@@ -940,14 +972,14 @@ def page_project(t, p, idx):
 def contact_split(c, extra=''):
     """Facts row, pen drawing and enquiry form. Direction A and D share it. `extra` adds links under the form."""
     v = PF['fixed']['villa']
-    maps = 'https://www.google.com/maps/search/?api=1&query=' + quote(SITE['address'])
+    maps = SITE['maps_url']
     return f'''<section class="section contact-page">
   <div class="container">
     <dl class="contact-facts" data-reveal>
       <div><dt>E-mail</dt><dd><a href="mailto:{SITE['email']}">{SITE['email']}</a></dd></div>
       <div><dt>Phone</dt><dd><a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a><span>{e(SITE['phone_note'])}</span></dd></div>
       <div><dt>Address</dt><dd><a href="{e(maps)}" target="_blank" rel="noopener">{e(SITE['address'])}</a></dd></div>
-      <div><dt>Social</dt><dd><a href="{SITE['instagram']}" target="_blank" rel="noopener">{SITE['instagram_handle']}</a></dd></div>
+      <div><dt>Social</dt><dd class="social-reveal"><a href="{SITE['instagram']}" target="_blank" rel="noopener">{SITE['instagram_handle']}</a>{social_icons()}</dd></div>
     </dl>
     <div class="contact-split">
       <div class="contact-art" data-reveal><img src="{c.base}portfolio/img/{v['file']}" width="{v['w']}" height="{v['h']}" alt="Pen drawing of a three-storey villa facade by Archipixels" loading="lazy"></div>
@@ -965,6 +997,7 @@ def page_contact(t):
     if t == 'a':
         write(c, 'Contact | Archipixels', 'Contact Archipixels in Gomti Nagar, Lucknow, by WhatsApp, phone or email.', 'studio.jpg', 'contact', 'contact.html', hero + '\n' + contact_split(c))
         return
+    social_items = ''.join(f'<li><a href="{u}" target="_blank" rel="noopener">{ic}<span>{n}</span></a></li>' for n, u, ic in social_links())
     body = hero + f'''
 <section class="section">
   <div class="container enquire__grid">
@@ -974,7 +1007,7 @@ def page_contact(t):
         <span>{e(SITE['address'])}</span>
         <a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a><span>{e(SITE['phone_note'])}</span>
         <a href="mailto:{SITE['email']}">{SITE['email']}</a>
-        <a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram {SITE['instagram_handle']}</a>
+        <ul class="footer-list footer-list--social">{social_items}</ul>
       </address>
       <a class="btn btn--primary" href="{wa()}" target="_blank" rel="noopener">Chat on WhatsApp</a>
     </div>

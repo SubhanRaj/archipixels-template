@@ -100,6 +100,8 @@ Decisions and content from the client:
 
 - The client picks a direction, or a mix. Update `CLAUDE.md` when that happens.
 - Confirm the contact details. The portfolio gives `1/146, Gomti Nagar, Lucknow` and `hello@archipixels.com`. The old Wix site gave `B-2, 1222, DLF MyPad, Vibhuti Khand, Gomtinagar` and `info@archipixels.com`. The templates use the portfolio values.
+- The Studio page's map card loads the Google embed after a click, so the cookie policy should mention Google Maps as a service that sets cookies once the visitor loads the map. `maps_url` and `maps_embed` in `data/site.json` become `site_settings` keys, and the components are `map-card` and the existing `project-gallery` (used for the studio slider too).
+- Social profiles are `instagram`, `linkedin` and `facebook` in `data/site.json`, and become `site_settings` keys. The seeded `linktree` key and the Linktree link in the footer are removed. The footer's Follow column, the Contact page's Social hover icons and the structured data `sameAs` use all three.
 - Fill the placeholders (they show with a dashed underline): `[YEAR]`, `[AREA IN SQ FT]`, `[LOCATION]` and `[PROJECT STORY]` on each project page, `[ROLE]` and `[SHORT BIO]` for each founder, the team member cards, `[STUDIO HOURS AND HOW TO BOOK A VISIT]` on the studio page and `[TURNKEY EXAMPLES]` on the services page.
 - Write the real project stories. The text on each project page comes only from the portfolio facts.
 - Replace the placeholder team in `data/team.json` (6 members and the founders' roles, intros and bios) when the client supplies it. Each person's profile page needs a photo, role, intro, bio, year joined and focus areas.

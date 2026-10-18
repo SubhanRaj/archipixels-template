@@ -17,6 +17,8 @@
   "whatsapp_message_general": "Hi Archipixels! I came across your work and I have a space in mind that needs a story. Can we talk?",
   "email": "hello@archipixels.com",
   "email_alt_old_site": "info@archipixels.com",
+  "maps_url": "https://www.google.com/maps/place/Archipixels/data=!4m2!3m1!1s0x0:0x5e33d826cbeb3a12",
+  "maps_embed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.117922111082!2d81.033321!3d26.867994300000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd7c16690029%3A0x5e33d826cbeb3a12!2sArchipixels!5e0!3m2!1sen!2sin!4v1792323003688!5m2!1sen!2sin",
   "address": "1/146, Gomti Nagar, Lucknow, India",
   "address_alt_old_site": "B-2, 1222, DLF MyPad, Vibhuti Khand, Gomtinagar, Lucknow, 226010",
   "confirm_with_client": [
@@ -25,7 +27,8 @@
   ],
   "instagram": "https://www.instagram.com/archipixels/",
   "instagram_handle": "@archipixels",
-  "linktree": "https://linktr.ee/archipixels",
+  "linkedin": "https://www.linkedin.com/company/archipixels/",
+  "facebook": "https://www.facebook.com/archipixels",
   "services": [
     {
       "name": "Architecture",

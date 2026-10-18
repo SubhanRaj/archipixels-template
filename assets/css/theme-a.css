@@ -74,6 +74,12 @@ body.theme-a {
 .contact-facts dd span { display: block; font: 400 .72rem var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; }
 .contact-facts a { background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat; transition: background-size .5s var(--ease), color .3s; }
 .contact-facts a:hover { background-size: 100% 1px; color: var(--accent); }
+.contact-facts .social-reveal { display: grid; gap: .8rem; justify-items: center; }
+.social-icons { display: flex; gap: .8rem; opacity: 0; transform: translateY(-6px); transition: opacity .35s var(--ease), transform .35s var(--ease); }
+.social-reveal:hover .social-icons, .social-reveal:focus-within .social-icons { opacity: 1; transform: none; }
+@media (hover: none) { .social-icons { opacity: 1; transform: none; } }
+.contact-facts .social-icons a { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; background: none; color: var(--text); transition: color .3s, border-color .3s, box-shadow .3s; }
+.contact-facts .social-icons a:hover { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 35%, transparent); }
 .contact-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 112px); align-items: center; }
 .contact-art img { width: 100%; }
 .contact-wa { margin-top: 1.6rem; }

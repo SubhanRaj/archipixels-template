@@ -301,6 +301,9 @@ p.placeholder { display: inline-block; margin-top: 1rem; }
 .footer-title { font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; font-weight: 500; }
 .footer-list { display: grid; gap: .45rem; color: var(--muted); font-size: .98rem; }
 .footer-list a:hover { color: var(--text); }
+.footer-list--social a { display: inline-flex; align-items: center; gap: .7rem; }
+.footer-list--social svg { width: 18px; height: 18px; flex: none; color: var(--muted); transition: color .3s; }
+.footer-list--social a:hover svg { color: var(--accent); }
 .site-footer__base { padding-block: 2rem; margin-top: 2.5rem; border-top: 1px solid var(--line); color: var(--muted); }
 @media (max-width: 900px) { .site-footer__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .site-footer__grid { grid-template-columns: 1fr; } }
@@ -515,3 +518,27 @@ a.member:hover h3 { color: var(--text); }
 .service-row__links { display: grid; gap: .8rem; }
 @media (max-width: 860px) { .service-row { grid-template-columns: 1fr; } .service-row:nth-child(even) .service-row__media { order: 0; } }
 .page-hero .lead { margin-top: 1.5rem; }
+
+/* ---------- map card (studio page) ---------- */
+.visit__map { display: grid; gap: 1.6rem; align-content: start; }
+.map-card { display: grid; gap: 1rem; justify-items: start; }
+.map-card__stage { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-card); }
+.map-card__stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(.35) invert(.92) hue-rotate(180deg) contrast(.92) brightness(.95); }
+.map-card__veil { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .5rem; padding: 1.5rem; text-align: center; background:
+  radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%),
+  repeating-linear-gradient(0deg, transparent 0 41px, var(--line) 41px 42px),
+  repeating-linear-gradient(90deg, transparent 0 41px, var(--line) 41px 42px), var(--surface); }
+.map-card__veil[hidden] { display: none; }
+.map-card__pin { color: var(--accent); }
+.map-card__veil b { font: 400 clamp(1.4rem, 2.4vw, 1.9rem)/1.2 var(--font-display); }
+.map-card__veil span { color: var(--muted); font-size: .92rem; max-width: 26ch; }
+.map-card .map-card__load { margin-top: .8rem; background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.map-card .map-card__load:hover { background: var(--accent); color: var(--accent-ink); }
+.visit .story__grid { align-items: center; }
+.visit .prose { align-content: center; gap: 2rem; }
+.visit .contact-list { gap: .7rem; }
+.visit .contact-list span { font: 400 clamp(1.6rem, 2.6vw, 2.2rem)/1.25 var(--font-display); color: var(--text); }
+.visit .contact-list a { font-size: clamp(1.05rem, 1.5vw, 1.25rem); }
+.visit .prose > p { margin: 0; }
+@media (prefers-reduced-motion: no-preference) { .map-card__pin { animation: map-pin 3.4s ease-in-out infinite; } }
+@keyframes map-pin { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
