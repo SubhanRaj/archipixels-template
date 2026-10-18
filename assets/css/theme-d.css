@@ -91,8 +91,10 @@ body.theme-d {
 
 /* ---------- works wall ---------- */
 
-.d-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: clamp(10px, 1.2vw, 16px); }
-.d-wall--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Four columns on desktop, three on tablet, two on phones. On tablet and desktop an incomplete last row is centred (flex, not grid). */
+.d-wall { --cols: 4; --gap: clamp(10px, 1.2vw, 16px); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
+.d-wall > li { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
+.d-wall--three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .d-tile { min-width: 0; }
 .d-tile[hidden] { display: none; }
 .d-tile a { display: block; position: relative; overflow: hidden; background: var(--c); aspect-ratio: 4 / 5; box-shadow: var(--shadow-card); }
@@ -143,6 +145,7 @@ body.theme-d {
 /* ---------- small screens ---------- */
 
 @media (max-width: 1000px) {
+  .d-wall { --cols: 3; }
   .d-split, .d-split--flip { grid-template-columns: minmax(0, 1fr); }
   .d-split__media { aspect-ratio: 4 / 3; }
   .d-pj__inner { grid-template-columns: minmax(0, 1fr); }
@@ -156,7 +159,7 @@ body.theme-d {
   .d-media--triptych .d-shot { grid-column: span 6; }
   .d-media--triptych .d-shot:nth-child(2) { margin-top: 0; }
   .d-media--triptych .d-frame { aspect-ratio: 4 / 5 !important; }
-  .d-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .d-wall { --cols: 2; justify-content: flex-start; }
   .d-wall--three { grid-template-columns: minmax(0, 1fr); }
   .d-next__body { flex-direction: column; align-items: flex-start; padding-top: clamp(80px, 20vw, 120px); }
 }

@@ -202,9 +202,12 @@ p.placeholder { display: inline-block; margin-top: 1rem; }
 @media (max-width: 800px) { .intro__grid { grid-template-columns: 1fr; } }
 
 /* ----- cards (works grid) ----- */
-.grid-works { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: clamp(1.4rem, 3vw, 2.4rem); }
-.grid-works--three { grid-template-columns: repeat(3, 1fr); }
-.grid-works--two { grid-template-columns: repeat(2, 1fr); }
+.grid-works { --cols: 3; --gap: clamp(1.4rem, 3vw, 2.4rem); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
+.grid-works > * { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); min-width: 0; }
+@media (max-width: 900px) { .grid-works { --cols: 2; } }
+@media (max-width: 600px) { .grid-works { --cols: 1; } }
+.grid-works--three { display: grid; grid-template-columns: repeat(3, 1fr); }
+.grid-works--two { display: grid; grid-template-columns: repeat(2, 1fr); }
 @media (max-width: 820px) { .grid-works--three, .grid-works--two { grid-template-columns: 1fr; } }
 .card-work { min-width: 0; }
 .card-work__link { display: block; height: 100%; }

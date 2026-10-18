@@ -177,7 +177,8 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 
 .wall__head { max-width: 46rem; margin-bottom: clamp(36px, 5vw, 72px); }
 .wall__head .display { font-size: clamp(2rem, 4vw, 3.4rem); }
-.wall { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: clamp(10px, 1.2vw, 16px); }
+.wall { --cols: 4; --gap: clamp(10px, 1.2vw, 16px); list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
+.wall > li { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
 .wall__tile a { display: block; position: relative; text-decoration: none; background: var(--c); overflow: hidden; aspect-ratio: 4 / 5; }
 .wall__img, .wall__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .wall__img img { transition: transform 1.1s var(--ease), filter 0.6s; }
@@ -282,6 +283,7 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 /* ---------- small screens ---------- */
 
 @media (max-width: 1000px) {
+  .wall { --cols: 3; }
   .top__nav { display: none; }
   .top__tools { margin-left: auto; }
   .split, .split--flip { grid-template-columns: minmax(0, 1fr); }
@@ -317,7 +319,7 @@ a.glightbox:focus-visible { outline-offset: 5px; }
   .studio__c { grid-column: 1 / 2; grid-row: auto; }
   .contact__list { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
   .contact__list dd { font-size: 1.3rem; }
-  .wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wall { --cols: 2; justify-content: flex-start; }
   .ix__list a { grid-template-columns: 2rem 1fr 14px; }
   .ix__kind { display: none; }
 }
