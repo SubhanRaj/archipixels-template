@@ -64,3 +64,24 @@ body.theme-a {
   .theme-a .hero--a .swiper-slide-active .hero__img { animation: kenburns 9s ease-out forwards; }
 }
 @keyframes kenburns { from { transform: scale(1.02); } to { transform: scale(1.14) translate(-1.5%, -1%); } }
+
+/* ---------- contact page (A and D) ---------- */
+
+.contact-facts { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); justify-content: center; gap: clamp(28px, 5vw, 80px); text-align: center; margin-bottom: clamp(48px, 7vw, 104px); }
+.contact-facts > div { display: grid; gap: .6rem; justify-items: center; align-content: start; }
+.contact-facts dt { font-size: .72rem; letter-spacing: .26em; text-transform: uppercase; color: var(--accent); }
+.contact-facts dd { font: 400 clamp(1.15rem, 1.8vw, 1.5rem)/1.35 var(--font-display); overflow-wrap: anywhere; }
+.contact-facts dd span { display: block; font: 400 .72rem var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; }
+.contact-facts a { background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat; transition: background-size .5s var(--ease), color .3s; }
+.contact-facts a:hover { background-size: 100% 1px; color: var(--accent); }
+.contact-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 112px); align-items: center; }
+.contact-art img { width: 100%; }
+.contact-wa { margin-top: 1.6rem; }
+
+@media (max-width: 1000px) {
+  .contact-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .contact-facts { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
+}

@@ -118,19 +118,6 @@ body.theme-d {
 .d-closing .btn--dark:hover { background: #14090C; }
 .d-closing .actions { justify-content: center; }
 
-/* ---------- contact ---------- */
-
-.d-contact__list { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); justify-content: center; gap: clamp(28px, 5vw, 80px); text-align: center; margin-bottom: clamp(48px, 7vw, 104px); }
-.d-contact__list > div { display: grid; gap: .6rem; justify-items: center; align-content: start; }
-.d-contact__list dt { font-size: .72rem; letter-spacing: .26em; text-transform: uppercase; color: var(--accent); }
-.d-contact__list dd { font: 400 clamp(1.15rem, 1.8vw, 1.5rem)/1.35 var(--font-display); overflow-wrap: anywhere; }
-.d-contact__list dd span { display: block; font: 400 .72rem var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; }
-.d-contact__list a { background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat; transition: background-size .5s var(--ease), color .3s; }
-.d-contact__list a:hover { background-size: 100% 1px; color: var(--accent); }
-.d-contact__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 112px); align-items: center; }
-.d-contact__art img { width: 100%; }
-.d-contact__wa { margin-top: 1.6rem; }
-
 /* ---------- small screens ---------- */
 
 @media (max-width: 1000px) {
@@ -138,8 +125,6 @@ body.theme-d {
   .d-split__media { aspect-ratio: 4 / 3; }
   .d-pj__inner { grid-template-columns: minmax(0, 1fr); }
   .d-panel { position: relative; top: 0; }
-  .d-contact__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .d-contact__split { grid-template-columns: minmax(0, 1fr); }
   .d-wall--three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -150,7 +135,6 @@ body.theme-d {
   .d-media--triptych .d-shot { grid-column: span 6; }
   .d-media--triptych .d-shot:nth-child(2) { margin-top: 0; }
   .d-media--triptych .d-frame { aspect-ratio: 4 / 5 !important; }
-  .d-contact__list { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
   .d-wall, .d-wall--three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .d-next__body { flex-direction: column; align-items: flex-start; padding-top: clamp(80px, 20vw, 120px); }
 }

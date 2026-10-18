@@ -401,25 +401,10 @@ def page_team():
 
 def page_contact():
     c = b.Ctx('d', 'contact.html')
-    v = PF['fixed']['villa']
-    maps = 'https://www.google.com/maps/search/?api=1&query=' + b.quote(SITE['address'])
     body = f'''<section class="page-hero page-hero--simple">
   <div class="container"><p class="eyebrow" data-reveal>Contact</p><h1 class="display" data-split>Have something wild in mind?</h1></div>
 </section>
-<section class="section d-contact">
-  <div class="container">
-    <dl class="d-contact__list" data-reveal>
-      <div><dt>E-mail</dt><dd><a href="mailto:{SITE['email']}">{SITE['email']}</a></dd></div>
-      <div><dt>Phone</dt><dd><a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a><span>{e(SITE['phone_note'])}</span></dd></div>
-      <div><dt>Address</dt><dd><a href="{e(maps)}" target="_blank" rel="noopener">{e(SITE['address'])}</a></dd></div>
-      <div><dt>Social</dt><dd><a href="{SITE['instagram']}" target="_blank" rel="noopener">{SITE['instagram_handle']}</a></dd></div>
-    </dl>
-    <div class="d-contact__split">
-      <div class="d-contact__art" data-reveal><img src="{pimg(c, v['file'])}" width="{v['w']}" height="{v['h']}" alt="Pen drawing of a three-storey villa facade by Archipixels" loading="lazy"></div>
-      <div class="d-contact__form" data-reveal>{b.form('contact')}<p class="d-contact__wa"><a class="link-arrow" href="{b.wa()}" target="_blank" rel="noopener">Or message us on WhatsApp{b.arrow_svg()}</a></p><p class="d-contact__wa"><a class="link-arrow" href="{c.base}{PDF_NAME}" target="_blank" rel="noopener">Get our portfolio{b.arrow_svg()}</a></p></div>
-    </div>
-  </div>
-</section>'''
+{b.contact_split(c, f'<p class="contact-wa"><a class="link-arrow" href="{c.base}{PDF_NAME}" target="_blank" rel="noopener">Get our portfolio{b.arrow_svg()}</a></p>')}'''
     write_d(c, 'Contact | Archipixels', 'Contact Archipixels in Gomti Nagar, Lucknow, by WhatsApp, phone or email.', 'studio.jpg', 'contact', 'contact.html', body)
 
 

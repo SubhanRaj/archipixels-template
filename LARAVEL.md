@@ -68,7 +68,7 @@ Build rules that apply from the first migration:
 | `/services` | Services |
 | `/works` | Works, filterable, with `#category` deep links |
 | `/works/{slug}` | Project page (19 projects) |
-| `/contact` | Contact and enquiry form |
+| `/contact` | Contact facts, pen drawing and enquiry form (A and D layout) |
 | `/portfolio` | The one-page portfolio: the PDF as a web page that reads the same on every platform, with a button for the PDF download |
 
 The 404 design in `404.html` of the chosen direction maps to `resources/views/errors/404.blade.php` in the live site. Keep the numeral, the two buttons, the three recent works and the call to action band.

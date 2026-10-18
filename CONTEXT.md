@@ -146,6 +146,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Project page: A's layout and hero, then everything below the hero is recoloured to the project's own colour. `tone_style()` in `tools/build_d.py` derives the surface, band, line, muted and accent tokens from the project's `bg`, and picks light or dark text by contrast. The palette sits on a tan panel with gold-ringed dots. The gallery shows every photo of the project. A next-project band and three related tiles follow.
 - Motion: photos wipe open and drift on scroll, tan panels and swatches enter in sequence, the closing line writes itself out.
 - Portfolio links: the footer of every version has one link, "Get our portfolio", in the place of the menu's Portfolio entry. It opens the PDF in a new tab, in the browser viewer on desktop and the phone's own PDF handling on mobile. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar. It returns to the version the visitor came from. The file is `assets/downloads/Archipixels-Portfolio.pdf`.
+- Contact: a row of four facts (e-mail, phone, address, Instagram), then the pen drawing of a villa beside the enquiry form. A uses the same layout, built by `contact_split` in `tools/build.py`. D adds a "Get our portfolio" link under the form. B and C keep the studio card and form panel.
 - Technical: `tools/build_d.py` builds it. Body class `theme-a theme-d`.
 
 ### One-page portfolio (`portfolio/`)

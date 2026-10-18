@@ -14,7 +14,7 @@ import struct
 from pathlib import Path
 from urllib.parse import quote
 
-from build_portfolio import contrast
+from build_portfolio import PF, contrast
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = json.loads((ROOT / 'data/site.json').read_text())
@@ -845,11 +845,35 @@ def page_project(t, p, idx):
     write(c, f"{p['name']} | Archipixels", f"{p['name']}: {p['tagline']}. {p['kind']} by Archipixels.", p['card'], 'project', 'works.html', body, style)
 
 
+def contact_split(c, extra=''):
+    """Facts row, pen drawing and enquiry form. Direction A and D share it. `extra` adds links under the form."""
+    v = PF['fixed']['villa']
+    maps = 'https://www.google.com/maps/search/?api=1&query=' + quote(SITE['address'])
+    return f'''<section class="section contact-page">
+  <div class="container">
+    <dl class="contact-facts" data-reveal>
+      <div><dt>E-mail</dt><dd><a href="mailto:{SITE['email']}">{SITE['email']}</a></dd></div>
+      <div><dt>Phone</dt><dd><a href="tel:{SITE['phone_tel']}">{SITE['phone_display']}</a><span>{e(SITE['phone_note'])}</span></dd></div>
+      <div><dt>Address</dt><dd><a href="{e(maps)}" target="_blank" rel="noopener">{e(SITE['address'])}</a></dd></div>
+      <div><dt>Social</dt><dd><a href="{SITE['instagram']}" target="_blank" rel="noopener">{SITE['instagram_handle']}</a></dd></div>
+    </dl>
+    <div class="contact-split">
+      <div class="contact-art" data-reveal><img src="{c.base}portfolio/img/{v['file']}" width="{v['w']}" height="{v['h']}" alt="Pen drawing of a three-storey villa facade by Archipixels" loading="lazy"></div>
+      <div class="contact-form" data-reveal>{form('contact')}<p class="contact-wa"><a class="link-arrow" href="{wa()}" target="_blank" rel="noopener">Or message us on WhatsApp{arrow_svg()}</a></p>{extra}</div>
+    </div>
+  </div>
+</section>'''
+
+
 def page_contact(t):
     c = Ctx(t, 'contact.html')
-    body = f'''<section class="page-hero page-hero--simple">
+    hero = '''<section class="page-hero page-hero--simple">
   <div class="container"><p class="eyebrow" data-reveal>Contact</p><h1 class="display" data-split>Have something wild in mind?</h1></div>
-</section>
+</section>'''
+    if t == 'a':
+        write(c, 'Contact | Archipixels', 'Contact Archipixels in Gomti Nagar, Lucknow, by WhatsApp, phone or email.', 'studio.jpg', 'contact', 'contact.html', hero + '\n' + contact_split(c))
+        return
+    body = hero + f'''
 <section class="section">
   <div class="container enquire__grid">
     <div class="contact-card" data-reveal>

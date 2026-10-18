@@ -38,19 +38,17 @@
 <section class="page-hero page-hero--simple">
   <div class="container"><p class="eyebrow" data-reveal>Contact</p><h1 class="display" data-split>Have something wild in mind?</h1></div>
 </section>
-<section class="section">
-  <div class="container enquire__grid">
-    <div class="contact-card" data-reveal>
-      <h2 class="h3">Studio</h2>
-      <address class="contact-list">
-        <span>1/146, Gomti Nagar, Lucknow, India</span>
-        <a href="tel:+919999660533">+91 99996 60533</a><span>WhatsApp</span>
-        <a href="mailto:hello@archipixels.com">hello@archipixels.com</a>
-        <a href="https://www.instagram.com/archipixels/" target="_blank" rel="noopener">Instagram @archipixels</a>
-      </address>
-      <a class="btn btn--primary" href="https://wa.me/919999660533?text=Hi%20Archipixels%21%20I%20came%20across%20your%20work%20and%20I%20have%20a%20space%20in%20mind%20that%20needs%20a%20story.%20Can%20we%20talk%3F" target="_blank" rel="noopener">Chat on WhatsApp</a>
-    </div>
-    <div class="panel" data-reveal><!-- component: enquiry-form (demo only, wire to a Laravel route) -->
+<section class="section contact-page">
+  <div class="container">
+    <dl class="contact-facts" data-reveal>
+      <div><dt>E-mail</dt><dd><a href="mailto:hello@archipixels.com">hello@archipixels.com</a></dd></div>
+      <div><dt>Phone</dt><dd><a href="tel:+919999660533">+91 99996 60533</a><span>WhatsApp</span></dd></div>
+      <div><dt>Address</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=1/146%2C%20Gomti%20Nagar%2C%20Lucknow%2C%20India" target="_blank" rel="noopener">1/146, Gomti Nagar, Lucknow, India</a></dd></div>
+      <div><dt>Social</dt><dd><a href="https://www.instagram.com/archipixels/" target="_blank" rel="noopener">@archipixels</a></dd></div>
+    </dl>
+    <div class="contact-split">
+      <div class="contact-art" data-reveal><img src="../portfolio/img/villa.png" width="1200" height="781" alt="Pen drawing of a three-storey villa facade by Archipixels" loading="lazy"></div>
+      <div class="contact-form" data-reveal><!-- component: enquiry-form (demo only, wire to a Laravel route) -->
 <form class="form" data-demo-form action="#" method="post" novalidate>
   <div class="field-row">
     <div class="field"><label for="contact-first">First name</label><input id="contact-first" name="first_name" type="text" autocomplete="given-name" required></div>
@@ -64,7 +62,8 @@
   <div class="field"><label for="contact-msg">The story so far</label><textarea id="contact-msg" name="message" rows="4" placeholder="A few lines about the space"></textarea></div>
   <button class="btn btn--primary" type="submit">Send enquiry</button>
   <p class="form__thanks" role="status" hidden>Thanks for submitting! We will reply on WhatsApp or email.</p>
-</form></div>
+</form><p class="contact-wa"><a class="link-arrow" href="https://wa.me/919999660533?text=Hi%20Archipixels%21%20I%20came%20across%20your%20work%20and%20I%20have%20a%20space%20in%20mind%20that%20needs%20a%20story.%20Can%20we%20talk%3F" target="_blank" rel="noopener">Or message us on WhatsApp<svg viewBox="0 0 24 12" width="24" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 6h22M17 1l5 5-5 5"/></svg></a></p></div>
+    </div>
   </div>
 </section></main>
 <!-- component: site-footer -->
