@@ -45,6 +45,17 @@
       });
     });
 
+    /* team cards rise one after another when the row comes into view */
+    $$('.team-swiper').forEach(function (row) {
+      var cards = $$('.member', row);
+      if (!cards.length) return;
+      gsap.set(cards, { y: 44, opacity: 0 });
+      ScrollTrigger.create({
+        trigger: row, start: 'top 90%', once: true,
+        onEnter: function () { gsap.to(cards, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: .1 }); }
+      });
+    });
+
     /* the closing line is written out from left to right */
     var line = $('[data-closing]');
     if (line) {

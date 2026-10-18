@@ -39,6 +39,7 @@
 
     /* section heads get a gold rule that draws in on scroll */
     $$('.section-head').forEach(function (h) {
+      if (h.querySelector('.rule')) return;
       var r = document.createElement('span'); r.className = 'rule'; r.setAttribute('aria-hidden', 'true'); h.appendChild(r);
     });
 
