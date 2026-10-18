@@ -85,7 +85,7 @@ What holds across directions:
 
 A, B and C use `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, and adds `approach`, `founders`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
 
-The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and the project story block have no comment. D's project page is A's page (hero, facts, story, palette, gallery), then a next-project band, three related tiles and the call to action. D's home page spotlights are three colour blocks, each a photo beside a tan panel.
+The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and the project story block have no comment. D's project page is A's page (hero, facts, gallery, story, palette), then a next-project band, three related tiles and the call to action. D's home page spotlights are three colour blocks, each a photo beside a tan panel.
 
 ### Header and navigation
 
@@ -143,7 +143,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Type: Bodoni Moda and Jost (as A), plus Herr Von Muellerhoff, a script face used for the closing line.
 - Home: hero slideshow (A's, with the headline on two lines on wide screens), the approach (titled "Design begins with curiosity.", because the hero already carries the studio line), the founders, three spotlight projects in their own colours (Helios Maximus, Chihiro, Mio Marito Gelato), the works wall, services and the closing line with the studio logo.
 - Works: a filterable wall of all 19 projects, each tile with its colour as a bottom edge.
-- Project page: A's page on the black background, with A's palette and gallery slider. The slider lists the project's single-shot photos from `data/portfolio.json`. A next-project band in the next project's colour follows the gallery, then three related tiles in the same tile grid as the works wall. The related tiles stack one per row at 640 px and below.
+- Project page: A's page on the black background, in this order: hero, facts row, gallery slider, design language and story, palette. The slider lists the project's single-shot photos from `data/portfolio.json`. It has no visible heading (the heading stays in the page for screen readers and search engines) and its arrows sit on its left and right edges. A next-project band in the next project's colour follows the palette, then three related tiles in the same tile grid as the works wall. The related tiles stack one per row at 640 px and below.
 - Motion: photos wipe open and drift on scroll, tan panels and swatches enter in sequence, the closing line writes itself out.
 - Portfolio links: the footer of every version has one link, "Get our portfolio", in the place of the menu's Portfolio entry. It opens the PDF in a new tab, in the browser viewer on desktop and the phone's own PDF handling on mobile. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar. It returns to the version the visitor came from. The file is `assets/downloads/Archipixels-Portfolio.pdf`.
 - Contact: a row of four facts (e-mail, phone, address, Instagram), then the pen drawing of a villa beside the enquiry form. A uses the same layout, built by `contact_split` in `tools/build.py`. D adds a "Get our portfolio" link under the form. B and C keep the studio card and form panel.
@@ -163,7 +163,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - The design of A, B and C is final. Only fixes are allowed (see Frozen designs in `CLAUDE.md`).
 - C is not the current pick, and its design is unchanged. It receives every site-wide update, and elements from it can be reused.
 - D merges the one-page portfolio with A's multi-page structure and nested menu.
-- D's project page uses A's full-background hero, with the page body in the project's colour. The photo-and-tan-panel block appears only in D's home page spotlights.
+- D's project page uses A's full-background hero on the black background. The photo-and-tan-panel block appears only in D's home page spotlights, where the photo fills the same height as the panel.
 - Every project page in D has a gallery slider with a lightbox. Warehouse Studio has one photo, so it has no arrows.
 - The preview switcher lists A, B, C and D on every page.
 - The About submenu starts closed on mobile in every direction.

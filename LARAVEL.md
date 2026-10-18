@@ -53,7 +53,7 @@ Build rules that apply from the first migration:
 - A, B and C: `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery`, `enquiry-form`.
 - Direction D: `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, plus `approach`, `founders`, `works-wall` and `closing-line`.
 - The work card has no comment. It is `.card-work` in A, B and C and `.d-tile` in D, and it appears on Works and in the related-projects row. The project hero and the story block (design language, story, signature details) have no comment either.
-- A Direction D project page has these parts in order, none with a comment: A's hero and facts row, the story block, the palette, the gallery, a next-project band, three related tiles and the call to action. The home page spotlights are three colour blocks, each a photo beside a tan panel.
+- A Direction D project page has these parts in order, none with a comment: A's hero and facts row, the gallery (no visible heading, arrows on the slider's edges), the story block, the palette, a next-project band, three related tiles and the call to action. The home page spotlights are three colour blocks, each a photo beside a tan panel.
 - The portfolio PDF in `assets/downloads/` goes in `public/` or a storage disk, and the download buttons link to it.
 - `theme-switcher` is for client preview only. Leave it out.
 

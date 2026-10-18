@@ -131,6 +131,15 @@ body.theme-d {
   .d-pj--spot .d-panel__cta { margin-top: 1.2rem; }
 }
 
+/* project page: the gallery sits under the facts row with no visible heading, and its arrows sit on the slider's edges */
+.gallery--inline { padding-block: clamp(2.5rem, 4.5vw, 4rem); }
+.gallery__stage { position: relative; }
+.gallery__stage .slider-arrows { position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: center; gap: 0; padding-inline: calc(var(--gutter) + 12px); pointer-events: none; z-index: 2; }
+.gallery__stage .slider-arrow { pointer-events: auto; background: rgba(20, 9, 12, .55); background: color-mix(in srgb, var(--bg) 55%, transparent); color: #F3E9DC; border-color: rgba(243, 233, 220, .4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.gallery__stage .slider-arrow:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.gallery__stage .slider-arrow.swiper-button-disabled { pointer-events: none; }
+.page-project .gallery + .pstory { padding-top: clamp(8px, 1.4vw, 20px); }
+
 /* ---------- small screens ---------- */
 
 @media (max-width: 1000px) {

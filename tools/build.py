@@ -810,15 +810,25 @@ def project_palette(p):
 <section class="section surface palette"><div class="container">{section_head('', 'Colour palette')}<ul class="palette__list">{sw}</ul></div></section>'''
 
 
-def project_gallery(c, p, srcs=None):
-    """A's gallery slider. `srcs` lists image addresses to show instead of the card and gallery photos."""
+def project_gallery(c, p, srcs=None, inline=False):
+    """A's gallery slider. `srcs` lists image addresses to show instead of the card and gallery photos.
+    With `inline`, the heading is visually hidden (it stays for screen readers and search engines) and the
+    arrows sit on the left and right edges of the slider. Direction D uses it."""
     srcs = srcs or [img(c, f) for f in [p['card']] + p['gallery']]
     gal_imgs = srcs
     slides = ''.join(f'<div class="swiper-slide"><a class="glightbox" href="{src}" data-gallery="project" data-title="{e(p["name"])}"><img src="{src}" alt="{e(p["name"])}, view {i + 1}" loading="lazy"></a></div>' for i, src in enumerate(srcs))
+    swiper = f'<div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>'
+    if inline:
+        arrows = ui_arrows("gallery-prev", "gallery-next") if len(gal_imgs) > 1 else ''
+        return f'''<!-- component: project-gallery (Swiper + GLightbox) -->
+<section class="section gallery gallery--inline">
+  <h2 class="sr-only">{e(p['name'])}, gallery</h2>
+  <div class="gallery__stage">{swiper}{arrows}</div>
+</section>'''
     return f'''<!-- component: project-gallery (Swiper + GLightbox) -->
 <section class="section gallery">
   <div class="container">{section_head('', 'Gallery', None)}</div>
-  <div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>
+  {swiper}
   {f'<div class="container gallery__ui">{ui_arrows("gallery-prev", "gallery-next")}</div>' if len(gal_imgs) > 1 else ''}
 </section>'''
 

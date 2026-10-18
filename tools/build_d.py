@@ -259,7 +259,7 @@ def page_works():
 
 
 def page_project(p, idx):
-    """A's project page as it is, then D's next-project band and More projects row."""
+    """A's project page with the gallery moved up under the facts row, then D's next-project band and More projects row."""
     c = b.Ctx('d', f"projects/{p['slug']}.html")
     nxt = PROJECTS[(idx + 1) % len(PROJECTS)]
     nbg = PF['projects'][nxt['slug']]['bg']
@@ -270,7 +270,7 @@ def page_project(p, idx):
 </a>'''
     rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (2, 3, 4)]
     related = f'''<section class="section d-related"><div class="container">{b.section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<ul class="d-wall d-wall--three">{''.join(tile(c, r, PROJECTS.index(r) + 1) for r in rel)}</ul></div></section>'''
-    body = (b.project_hero_a(c, p) + b.project_story(p) + b.project_palette(p) + b.project_gallery(c, p, [pimg(c, im['file']) for im in PF['projects'][p['slug']]['images']])
+    body = (b.project_hero_a(c, p) + b.project_gallery(c, p, [pimg(c, im['file']) for im in PF['projects'][p['slug']]['images']], inline=True) + b.project_story(p) + b.project_palette(p)
             + nxt_html + related + b.cta(c, 'Have a space in mind? Tell us its story.'))
     style = f'<style>body.page-project{{--lit:{p["lit"]}}}</style>\n'
     write_d(c, f"{p['name']} | Archipixels", f"{p['name']}: {p['tagline']}. {p['kind']} by Archipixels.",
