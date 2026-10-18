@@ -68,7 +68,7 @@ body.theme-d {
 .d-panel__tagline { font: italic 400 clamp(1.15rem, 1.5vw, 1.4rem)/1.35 var(--font-display); margin-top: .5rem; }
 .d-swatches { list-style: none; margin: clamp(22px, 2.6vw, 38px) auto; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.3rem 1rem; max-width: 20rem; }
 .d-swatches li { display: grid; justify-items: center; gap: .55rem; font-size: .92rem; line-height: 1.2; }
-.d-dot { width: clamp(64px, 6vw, 84px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .3), transparent 52%), var(--c); box-shadow: 0 0 0 3px var(--gold), 0 0 0 4px rgba(27, 16, 10, .35), 0 12px 20px -8px rgba(0, 0, 0, .5), inset 0 -8px 14px rgba(0, 0, 0, .18); }
+.d-dot { width: clamp(64px, 6vw, 84px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .3), transparent 52%) center / cover, var(--c); box-shadow: 0 0 0 3px var(--gold), 0 0 0 4px rgba(27, 16, 10, .35), 0 12px 20px -8px rgba(0, 0, 0, .5), inset 0 -8px 14px rgba(0, 0, 0, .18); }
 .d-panel h3 { font: 600 .9rem/1.2 var(--font-display); letter-spacing: .12em; text-transform: uppercase; margin: 1.6rem 0 .5rem; }
 .d-panel h3 + p { font-size: 1.02rem; line-height: 1.55; }
 .d-panel__cta { margin-top: 1.8rem; }
