@@ -125,7 +125,6 @@ body.theme-d {
   .d-split__media { aspect-ratio: 4 / 3; }
   .d-pj__inner { grid-template-columns: minmax(0, 1fr); }
   .d-panel { position: relative; top: 0; }
-  .d-wall--three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {
@@ -135,19 +134,13 @@ body.theme-d {
   .d-media--triptych .d-shot { grid-column: span 6; }
   .d-media--triptych .d-shot:nth-child(2) { margin-top: 0; }
   .d-media--triptych .d-frame { aspect-ratio: 4 / 5 !important; }
-  .d-wall, .d-wall--three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .d-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .d-wall--three { grid-template-columns: minmax(0, 1fr); }
   .d-next__body { flex-direction: column; align-items: flex-start; padding-top: clamp(80px, 20vw, 120px); }
 }
 
-/* hero caption: Swiper gives the bullets width:100%, which squeezes the project name */
-.hero--d .hero__pagination.swiper-pagination-bullets { position: static; display: flex; gap: 8px; width: auto; flex: none; transform: none; }
-
-/* project gallery: slides keep each photo's own proportions */
-.d-gallery { background: var(--bg); }
-.d-gallery .gallery-swiper .swiper-slide { width: auto; aspect-ratio: auto; height: clamp(240px, 50vh, 500px); background: transparent; }
-.d-gallery .gallery-swiper img { width: auto; height: 100%; max-width: none; object-fit: contain; display: block; }
-.d-gallery .gallery-swiper a { display: block; height: 100%; }
-@media (max-width: 640px) { .d-gallery .gallery-swiper .swiper-slide { height: clamp(200px, 38vh, 340px); } }
+/* home hero: A's slideshow, with the headline on two lines when the screen is wide enough */
+@media (min-width: 760px) { .hero--d .hero__title { max-width: 21ch; } }
 
 /* ---------- portfolio download button ---------- */
 .d-closing .btn--outline { background: transparent; color: #2A0F16; box-shadow: inset 0 0 0 1px #2A0F16; }
@@ -155,23 +148,3 @@ body.theme-d {
 .btn--outline { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1px var(--text); }
 .btn--outline:hover { background: var(--text); color: var(--bg); }
 .d-closing .actions { flex-wrap: wrap; }
-
-/* ---------- project page: A's hero, body in the project colour ---------- */
-.d-tone { position: relative; background: var(--bg); color: var(--text); }
-.d-tone::before { content: ""; position: absolute; inset: 0 0 auto 0; height: min(24vh, 220px); background: linear-gradient(var(--prev), rgba(20, 9, 12, 0)); pointer-events: none; z-index: 0; }
-.d-tone > * { position: relative; z-index: 1; }
-.d-tone .facts-wrap { padding-top: 2.4rem; }
-.d-tone .lead, .d-tone .prose p { color: var(--text); }
-.d-tone .placeholder { color: var(--muted); }
-.d-tone .chips-static li { border-color: var(--line); color: var(--text); }
-.d-tone .details li { border-color: var(--line); }
-.d-tone .mini-title { color: var(--muted); }
-.d-tone__cta { margin-top: 2rem; }
-.d-tone__pal { padding-top: 0; }
-.d-tone__panel { background: var(--tan); color: var(--tan-ink); padding: clamp(24px, 4vw, 52px); display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; justify-items: center; text-align: center; }
-.d-tone__panel .h3 { color: var(--tan-ink); }
-.d-tone__panel .d-swatches { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); max-width: 52rem; width: 100%; }
-.d-tone .d-gallery { background: var(--bg); }
-.d-tone .gallery__ui button { color: var(--text); border-color: var(--line); }
-.d-tone .section-head .link-arrow, .d-tone .section-head h2 { color: var(--text); }
-.d-tone .details li::before { background: var(--accent); }

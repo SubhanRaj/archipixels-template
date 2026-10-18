@@ -28,8 +28,6 @@ b.THEMES['d'] = dict(
     fonts='https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;0,700;1,400&family=Herr+Von+Muellerhoff&family=Jost:wght@300;400;500&display=swap')
 
 SPOTLIGHT = ['helios-maximus', 'chihiro', 'mio-marito-gelato']
-HERO = [('cover.jpg', 'Helios Maximus', 'helios-maximus'), ('the-deco-grand-1.jpg', 'The Deco Grand', 'the-deco-grand'),
-        ('hons-grey-opera-2.jpg', 'Hons, Grey Opera', 'hons-grey-opera'), ('warehouse-studio-1.jpg', 'Warehouse Studio', 'warehouse-studio')]
 DARK = '#14090C'
 
 
@@ -146,30 +144,9 @@ def pj_block(c, p, n, prev_bg, full):
 
 
 def hero_d(c):
-    slides = ''.join(f'''<div class="swiper-slide" data-title="{e(name)}" data-meta="{e(project_meta(b.BY_SLUG[slug]))}" data-href="{c.loc}projects/{slug}.html">
-  <img class="hero__img" src="{pimg(c, f)}" alt="" {'loading="eager"' if i == 0 else 'loading="lazy"'}>
-</div>''' for i, (f, name, slug) in enumerate(HERO))
-    return f'''<!-- component: hero-slideshow (D, same behaviour as A) -->
-<section class="hero hero--a hero--d" aria-label="Introduction">
-  <div class="swiper hero-swiper"><div class="swiper-wrapper">{slides}</div></div>
-  <div class="hero__veil"></div>
-  <div class="hero__spot" aria-hidden="true"></div>
-  <div class="container hero__content">
-    <p class="eyebrow" data-reveal>{e(SITE['descriptor'])}</p>
-    <h1 class="hero__title" data-split>Archipixels. Selected works.</h1>
-    <p class="lead" data-reveal>{e(SITE['tagline'])} An architecture and interior design studio in Lucknow, for clients with extraordinary ambitions.</p>
-    <div class="actions" data-reveal>
-      <a class="btn btn--primary" href="{c.loc}works.html">See selected works</a>
-      <a class="link-arrow" href="{c.loc}about.html">About the studio{b.arrow_svg()}</a>
-    </div>
-  </div>
-  <div class="container hero__ui">
-    <div class="hero__now"><span class="hero__now-meta"></span><a class="hero__now-title" href="#"></a></div>
-    <div class="hero__pagination" aria-hidden="true"></div>
-    {b.ui_arrows('hero-prev', 'hero-next')}
-  </div>
-</section>
-{b.marquee([p['name'] for p in PROJECTS[:12]])}'''
+    """A's home hero with D's marquee. The hero--d class adds the two-line headline."""
+    return b.hero_a(c, [p['name'] for p in PROJECTS[:12]]).replace(
+        'hero-slideshow (A)', 'hero-slideshow (D, copy of A)').replace('class="hero hero--a"', 'class="hero hero--a hero--d"')
 
 
 def approach(c):
@@ -180,8 +157,8 @@ def approach(c):
     <figure class="d-split__media parallax"><img src="{pimg(c, im['file'])}" width="{im['w']}" height="{im['h']}" alt="A layered, colourful Archipixels interior with hanging lamps and patterned floors" loading="lazy"></figure>
     <div class="d-split__text">
       <p class="eyebrow" data-reveal>Our approach</p>
-      <h2 class="h2" data-split>Spaces with stories of their own.</h2>
-      <p class="lead" data-reveal>We believe every space has a story waiting to be told. At Archipixels, design begins with curiosity. A curiosity about people, places, cultures and the little things that often go unnoticed.</p>
+      <h2 class="h2" data-split>Design begins with curiosity.</h2>
+      <p class="lead" data-reveal>We believe every space has a story waiting to be told. It starts with a curiosity about people, places, cultures and the little things that often go unnoticed.</p>
       <p data-reveal>Spaces that are layered, expressive, sometimes unexpected, but always thoughtful in their details. We create artful, expressive spaces, each with its own identity. Every project begins with a different story, and we never repeat a design.</p>
       <p class="d-quote" data-reveal>We don't believe every space should look a certain way. We believe it should feel a certain way and make you feel something, too.</p>
     </div>
@@ -281,91 +258,23 @@ def page_works():
     write_d(c, 'Selected works | Archipixels', 'Hotels, cafés, residences, workplaces and themed stays by Archipixels.', 'deco-facade.jpg', 'works', 'works.html', body)
 
 
-def gallery_d(c, p):
-    """Swiper + GLightbox gallery with every photo of the project, as on A's project pages."""
-    imgs = PF['projects'][p['slug']]['images']
-    slides = ''.join(
-        f'<div class="swiper-slide"><a class="glightbox" href="{pimg(c, im["file"])}" data-gallery="{e(p["slug"])}-gallery" '
-        f'data-title="{e(p["name"] + (": " + im["caption"] if im.get("caption") else ""))}">'
-        f'<img src="{pimg(c, im["file"])}" width="{im["w"]}" height="{im["h"]}" alt="{e(p["name"])}, view {i + 1} of {len(imgs)}" loading="lazy"></a></div>'
-        for i, im in enumerate(imgs))
-    ui = f'<div class="container gallery__ui">{b.ui_arrows("gallery-prev", "gallery-next")}</div>' if len(imgs) > 1 else ''
-    return f'''<!-- component: project-gallery (Swiper + GLightbox) -->
-<section class="section gallery d-gallery">
-  <div class="container">{b.section_head('', 'Gallery', None)}</div>
-  <div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>
-  {ui}
-</section>'''
-
-
-def _rgb(h):
-    h = h.lstrip('#')
-    return [int(h[i:i + 2], 16) for i in (0, 2, 4)]
-
-
-def _mix(a, z, t):
-    """Blend colour a towards z by t (0 to 1), as a hex string."""
-    ra, rz = _rgb(a), _rgb(z)
-    return '#' + ''.join(f'{round(x + (y - x) * t):02X}' for x, y in zip(ra, rz))
-
-
-def tone_style(bg):
-    """Tokens that recolour A's project sections in the project's own colour."""
-    ink = bp.ink_for(bg)
-    accent = next((x for x in ('#D8A93A', '#8A5A12', '#7A1F2E', '#F3E9DC', '#14090C') if bp.contrast(bg, x) >= 4.5), ink)
-    r, g, bl = _rgb(ink)
-    return (f'--bg:{bg};--text:{ink};--muted:{_mix(ink, bg, .32)};--surface:{_mix(bg, ink, .07)};'
-            f'--band:{_mix(bg, ink, .12)};--line:rgba({r},{g},{bl},.28);--accent:{accent};'
-            f'--accent-ink:{bp.ink_for(accent)};--prev:{DARK}')
-
-
 def page_project(p, idx):
-    """A's project page (full-background hero), with the body recoloured to the project's colour."""
+    """A's project page as it is, then D's next-project band and More projects row."""
     c = b.Ctx('d', f"projects/{p['slug']}.html")
-    d = PF['projects'][p['slug']]
     nxt = PROJECTS[(idx + 1) % len(PROJECTS)]
     nbg = PF['projects'][nxt['slug']]['bg']
     nim = PF['projects'][nxt['slug']]['images'][0]
-    by = f'<p class="phero__by">by {e(p["by"])}</p>' if p['by'] else ''
-    hero = f'''<section class="phero phero--a">
-  <div class="phero__media parallax"><img src="{b.img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="eager"></div>
-  <div class="phero__veil"></div>
-  <div class="container phero__content">
-    <a class="back" href="{c.loc}works.html">All selected works</a>
-    <p class="eyebrow">{e(b.meta_line(p))}</p>
-    <h1 class="phero__title" data-split>{e(p['name'])}</h1>{by}
-    <p class="phero__tag">{e(p['tagline'])}</p>
-  </div>
-</section>'''
-    story = p.get('story') or f"{p['tagline'][0].upper() + p['tagline'][1:]}."
-    langs = ''.join(f'<li>{e(x)}</li>' for x in p['language'])
-    details = ''.join(f'<li data-reveal>{e(x)}</li>' for x in p['details'])
-    det = f'<h2 class="mini-title">Signature details</h2><ul class="details">{details}</ul>' if p['details'] else ''
-    pal = ''
-    if p['palette']:
-        pal = f'''<section class="section d-tone__pal"><div class="container"><div class="d-tone__panel">
-    <h2 class="h3">Colour palette</h2>{swatches(p)}</div></div></section>'''
-    tone = f'''<div class="d-tone" style="{tone_style(d['bg'])}">
-<div class="container facts-wrap">{b.facts_html(p)}</div>
-<section class="section pstory">
-  <div class="container pstory__grid">
-    <div><p class="eyebrow" data-reveal>The design language</p><ul class="chips-static" data-reveal>{langs}</ul></div>
-    <div class="prose" data-reveal><p class="lead">{e(story)}</p><p class="placeholder">[PROJECT STORY: the brief, the idea behind the space and how it is used.]</p>{det}
-      <p class="d-tone__cta"><a class="btn btn--primary" href="{c.loc}contact.html">Discuss a space like this</a></p></div>
-  </div>
-</section>
-{pal}
-{gallery_d(c, p)}
-</div>'''
     nxt_html = f'''<a class="d-next" href="{c.loc}projects/{nxt['slug']}.html" style="--bg:{nbg};--ink:{bp.ink_for(nbg)}">
   <img src="{pimg(c, nim['file'])}" width="{nim['w']}" height="{nim['h']}" alt="" loading="lazy">
   <span class="container d-next__body"><small>Next project · No. {(idx + 1) % len(PROJECTS) + 1:02d}</small><b>{e(nxt['name'])}</b><i>{b.arrow_svg()}</i></span>
 </a>'''
     rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (2, 3, 4)]
     related = f'''<section class="section d-related"><div class="container">{b.section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<ul class="d-wall d-wall--three">{''.join(tile(c, r, PROJECTS.index(r) + 1) for r in rel)}</ul></div></section>'''
-    body = hero + tone + nxt_html + related + b.cta(c, 'Have a space in mind? Tell us its story.')
+    body = (b.project_hero_a(c, p) + b.project_story(p) + b.project_palette(p) + b.project_gallery(c, p, [pimg(c, im['file']) for im in PF['projects'][p['slug']]['images']])
+            + nxt_html + related + b.cta(c, 'Have a space in mind? Tell us its story.'))
+    style = f'<style>body.page-project{{--lit:{p["lit"]}}}</style>\n'
     write_d(c, f"{p['name']} | Archipixels", f"{p['name']}: {p['tagline']}. {p['kind']} by Archipixels.",
-            p['card'], 'project', 'works.html', body)
+            p['card'], 'project', 'works.html', body, style)
 
 
 def page_team():

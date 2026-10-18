@@ -312,7 +312,8 @@ def hero_slides(c):
     return '\n'.join(out)
 
 
-def hero_a(c):
+def hero_a(c, strip=None):
+    """A's home hero. `strip` lists the names in the marquee below it, and defaults to the featured works."""
     return f'''<!-- component: hero-slideshow (A) -->
 <section class="hero hero--a" aria-label="Introduction">
   <div class="swiper hero-swiper"><div class="swiper-wrapper">
@@ -335,7 +336,7 @@ def hero_a(c):
     {ui_arrows('hero-prev', 'hero-next')}
   </div>
 </section>
-{marquee([BY_SLUG[s]['name'] for s in FEATURED])}'''
+{marquee(strip or [BY_SLUG[s]['name'] for s in FEATURED])}'''
 
 
 def hero_b(c):
@@ -772,12 +773,10 @@ def facts_html(p):
 </dl>'''
 
 
-def page_project(t, p, idx):
-    c = Ctx(t, f"projects/{p['slug']}.html")
-    gal_imgs = [p['card']] + p['gallery']
+def project_hero_a(c, p):
+    """A's project hero and facts row. Direction D uses it as well."""
     by = f'<p class="phero__by">by {e(p["by"])}</p>' if p['by'] else ''
-    if t == 'a':
-        hero = f'''<section class="phero phero--a">
+    return f'''<section class="phero phero--a">
   <div class="phero__media parallax"><img src="{img(c, p['card'])}" alt="{e(p['name'])}, {e(p['kind'].lower())}" loading="eager"></div>
   <div class="phero__veil"></div>
   <div class="container phero__content">
@@ -788,6 +787,48 @@ def page_project(t, p, idx):
   </div>
 </section>
 <div class="container facts-wrap">{facts_html(p)}</div>'''
+
+
+def project_story(p):
+    story = p.get('story') or f"{p['tagline'][0].upper() + p['tagline'][1:]}."
+    langs = ''.join(f'<li>{e(x)}</li>' for x in p['language'])
+    details = ''.join(f'<li data-reveal>{e(x)}</li>' for x in p['details'])
+    det = f'<h2 class="mini-title">Signature details</h2><ul class="details">{details}</ul>' if p['details'] else ''
+    return f'''<section class="section pstory">
+  <div class="container pstory__grid">
+    <div><p class="eyebrow" data-reveal>The design language</p><ul class="chips-static" data-reveal>{langs}</ul></div>
+    <div class="prose" data-reveal><p class="lead">{e(story)}</p><p class="placeholder">[PROJECT STORY: the brief, the idea behind the space and how it is used.]</p>{det}</div>
+  </div>
+</section>'''
+
+
+def project_palette(p):
+    if not p['palette']:
+        return ''
+    sw = ''.join(f'<li class="swatch" style="--sw:{hx}" data-reveal><span class="swatch__dot"></span><span class="swatch__name">{e(n)}</span></li>' for n, hx in p['palette'])
+    return f'''<!-- component: palette -->
+<section class="section surface palette"><div class="container">{section_head('', 'Colour palette')}<ul class="palette__list">{sw}</ul></div></section>'''
+
+
+def project_gallery(c, p, srcs=None):
+    """A's gallery slider. `srcs` lists image addresses to show instead of the card and gallery photos."""
+    srcs = srcs or [img(c, f) for f in [p['card']] + p['gallery']]
+    gal_imgs = srcs
+    slides = ''.join(f'<div class="swiper-slide"><a class="glightbox" href="{src}" data-gallery="project" data-title="{e(p["name"])}"><img src="{src}" alt="{e(p["name"])}, view {i + 1}" loading="lazy"></a></div>' for i, src in enumerate(srcs))
+    return f'''<!-- component: project-gallery (Swiper + GLightbox) -->
+<section class="section gallery">
+  <div class="container">{section_head('', 'Gallery', None)}</div>
+  <div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>
+  {f'<div class="container gallery__ui">{ui_arrows("gallery-prev", "gallery-next")}</div>' if len(gal_imgs) > 1 else ''}
+</section>'''
+
+
+def page_project(t, p, idx):
+    c = Ctx(t, f"projects/{p['slug']}.html")
+    gal_imgs = [p['card']] + p['gallery']
+    by = f'<p class="phero__by">by {e(p["by"])}</p>' if p['by'] else ''
+    if t == 'a':
+        hero = project_hero_a(c, p)
     elif t == 'b':
         stack = ''.join(f'<figure class="reveal-img"><img src="{img(c, f)}" alt="{e(p["name"])}, view {i + 1}" loading="{"eager" if i == 0 else "lazy"}"></figure>' for i, f in enumerate(gal_imgs))
         hero = f'''<section class="phero phero--b">
@@ -815,28 +856,7 @@ def page_project(t, p, idx):
   </div>
   <div class="container facts-wrap">{facts_html(p)}</div>
 </section>'''
-    story = p.get('story') or f"{p['tagline'][0].upper() + p['tagline'][1:]}."
-    langs = ''.join(f'<li>{e(x)}</li>' for x in p['language'])
-    details = ''.join(f'<li data-reveal>{e(x)}</li>' for x in p['details'])
-    pal = ''
-    if p['palette']:
-        sw = ''.join(f'<li class="swatch" style="--sw:{hx}" data-reveal><span class="swatch__dot"></span><span class="swatch__name">{e(n)}</span></li>' for n, hx in p['palette'])
-        pal = f'''<!-- component: palette -->
-<section class="section surface palette"><div class="container">{section_head('', 'Colour palette')}<ul class="palette__list">{sw}</ul></div></section>'''
-    det = f'<h2 class="mini-title">Signature details</h2><ul class="details">{details}</ul>' if p['details'] else ''
-    body_story = f'''<section class="section pstory">
-  <div class="container pstory__grid">
-    <div><p class="eyebrow" data-reveal>The design language</p><ul class="chips-static" data-reveal>{langs}</ul></div>
-    <div class="prose" data-reveal><p class="lead">{e(story)}</p><p class="placeholder">[PROJECT STORY: the brief, the idea behind the space and how it is used.]</p>{det}</div>
-  </div>
-</section>'''
-    slides = ''.join(f'<div class="swiper-slide"><a class="glightbox" href="{img(c, f)}" data-gallery="project" data-title="{e(p["name"])}"><img src="{img(c, f)}" alt="{e(p["name"])}, view {i + 1}" loading="lazy"></a></div>' for i, f in enumerate(gal_imgs))
-    gallery = f'''<!-- component: project-gallery (Swiper + GLightbox) -->
-<section class="section gallery">
-  <div class="container">{section_head('', 'Gallery', None)}</div>
-  <div class="swiper gallery-swiper"><div class="swiper-wrapper">{slides}</div></div>
-  {f'<div class="container gallery__ui">{ui_arrows("gallery-prev", "gallery-next")}</div>' if len(gal_imgs) > 1 else ''}
-</section>'''
+    body_story, pal, gallery = project_story(p), project_palette(p), project_gallery(c, p)
     rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (1, 2, 3)]
     related = f'''<section class="section related"><div class="container">{section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<div class="grid-works grid-works--three">{''.join(card_work(c, r) for r in rel)}</div></div></section>'''
     body = hero + body_story + pal + gallery + related + cta(c, 'Have a space in mind? Tell us its story.')
