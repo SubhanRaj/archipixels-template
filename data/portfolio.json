@@ -64,8 +64,8 @@
    "images": [
     {
      "file": "helios-maximus-1.jpg",
-     "w": 1600,
-     "h": 1200,
+     "w": 1666,
+     "h": 1250,
      "caption": ""
     },
     {
@@ -119,14 +119,14 @@
     },
     {
      "file": "chihiro-2.jpg",
-     "w": 1035,
-     "h": 484,
+     "w": 1036,
+     "h": 485,
      "caption": ""
     },
     {
      "file": "chihiro-3.jpg",
      "w": 459,
-     "h": 401,
+     "h": 402,
      "caption": ""
     }
    ]
@@ -235,8 +235,8 @@
     },
     {
      "file": "bajpayee-kachori-bhandar-2.jpg",
-     "w": 1011,
-     "h": 317,
+     "w": 1012,
+     "h": 318,
      "caption": ""
     }
    ]
@@ -260,7 +260,7 @@
     {
      "file": "buttercup-bungalow-2.jpg",
      "w": 535,
-     "h": 437,
+     "h": 438,
      "caption": ""
     },
     {
@@ -289,14 +289,14 @@
    "images": [
     {
      "file": "danzeria-by-danbro-1.jpg",
-     "w": 1036,
-     "h": 509,
+     "w": 1037,
+     "h": 511,
      "caption": ""
     },
     {
      "file": "danzeria-by-danbro-2.jpg",
-     "w": 553,
-     "h": 374,
+     "w": 554,
+     "h": 375,
      "caption": ""
     },
     {
@@ -319,20 +319,20 @@
    "images": [
     {
      "file": "ksmb-marketing-office-1.jpg",
-     "w": 1014,
-     "h": 541,
+     "w": 1015,
+     "h": 543,
      "caption": ""
     },
     {
      "file": "ksmb-marketing-office-2.jpg",
-     "w": 605,
-     "h": 328,
+     "w": 607,
+     "h": 329,
      "caption": ""
     },
     {
      "file": "ksmb-marketing-office-3.jpg",
-     "w": 396,
-     "h": 328,
+     "w": 397,
+     "h": 330,
      "caption": ""
     }
    ]
@@ -355,7 +355,7 @@
     },
     {
      "file": "mio-marito-gelato-2.jpg",
-     "w": 374,
+     "w": 372,
      "h": 281,
      "caption": ""
     },
@@ -385,14 +385,14 @@
    "images": [
     {
      "file": "pixel-pop-1.jpg",
-     "w": 1011,
-     "h": 543,
+     "w": 1013,
+     "h": 544,
      "caption": ""
     },
     {
      "file": "pixel-pop-2.jpg",
-     "w": 1011,
-     "h": 324,
+     "w": 1012,
+     "h": 326,
      "caption": ""
     }
    ]
@@ -428,8 +428,8 @@
    "images": [
     {
      "file": "jewellery-spaces-1.jpg",
-     "w": 1022,
-     "h": 420,
+     "w": 1023,
+     "h": 416,
      "caption": "Hritik Agarwal Jewellery Store"
     },
     {
@@ -447,14 +447,14 @@
    "images": [
     {
      "file": "shreeya-vista-homes-1.jpg",
-     "w": 1014,
-     "h": 541,
+     "w": 1016,
+     "h": 542,
      "caption": ""
     },
     {
      "file": "shreeya-vista-homes-2.jpg",
-     "w": 1014,
-     "h": 331,
+     "w": 1015,
+     "h": 333,
      "caption": ""
     }
    ]
@@ -472,18 +472,18 @@
     {
      "file": "house-of-narula-1.jpg",
      "w": 1014,
-     "h": 526,
+     "h": 528,
      "caption": ""
     },
     {
      "file": "house-of-narula-2.jpg",
-     "w": 564,
-     "h": 348,
+     "w": 565,
+     "h": 349,
      "caption": ""
     },
     {
      "file": "house-of-narula-3.jpg",
-     "w": 431,
+     "w": 432,
      "h": 348,
      "caption": ""
     }
@@ -526,13 +526,109 @@
     {
      "file": "the-quiet-abode-1.jpg",
      "w": 989,
-     "h": 448,
+     "h": 449,
      "caption": ""
     },
     {
      "file": "the-quiet-abode-2.jpg",
      "w": 989,
      "h": 420,
+     "caption": ""
+    }
+   ]
+  },
+  "poddar-mansion": {
+   "bg": "#0A0A0A",
+   "swatches": [
+    "#3A3A38",
+    "#F3E7D3",
+    "#C19643",
+    "#EC4B52"
+   ],
+   "layout": "triptych",
+   "images": [
+    {
+     "file": "poddar-mansion-1.jpg",
+     "w": 532,
+     "h": 887,
+     "caption": ""
+    },
+    {
+     "file": "poddar-mansion-2.jpg",
+     "w": 474,
+     "h": 434,
+     "caption": ""
+    },
+    {
+     "file": "poddar-mansion-3.jpg",
+     "w": 474,
+     "h": 435,
+     "caption": ""
+    }
+   ]
+  },
+  "mr-singhs-dwelling": {
+   "bg": "#243544",
+   "swatches": [
+    "#D1BCA6",
+    "#D3CAC4",
+    "#484A4E",
+    "#5D402B"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "mr-singhs-dwelling-1.jpg",
+     "w": 1491,
+     "h": 1055,
+     "caption": ""
+    }
+   ]
+  },
+  "house-of-mishras": {
+   "bg": "#3E1C1E",
+   "swatches": [
+    "#E2D8C8",
+    "#5B2232",
+    "#26282C",
+    "#A9C8CB"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "house-of-mishras-1.jpg",
+     "w": 1021,
+     "h": 899,
+     "caption": ""
+    }
+   ]
+  },
+  "house-of-agarwals": {
+   "bg": "#5A331B",
+   "swatches": [
+    "#EDE8E0",
+    "#CFC0AE",
+    "#5A2E1A",
+    "#A8CBE8"
+   ],
+   "layout": null,
+   "images": [
+    {
+     "file": "house-of-agarwals-1.jpg",
+     "w": 1083,
+     "h": 602,
+     "caption": ""
+    },
+    {
+     "file": "house-of-agarwals-2.jpg",
+     "w": 525,
+     "h": 294,
+     "caption": ""
+    },
+    {
+     "file": "house-of-agarwals-3.jpg",
+     "w": 547,
+     "h": 294,
      "caption": ""
     }
    ]
