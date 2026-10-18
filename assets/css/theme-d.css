@@ -118,6 +118,19 @@ body.theme-d {
 .d-closing .btn--dark:hover { background: #14090C; }
 .d-closing .actions { justify-content: center; }
 
+/* Home spotlight: the panel sets the row height with a little less spacing, and the photo fills that height (cropped, not stretched) so neither column has empty space */
+@media (min-width: 1001px) {
+  .d-pj--spot .d-media { align-self: stretch; align-content: stretch; grid-template-rows: minmax(0, 1fr); }
+  .d-pj--spot .d-shot, .d-pj--spot .d-shot a { height: 100%; }
+  .d-pj--spot .d-frame { aspect-ratio: auto !important; height: 100%; }
+  .d-pj--spot .d-panel { position: relative; top: 0; padding: clamp(26px, 2.6vw, 40px) clamp(24px, 2.8vw, 46px); }
+  .d-pj--spot .d-panel__no { margin-bottom: .8rem; }
+  .d-pj--spot .d-swatches { margin: clamp(16px, 1.8vw, 26px) auto; gap: 1rem; }
+  .d-pj--spot .d-dot { width: clamp(56px, 4.8vw, 70px); }
+  .d-pj--spot .d-panel h3 { margin: 1.1rem 0 .4rem; }
+  .d-pj--spot .d-panel__cta { margin-top: 1.2rem; }
+}
+
 /* ---------- small screens ---------- */
 
 @media (max-width: 1000px) {
