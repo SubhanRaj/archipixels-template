@@ -42,7 +42,7 @@ Build rules that apply from the first migration:
 | `a/` to `d/` HTML | Reference for views. Pick one direction. |
 | `assets/css/core.css` | Layout and components shared by every direction. |
 | `assets/css/theme-*.css` | Tokens and styling for the chosen direction. D loads `theme-a.css` and then `theme-d.css`. |
-| `assets/js/core.js` | Nav, works filter, forms, lightbox, the motion of the filter and of the move to a project page, and the `window.AP` helpers. |
+| `assets/js/core.js` | Nav, works filter, forms, lightbox, the motion of the filter and of the move to a project page (the hero photo fades up in CSS), and the `window.AP` helpers. |
 | `assets/js/theme-*.js` | Motion for the chosen direction. D loads `theme-a.js` and then `theme-d.js`. |
 | `assets/vendor/` | GSAP 3.12.5 with ScrollTrigger, Swiper 11.1.4 and GLightbox 3.3.0. Copy them to `public/assets/vendor/`. |
 | `assets/img/`, `portfolio/img/` | Photos. D reads `portfolio/img/`. |

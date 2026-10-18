@@ -174,8 +174,8 @@ def founders(c):
     <div class="d-split__text">
       <p class="eyebrow" data-reveal>The founders</p>
       <h2 class="h2" data-split>Two minds. A thousand ideas.</h2>
-      <p class="lead" data-reveal>We're <strong>{SITE['founders'][0]}</strong> and <strong>{SITE['founders'][1]}</strong>, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels.</p>
-      <p data-reveal>We started Archipixels in {SITE['founded']}. Our journey began in Dubai, where we gained international experience before founding Archipixels in India. Now we're ready to take that energy worldwide.</p>
+      <p class="lead" data-reveal>We're <strong>{SITE['founders'][0]}</strong> and <strong>{SITE['founders'][1]}</strong>, partners in life, work and a wonderfully crazy pursuit of creating beautiful spaces. Archipixels grew from our shared love for design, travel, art and anything that makes us stop and look twice. From a curious street to a beautifully odd detail, we collect inspiration wherever we go and in everything we observe. Sooner or later, it finds its way into a space we create.</p>
+      <p data-reveal>We started Archipixels in {SITE['founded']}. Since then, that curiosity has grown into bold spaces and unexpected ideas. Our journey began in Dubai, where we gained international experience before founding Archipixels in India. Now, we're ready to take that energy worldwide. We're looking for collaborators who share our curiosity and clients with extraordinary ambitions. Have something wild in mind? Let's make it happen together.</p>
       <div class="actions" data-reveal><a class="link-arrow" href="{c.loc}about.html">About us{b.arrow_svg()}</a><a class="link-arrow" href="{c.loc}team.html">The team{b.arrow_svg()}</a></div>
     </div>
     <figure class="d-split__media parallax"><img src="{pimg(c, im['file'])}" width="{im['w']}" height="{im['h']}" alt="Shivika and Abhinav, the founders of Archipixels, seated on a velvet sofa" loading="lazy"></figure>

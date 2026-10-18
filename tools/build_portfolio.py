@@ -240,9 +240,8 @@ def founders():
       <p class="eyebrow" data-reveal>The founders</p>
       <h2 class="display" data-split>Two minds. A thousand ideas.</h2>
       <hr class="rule">
-      <p class="lead" data-reveal>We're <strong>Shivika</strong> and <strong>Abhinav</strong>, partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels. We find inspiration in the places we visit, the people we meet and the smallest details that often go unnoticed.</p>
-      <p data-reveal>We started Archipixels in {SITE['founded']}. Since then, that curiosity has grown into bold spaces and unexpected ideas. Our journey began in Dubai, where we gained international experience before founding Archipixels in India.</p>
-      <p data-reveal>Now, we're ready to take that energy worldwide. We're looking for collaborators who share our curiosity and clients with extraordinary ambitions.</p>
+      <p class="lead" data-reveal>We're <strong>Shivika</strong> and <strong>Abhinav</strong>, partners in life, work and a wonderfully crazy pursuit of creating beautiful spaces. Archipixels grew from our shared love for design, travel, art and anything that makes us stop and look twice. From a curious street to a beautifully odd detail, we collect inspiration wherever we go and in everything we observe. Sooner or later, it finds its way into a space we create.</p>
+      <p data-reveal>We started Archipixels in {SITE['founded']}. Since then, that curiosity has grown into bold spaces and unexpected ideas. Our journey began in Dubai, where we gained international experience before founding Archipixels in India. Now, we're ready to take that energy worldwide. We're looking for collaborators who share our curiosity and clients with extraordinary ambitions.</p>
       <p class="signoff" data-reveal>Have something wild in mind? Let's make it happen together.</p>
     </div>
   </div>

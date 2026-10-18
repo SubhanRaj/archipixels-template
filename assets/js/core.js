@@ -38,28 +38,28 @@
   AP.wallOut = function (done) {
     var t = wallTiles();
     if (AP.reduce || !hasGsap || !t.length) { if (done) done(); return; }
-    gsap.to(t, { opacity: 0, duration: .25, stagger: { amount: .1 }, ease: 'power1.out', overwrite: true, onComplete: done });
+    gsap.to(t, { opacity: 0, duration: .5, stagger: { amount: .2 }, ease: 'power1.inOut', overwrite: true, onComplete: done });
   };
-  AP.wallIn = function () {
+  AP.wallIn = function (wait) {
     var t = wallTiles(), n = wallCount();
     if (AP.reduce || !hasGsap) return;
-    if (t.length) gsap.fromTo(t, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .8, stagger: { amount: Math.min(.4, t.length * .04) }, ease: 'power2.out', overwrite: true, clearProps: 'opacity,transform' });
-    if (n) gsap.fromTo(n, { opacity: 0 }, { opacity: 1, duration: .5, ease: 'power1.out', clearProps: 'opacity,transform' });
+    if (t.length) gsap.fromTo(t, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.2, delay: wait || 0, stagger: { amount: Math.min(.7, t.length * .06) }, ease: 'power2.out', overwrite: true, clearProps: 'opacity,transform' });
+    if (n) gsap.fromTo(n, { opacity: 0 }, { opacity: 1, duration: .7, delay: wait || 0, ease: 'power1.out', clearProps: 'opacity,transform' });
   };
   AP.wallBack = function () { if (hasGsap) gsap.to(wallTiles(), { opacity: 1, y: 0, duration: .25, overwrite: true, clearProps: 'opacity,transform' }); };
-  AP.chipPop = function (chip) { if (!AP.reduce && hasGsap && chip) gsap.fromTo(chip, { scale: .96 }, { scale: 1, duration: .45, ease: 'power2.out', clearProps: 'transform' }); };
+  AP.chipPop = function (chip) { if (!AP.reduce && hasGsap && chip) gsap.fromTo(chip, { scale: .96 }, { scale: 1, duration: .6, ease: 'power2.out', clearProps: 'transform' }); };
 
   /* The Livewire filter (Laravel): a chip press starts the fade at once, and the new tiles rise when the page has been updated. */
-  var filtering = false;
+  var filtering = false, fadedAt = 0; /* fadedAt: when the old tiles have finished fading, so the new ones never cut in */
   d.addEventListener('click', function (e) {
     var chip = e.target.closest('.works .filters .chip, .filters .chip');
     if (!chip || chip.hasAttribute('data-filter') || chip.classList.contains('is-active') || !AP.$('.works')) return;
-    filtering = true; AP.wallOut(); AP.chipPop(chip);
+    filtering = true; fadedAt = Date.now() + 700; AP.wallOut(); AP.chipPop(chip);
   });
   function hookLivewire() {
     if (hookLivewire.done || !window.Livewire || !Livewire.hook) return;
     hookLivewire.done = true;
-    Livewire.hook('morphed', function () { if (filtering) { filtering = false; AP.wallIn(); } });
+    Livewire.hook('morphed', function () { if (filtering) { filtering = false; AP.wallIn(Math.max(0, (fadedAt - Date.now()) / 1000)); } });
     Livewire.hook('commit', function (c) { c.fail(function () { if (filtering) { filtering = false; AP.wallBack(); } }); });
   }
   hookLivewire();

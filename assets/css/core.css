@@ -549,6 +549,12 @@ a.member:hover h3 { color: var(--text); }
 .visit .contact-list span { font: 400 clamp(1.6rem, 2.6vw, 2.2rem)/1.25 var(--font-display); color: var(--text); }
 .visit .contact-list a { font-size: clamp(1.05rem, 1.5vw, 1.25rem); }
 .visit .prose > p { margin: 0; }
+/* The photo of the home hero and of a project hero fades up from the page colour. It is CSS, so it starts with the first paint
+   and cannot flash bright first; it ends on its own, so nothing can stay hidden. */
+@keyframes hero-photo-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero--a .hero-swiper, .phero--a .phero__media { animation: hero-photo-in 1.5s cubic-bezier(.33, 0, .2, 1) backwards; }
+}
 @media (prefers-reduced-motion: no-preference) { .map-card__pin { animation: map-pin 3.4s ease-in-out infinite; } }
 @keyframes map-pin { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 

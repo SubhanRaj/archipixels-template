@@ -57,7 +57,6 @@
 
     /* hero intro: veil lifts, content rises */
     if (hero) {
-      gsap.from('.hero__veil', { opacity: 0, duration: 1.6, ease: 'power2.out' });
       gsap.from('.hero__ui', { opacity: 0, y: 20, duration: 1, delay: .9, ease: 'power3.out' });
       gsap.to('.hero__content', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
       gsap.to('.hero-swiper', { yPercent: 8, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
