@@ -126,6 +126,11 @@
   function start() {
     AP.leaving = false;
     readMotion();
+    /* Livewire keeps a copy of the page when a visitor leaves it, and the back button puts that copy back. If the copy was taken
+       during the fade to a project, the fade layer comes back with it and covers the page, so it is cleared on every page start. */
+    AP.$$('.page-fade').forEach(function (c) {
+      if (hasGsap) gsap.to(c, { opacity: 0, duration: .35, ease: 'power1.out', overwrite: true, onComplete: function () { c.remove(); } }); else c.remove();
+    });
     life = window.AbortController ? new AbortController() : { signal: undefined, abort: function () {} };
     var sig = life.signal;
     /* ---- header: scrolled state + mobile nav ---- */
@@ -283,6 +288,9 @@
   };
 
   /* fades up [data-reveal] elements in batches as they enter the viewport */
+  /* Text on a hero waits for the photo to fade up (hero-photo-in in core.css), so the photo shows first and the text lands on it. */
+  function heroWait(el) { return el && el.closest && el.closest('.hero--a, .phero--a') ? .9 : 0; }
+
   AP.reveals = function (o) {
     if (!hasGsap) return;
     o = o || {};
@@ -291,7 +299,7 @@
     gsap.set(els, { opacity: 0, y: o.y || 36, rotation: o.rot || 0 });
     ScrollTrigger.batch(els, {
       start: 'top 90%', once: true,
-      onEnter: function (b) { gsap.to(b, { opacity: 1, y: 0, rotation: 0, duration: o.dur || .9, stagger: .09, ease: o.ease || 'power3.out', overwrite: true }); }
+      onEnter: function (b) { gsap.to(b, { opacity: 1, y: 0, rotation: 0, duration: o.dur || .9, stagger: .09, delay: function (i, el) { return heroWait(el); }, ease: o.ease || 'power3.out', overwrite: true }); }
     });
   };
 
@@ -303,7 +311,7 @@
       gsap.set(s.spans, { yPercent: 115, rotation: o.rot || 0 });
       ScrollTrigger.create({
         trigger: s.el, start: 'top 90%', once: true,
-        onEnter: function () { gsap.to(s.spans, { yPercent: 0, rotation: 0, duration: o.dur || 1.1, stagger: o.stagger || .07, ease: o.ease || 'power4.out' }); }
+        onEnter: function () { gsap.to(s.spans, { yPercent: 0, rotation: 0, duration: o.dur || 1.1, stagger: o.stagger || .07, delay: heroWait(s.el), ease: o.ease || 'power4.out' }); }
       });
     });
   };
