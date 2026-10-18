@@ -264,7 +264,7 @@ def works_intro():
   <div class="wrap">
     <header class="wall__head">
       <p class="eyebrow" data-reveal>Selected works</p>
-      <h2 class="display" data-split>All {len(PROJECTS)} projects.</h2>
+      <h2 class="display" data-split>Our projects.</h2>
       <p class="lead" data-reveal>Homes, hotels, restaurants, offices, salons and a township. Scroll on to walk through them in order, or pick one below.</p>
     </header>
     <ul class="wall">{''.join(tiles)}</ul>
@@ -275,14 +275,18 @@ def works_intro():
 
 # ---------------------------------------------------------------- projects
 
+def bg(x):
+    # a palette entry may carry a photo of the material as its third item
+    return f"background-image:url(../assets/img/{x[2]})" if len(x) > 2 else ""
+
+
 def swatches(p, d):
     cols = d.get("swatches") or [c[1] for c in p["palette"]]
-    names = [c[0] for c in p["palette"]]
-    if not names:
+    if not p["palette"]:
         return ""
     items = "".join(
-        f'<li><span class="dot" style="--c:{c}"></span><span class="swatch__name">{e(n)}</span></li>'
-        for c, n in zip(cols, names)
+        f'<li><span class="dot" style="--c:{c};{bg(x)}"></span><span class="swatch__name">{e(x[0])}</span></li>'
+        for c, x in zip(cols, p["palette"])
     )
     return f'<ul class="swatches" aria-label="Colour palette">{items}</ul>'
 
@@ -317,8 +321,7 @@ def project(n, p, prev_bg):
       {swatches(p, d)}
       <h3>The design language</h3>
       <p>{language}</p>
-      <h3>Signature details</h3>
-      <p>{details}</p>
+      {f"<h3>Signature details</h3><p>{details}</p>" if details else ""}
     </article>
   </div>
 </section>
