@@ -21,6 +21,7 @@ SITE = json.loads((ROOT / 'data/site.json').read_text())
 PROJECTS = json.loads((ROOT / 'data/projects.json').read_text())
 LEGACY = json.loads((ROOT / 'data/legacy-projects.json').read_text())['projects']
 BY_SLUG = {p['slug']: p for p in PROJECTS}
+TEAM = json.loads((ROOT / 'data/team.json').read_text())['members']
 e = html.escape
 
 THEMES = {
@@ -671,10 +672,30 @@ def page_studio(t):
     write(c, 'The studio | Archipixels', 'The Archipixels studio in Gomti Nagar, Lucknow: an artful, maximalist space that reflects how the team designs.', 'studio.jpg', 'studio', 'studio.html', body)
 
 
+def member_name(m):
+    """The name to show in a title or heading. Placeholder members read as 'Team member'."""
+    return 'Team member' if m['name'].startswith('[') else m['name']
+
+
+def member_card(c, m):
+    return f'''<div class="swiper-slide"><a class="member" href="{c.loc}team/{m['slug']}.html">
+  <div class="member__photo"><span>Photo</span></div>
+  <h3>{e(m['name'])}</h3><p>{e(m['role'])}</p>
+</a></div>'''
+
+
+def team_carousel(c, members):
+    """Swipeable row of member cards. Each card links to the member's profile page."""
+    slides = ''.join(member_card(c, m) for m in members)
+    return f'''<!-- component: team-carousel (Swiper) -->
+<div class="swiper team-swiper"><div class="swiper-wrapper">{slides}</div></div>
+<div class="gallery__ui">{ui_arrows('team-prev', 'team-next')}</div>'''
+
+
 def page_team(t):
     c = Ctx(t, 'team.html')
-    founders = ''.join(f'''<li class="founder" data-reveal><h3>{e(n)}</h3><p class="founder__role">{placeholder('[ROLE]')}</p><p>{placeholder('[SHORT BIO: two or three lines on background and what each person leads.]')}</p></li>''' for n in SITE['founders'])
-    members = ''.join('''<li class="member" data-reveal><div class="member__photo"><span>Photo</span></div><h3>[NAME]</h3><p>[ROLE]</p></li>''' for _ in range(4))
+    founders = ''.join(f'''<li class="founder" data-reveal><h3>{e(m['name'])}</h3><p class="founder__role">{e(m['role'])}</p><p>{placeholder(m['intro'])}</p><a class="link-arrow" href="{c.loc}team/{m['slug']}.html">View profile{arrow_svg()}</a></li>''' for m in TEAM if m['founder'])
+    members = [m for m in TEAM if not m['founder']]
     body = f'''<section class="page-hero">
   <div class="container page-hero__grid">
     <div><p class="eyebrow" data-reveal>Our team</p><h1 class="display" data-split>The Archipixels family.</h1>
@@ -693,7 +714,7 @@ def page_team(t):
 </section>
 <section class="section">
   <div class="container">{section_head('', 'The people behind the projects')}
-    <ul class="team-grid">{members}</ul>
+    {team_carousel(c, members)}
   </div>
 </section>
 <section class="section band">
@@ -703,6 +724,47 @@ def page_team(t):
   </div>
 </section>'''
     write(c, 'The team | Archipixels', 'Meet the Archipixels team, led by founders Shivika and Abhinav in Lucknow.', 'team.jpg', 'team', 'team.html', body)
+
+
+def page_member(t, m):
+    """A team member's profile page. The layout is the same in every direction. Text comes from data/team.json."""
+    c = Ctx(t, f"team/{m['slug']}.html")
+    name = member_name(m)
+    if m['founder']:
+        media = f'<img src="{img(c, "founders.jpg")}" alt="{e(m["name"])} and {e(" and ".join(x["name"] for x in TEAM if x["founder"] and x is not m))}, founders of Archipixels" loading="eager">'
+    else:
+        media = '<div class="member__photo member__photo--large"><span>Photo</span></div>'
+    focus = ''.join(f'<li>{e(x)}</li>' for x in m['focus'])
+    others = [x for x in TEAM if x is not m]
+    body = f'''<section class="page-hero">
+  <div class="container page-hero__grid">
+    <div><a class="back" href="{c.loc}team.html">The team</a><p class="eyebrow" data-reveal>{e(m['role'])}</p><h1 class="display" data-split>{e(m['name'])}</h1>
+    <p class="lead" data-reveal>{placeholder(m['intro'])}</p></div>
+    <figure class="page-hero__media parallax">{media}</figure>
+  </div>
+</section>
+<div class="container"><dl class="facts" data-reveal>
+  <div><dt>Role</dt><dd>{e(m['role'])}</dd></div>
+  <div><dt>With the studio since</dt><dd>{placeholder(m['since']) if m['since'].startswith('[') else e(m['since'])}</dd></div>
+  <div><dt>Based in</dt><dd>Lucknow</dd></div>
+  <div><dt>Works on</dt><dd>{placeholder('[PROJECT TYPES]')}</dd></div>
+</dl></div>
+<section class="section story">
+  <div class="container story__grid">
+    <blockquote class="pullquote" data-reveal>{placeholder(m['quote'])}</blockquote>
+    <div class="prose" data-reveal>
+      <p>{placeholder(m['bio'])}</p>
+      <h2 class="mini-title">Focus</h2><ul class="chips-static">{focus}</ul>
+    </div>
+  </div>
+</section>
+<section class="section surface">
+  <div class="container">{section_head('', 'Meet the rest of the team')}
+    {team_carousel(c, others)}
+  </div>
+</section>
+{cta(c)}'''
+    write(c, f'{name} | Archipixels', f"{name}, {m['role']} at Archipixels, an architecture and interior design studio in Lucknow.", 'team.jpg', 'member', 'team.html', body)
 
 
 def page_services(t):
@@ -968,6 +1030,8 @@ def main():
         page_about(t)
         page_studio(t)
         page_team(t)
+        for m in TEAM:
+            page_member(t, m)
         page_services(t)
         page_works(t)
         page_contact(t)

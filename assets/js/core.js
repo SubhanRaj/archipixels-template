@@ -91,6 +91,11 @@
     new Swiper(el, { slidesPerView: 'auto', spaceBetween: 16, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.gallery-prev', nextEl: '.gallery-next' } });
   });
 
+  /* ---- team carousel (cards link to the member pages) ---- */
+  AP.$$('.team-swiper').forEach(function (el) {
+    new Swiper(el, { slidesPerView: 'auto', spaceBetween: 24, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.team-prev', nextEl: '.team-next' } });
+  });
+
   /* ---- helpers for theme scripts ---- */
 
   /* wraps each word of [data-split] elements in .word > span */

@@ -4,7 +4,7 @@ This repository holds static HTML, CSS and JS templates (four dark directions: A
 
 Read `CONTEXT.md` first. It holds the brief, the design language of each direction and the decisions made so far. This file holds the working rules.
 
-The chosen direction is not decided yet. Update this paragraph when it is.
+The Laravel site is built on Direction D. A, B and C stay in the repository as references and are not built into the app.
 
 The templates use no JS framework and no bundler. GSAP, Swiper and GLightbox are vendored in `assets/vendor/`.
 
@@ -20,6 +20,7 @@ The templates use no JS framework and no bundler. GSAP, Swiper and GLightbox are
 - Logos are in `assets/img/brand/` (white, transparent, for the dark themes). Originals are in `assets/brand-originals/`.
 
 Frozen designs
+- The home page of every version (A, B, C and D) is final and locked. Do not change it, and do not let a shared-code change reach it, unless the developer asks. After a build, check that each `index.html` is unchanged in git.
 - The design of A, B and C is final. Do not change their layout, styling or content.
 - You may fix mistakes in them: broken links, stale text in docs and comments, markup errors, bugs, and accessibility or contrast defects.
 - A new site-wide change (a link, a button, a feature) goes into every version where it suits. Build it once in the shared source and style it with each version's existing classes. Add a rule to a theme file only when the existing classes do not cover it.
@@ -33,12 +34,13 @@ Effort
 
 ## Pages
 
-Home, About, Studio, Team, Services, Works, Contact, and one page per project (19). Each direction builds all of them, plus a `404.html` with root-relative paths, because Cloudflare Pages serves it at the missing URL. `build.py` also writes the root `404.html` from `tools/root-404.tpl`.
+Home, About, Studio, Team, Services, Works, Contact, one page per project (19) and one profile page per team member (`team/<slug>.html`, from `data/team.json`). Each direction builds all of them, plus a `404.html` with root-relative paths, because Cloudflare Pages serves it at the missing URL. `build.py` also writes the root `404.html` from `tools/root-404.tpl`.
 
 ## Laravel build
 
 The Laravel app lives in its own repository, `SubhanRaj/archipixels`, at `~/Sites/archipixels`. Read `LARAVEL.md` for the mapping from these files to that app. The rules for the build:
 
+- The Laravel app already carries Direction D. Design changes are made here, then carried over: the developer runs `scripts/sync-template.sh` in the Laravel repository for the CSS, JS, photos and PDF, and edits the matching Blade component for markup. `docs/design-sync.md` in that repository maps each `build.py` and `build_d.py` function to its Blade file. When a change touches D's markup or classes, say which components need the same edit.
 - The Laravel project is where the site lives. Before writing Laravel code, read that project's own `CLAUDE.md`, `composer.json`, routes and existing folder layout, and follow its conventions for structure, naming, formatting, testing and front-end tooling. Where the project has no convention for something, ask the developer before choosing.
 - Do not assume PHP, Laravel, database or Livewire versions. Take them from the project.
 - The Python generators (`tools/build*.py`) exist only to produce the templates. Blade views and partials replace them. Do not port the generators.
@@ -50,7 +52,7 @@ The Laravel app lives in its own repository, `SubhanRaj/archipixels`, at `~/Site
 ## Blade conversion plan
 
 - `layouts/app.blade.php` holds the head, header, footer and scripts. Keep the chosen direction's CSS and JS (for D, `theme-a` and `theme-d` together) and drop the rest and the `theme-switcher`.
-- The `<!-- component: name -->` comments in the generated HTML mark the partials. A, B and C use `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. Direction D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, and adds `approach`, `founders`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
+- The `<!-- component: name -->` comments in the generated HTML mark the partials. A, B and C use `site-header`, `site-footer`, `team-carousel`, `team-member`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. Direction D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, `studio-teaser` (A's, with the team photo strip), `team-carousel` and `team-member`, and adds `approach`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
 - Some markup has no comment but is a partial in the same way: the work card (`.card-work` in A, B and C, `.d-tile` in D), which appears on Works and in the related-projects row, and the project hero and story block. Direction D's project page is described under Direction D below.
 - Projects become an Eloquent model with slug, name, by, tagline, kind, cats, place, lit (hex), language[], details[], palette[], card image, gallery[], story, year and area. `data/projects.json` seeds it.
 - The works filter runs as a Livewire component using the same `data-cats` logic. `works.html#category` deep links already work in `core.js`.
@@ -75,7 +77,7 @@ The Before launch section of `LARAVEL.md` lists what to confirm or fill before l
 
 ## Direction D
 
-`d/` merges the one-page portfolio with the multi-page approach of Direction A. It has 26 pages and the same nested menu as the other directions (About holds About us and Team).
+`d/` merges the one-page portfolio with the multi-page approach of Direction A. It has 34 pages plus the 404 and the same nested menu as the other directions (About holds About us and Team).
 
 - Generate it with `python3 tools/build_d.py`. The sources are the generator, `assets/css/theme-d.css`, `assets/js/theme-d.js` and `data/*.json`. Do not edit the HTML.
 - `build_d.py` imports `build.py` and `build_portfolio.py` and reuses their functions. It replaces `b.write` at runtime and registers `b.THEMES['d']`, so `python3 tools/build.py` does not build D. The preview switcher in every footer lists `SWITCH` from `build.py` (A, B, C and D).
@@ -87,5 +89,6 @@ The Before launch section of `LARAVEL.md` lists what to confirm or fill before l
 - Browser support: the header and veil rules keep a plain `rgba()` fallback before each `color-mix()`, and `-webkit-backdrop-filter` sits beside `backdrop-filter`, for iOS 15 Safari. Keep this pattern in new rules. `--bg-rgb` and `--text-rgb` in each theme feed the fallbacks.
 - Photos come from `portfolio/img/` and the closing logo from `assets/brand-originals/logo-stacked-light.png`. Keep both when moving D.
 - The Contact page layout (facts row, pen drawing, form) is shared with A. Its rules are `.contact-facts`, `.contact-split`, `.contact-art` and `.contact-wa` in `theme-a.css`, built by `contact_split` in `build.py`. D adds the portfolio link under the form.
-- About, Studio and Services are A's pages with D's header and footer. The Studio page has one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.
+- About, Studio, Services and Team are A's pages with D's header and footer, and the home page's founders block is A's `studio` teaser with the team photo strip. The Team page and the member profile pages are shared by all four directions (`page_team`, `page_member`, `team_carousel` in `build.py`). Members come from `data/team.json`, whose text is placeholder until the client supplies it. The carousel is Swiper (`.team-swiper`, started in `core.js`), and each card links to the member's page.
+- About, Studio and Services The Studio page has one placeholder, `[STUDIO HOURS AND HOW TO BOOK A VISIT]`.
 - In the Blade conversion, D's gallery reuses the `project-gallery` partial. The other D components are listed under the Blade conversion plan.

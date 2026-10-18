@@ -83,7 +83,7 @@ What holds across directions:
 
 ### Components (marked by `<!-- component: name -->` comments)
 
-A, B and C use `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, and adds `approach`, `founders`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
+A, B and C use `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery` and `enquiry-form`. D uses `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, `studio-teaser`, `team-carousel` and `team-member`, and adds `approach`, `works-wall` and `closing-line`. The footer also carries a `theme-switcher` comment.
 
 The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and the project story block have no comment. D's project page is A's page (hero, facts, gallery, story, palette), then a next-project band, three related tiles and the call to action. D's home page spotlights are three colour blocks, each a photo beside a tan panel.
 
@@ -141,7 +141,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Idea: the PDF portfolio as a website. A's multi-page structure and look, with the portfolio's colour-block way of showing each project.
 - Palette: A's tokens, plus tan `#C3A17E` with tan ink `#1B100A` (the panels) and gold `#D8A93A`. Each project adds its own page colour.
 - Type: Bodoni Moda and Jost (as A), plus Herr Von Muellerhoff, a script face used for the closing line.
-- Home: hero slideshow (A's, with the headline on two lines on wide screens), the approach (titled "Design begins with curiosity.", because the hero already carries the studio line), the founders, three spotlight projects in their own colours (Helios Maximus, Chihiro, Mio Marito Gelato), the works wall, services and the closing line with the studio logo.
+- Home: hero slideshow (A's, with the headline on two lines on wide screens), the approach (titled "Design begins with curiosity.", because the hero already carries the studio line), the founders with A's team photo strip, three spotlight projects in their own colours (Helios Maximus, Chihiro, Mio Marito Gelato), the works wall, services and the closing line with the studio logo.
 - Works: a filterable wall of all 19 projects, each tile with its colour as a bottom edge.
 - Project page: A's page on the black background, in this order: hero, facts row, gallery slider, design language and story, palette. The slider lists the project's single-shot photos from `data/portfolio.json`. It has no visible heading (the heading stays in the page for screen readers and search engines) and its arrows sit on its left and right edges. A next-project band in the next project's colour follows the palette, then three related tiles in the same tile grid as the works wall. The related tiles stack one per row at 640 px and below.
 - Motion: photos wipe open and drift on scroll, tan panels and swatches enter in sequence, the closing line writes itself out.
@@ -187,7 +187,7 @@ The list of what to decide, confirm or fill before launch is in the Before launc
 - Rebuild only the builders whose output the change touches. A change to `build.py` also needs `build_d.py`, which imports it. A change to a stylesheet or script needs no rebuild.
 - Check only the pages a change touches: one page per version, at 1440 and 390 px. Look for horizontal scroll, broken images and console errors. When a change touches project pages, use a light-coloured project (The Quiet Abode, Jewellery Spaces), a portrait-photo project (Archipixels Homes) or Warehouse Studio. Run the full link and console check on all pages only when the developer asks for it.
 - A, B and C are frozen. Fix mistakes in them and leave their design alone. A new site-wide change goes into every version where it suits, built once in the shared source and styled with each version's existing classes.
-- The live Laravel site is a separate project. Read that project's own `CLAUDE.md` and follow its conventions. Do not port the Python generators.
+- The live Laravel site is a separate project, built on Direction D. Read that project's own `CLAUDE.md` and follow its conventions. Do not port the Python generators. Design changes are made here and carried over with the Laravel repository's `scripts/sync-template.sh` and `docs/design-sync.md`.
 
 ## 9. Starting a new session
 

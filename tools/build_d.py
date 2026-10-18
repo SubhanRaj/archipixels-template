@@ -277,37 +277,6 @@ def page_project(p, idx):
             p['card'], 'project', 'works.html', body, style)
 
 
-def page_team():
-    c = b.Ctx('d', 'team.html')
-    team = PF['fixed']['team']
-    fo = PF['fixed']['founders']
-    names = ''.join(f'<li class="founder" data-reveal><h3>{e(n)}</h3><p class="founder__role">Founder</p></li>' for n in SITE['founders'])
-    body = f'''<section class="page-hero">
-  <div class="container page-hero__grid">
-    <div><p class="eyebrow" data-reveal>Our team</p><h1 class="display" data-split>The Archipixels family.</h1>
-    <p class="lead" data-reveal>We believe that when people are valued, supported and given love, they create their best work. We are more than a team; we are the Archipixels family, growing together, celebrating every milestone and standing by one another through every challenge.</p></div>
-    <figure class="page-hero__media parallax"><img src="{pimg(c, team['file'])}" alt="The Archipixels team gathered on sofas around a coffee table" loading="eager"></figure>
-  </div>
-</section>
-<section class="section surface">
-  <div class="container founders">
-    <figure class="founders__media parallax"><img src="{pimg(c, fo['file'])}" alt="Shivika and Abhinav, founders of Archipixels" loading="lazy"></figure>
-    <div class="founders__copy">
-      <h2 class="h2" data-split>The founders</h2>
-      <ul class="founders__list">{names}</ul>
-      <p class="lead" data-reveal>Partners in life, work and a shared curiosity for everything around us. Our love for design, travel, art and the unexpected has shaped the journey of Archipixels.</p>
-    </div>
-  </div>
-</section>
-<section class="section band">
-  <div class="container story__grid">
-    <blockquote class="pullquote" data-reveal>The best ideas rarely happen in isolation.</blockquote>
-    <div class="prose" data-reveal><p>We are looking for collaborators who share our curiosity, and clients with extraordinary ambitions.</p><div class="actions"><a class="btn btn--light" href="{c.loc}contact.html">Get in touch</a></div></div>
-  </div>
-</section>'''
-    write_d(c, 'The team | Archipixels', 'Meet the Archipixels team, led by founders Shivika and Abhinav in Lucknow.', 'team.jpg', 'team', 'team.html', body)
-
-
 def page_contact():
     c = b.Ctx('d', 'contact.html')
     body = f'''<section class="page-hero page-hero--simple">
@@ -332,7 +301,9 @@ def main():
     page_home()
     b.page_about('d')
     b.page_studio('d')
-    page_team()
+    b.page_team('d')
+    for m in b.TEAM:
+        b.page_member('d', m)
     b.page_services('d')
     page_works()
     page_contact()

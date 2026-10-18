@@ -1,0 +1,19 @@
+{
+  "_note": "Placeholder team. Each entry gets a profile page at team/<slug>.html. Replace the bracketed text when the client supplies it. Founders are real, their role, intro and bio are not supplied yet.",
+  "members": [
+    {"slug": "shivika", "name": "Shivika", "role": "Founder", "founder": true,
+     "intro": "[ONE-LINE INTRO: what Shivika leads at the studio.]",
+     "bio": "[SHORT BIO: two or three paragraphs on background, training and the work Shivika leads.]",
+     "since": "2018", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"},
+    {"slug": "abhinav", "name": "Abhinav", "role": "Founder", "founder": true,
+     "intro": "[ONE-LINE INTRO: what Abhinav leads at the studio.]",
+     "bio": "[SHORT BIO: two or three paragraphs on background, training and the work Abhinav leads.]",
+     "since": "2018", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"},
+    {"slug": "member-1", "name": "[NAME]", "role": "[ROLE]", "founder": false, "intro": "[ONE-LINE INTRO]", "bio": "[SHORT BIO: two or three paragraphs on background and the work this person does.]", "since": "[YEAR JOINED]", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"},
+    {"slug": "member-2", "name": "[NAME]", "role": "[ROLE]", "founder": false, "intro": "[ONE-LINE INTRO]", "bio": "[SHORT BIO: two or three paragraphs on background and the work this person does.]", "since": "[YEAR JOINED]", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"},
+    {"slug": "member-3", "name": "[NAME]", "role": "[ROLE]", "founder": false, "intro": "[ONE-LINE INTRO]", "bio": "[SHORT BIO: two or three paragraphs on background and the work this person does.]", "since": "[YEAR JOINED]", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"},
+    {"slug": "member-4", "name": "[NAME]", "role": "[ROLE]", "founder": false, "intro": "[ONE-LINE INTRO]", "bio": "[SHORT BIO: two or three paragraphs on background and the work this person does.]", "since": "[YEAR JOINED]", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"},
+    {"slug": "member-5", "name": "[NAME]", "role": "[ROLE]", "founder": false, "intro": "[ONE-LINE INTRO]", "bio": "[SHORT BIO: two or three paragraphs on background and the work this person does.]", "since": "[YEAR JOINED]", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"},
+    {"slug": "member-6", "name": "[NAME]", "role": "[ROLE]", "founder": false, "intro": "[ONE-LINE INTRO]", "bio": "[SHORT BIO: two or three paragraphs on background and the work this person does.]", "since": "[YEAR JOINED]", "focus": ["[FOCUS AREA]", "[FOCUS AREA]"], "quote": "[A LINE IN THEIR OWN WORDS]"}
+  ]
+}

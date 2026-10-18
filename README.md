@@ -28,7 +28,7 @@ Four complete website directions (A, B, C and D) and a one-page portfolio, built
 
 ## What is in the package
 
-- Directions A, B, C and D, each with 26 pages: Home, About, Studio, Team, Services, Works, Contact and one page for each of the 19 projects. Each version also has its own `404.html`. The root has a fallback `404.html` for every other address, and Cloudflare Pages serves the nearest one.
+- Directions A, B, C and D, each with 34 pages: Home, About, Studio, Team, Services, Works, Contact, one page for each of the 19 projects and one profile page for each of the 8 team members (the 2 founders and 6 placeholders). Each version also has its own `404.html`. The root has a fallback `404.html` for every other address, and Cloudflare Pages serves the nearest one.
 - A one-page portfolio version, which is the PDF portfolio as a single scrolling page.
 - A chooser page (`index.html`) that links to every version, and a small switcher at the bottom left of each page that opens the same page in another direction.
 - Mood boards for each direction and for the portfolio version in `moodboards/`.
@@ -69,7 +69,7 @@ Each command rebuilds only its own folders.
 
 `d/` merges the one-page portfolio with the multi-page structure and style of Direction A. The header menu is Works, About (with About us and Team below it), Studio, Services, Portfolio and Contact. Portfolio opens the one-page portfolio in every version.
 
-- Home has a hero slideshow, the approach, the founders, three spotlight projects in their own colours, the works wall and the closing line.
+- Home has a hero slideshow, the approach, the founders with the team photo strip, three spotlight projects in their own colours, the works wall and the closing line.
 - Works is a filterable wall of all 19 projects.
 - Each project page uses A's layout: a full-background hero photo, a facts row, the design language, signature details and story, a colour palette, a gallery slider with a lightbox, related projects and an enquiry call to action. D uses the same page on the black background with the gallery moved up under the facts row (no visible heading, arrows on the slider's edges), and puts a next-project band after the palette. Warehouse Studio has one photo, so its gallery has one slide and no arrows.
 - The portfolio PDF (5 MB) is at `assets/downloads/Archipixels-Portfolio.pdf`. Every version has one "Get our portfolio" link in the footer, which opens the PDF in a new tab. D repeats it in the closing band and on the contact page. The one-page portfolio has a Back to site link in its top bar, and it offers the PDF from the contact section, the index menu and the footer.
@@ -90,6 +90,7 @@ Each command rebuilds only its own folders.
 
 - `index.html`
 - `about.html`, `studio.html`, `team.html`, `services.html`
+- `team/<slug>.html`, a profile page for each person in `data/team.json`. The Team page shows the members in a swipeable carousel that links to them
 - `works.html`, a filterable list of 19 projects plus a text list of earlier Lucknow work
 - `projects/<slug>.html`, 19 project pages
 - `contact.html`

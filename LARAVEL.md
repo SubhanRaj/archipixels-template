@@ -2,11 +2,14 @@
 
 The static templates in this repository are the design reference for the Archipixels website. The site is built in Laravel 13 in a separate repository, `SubhanRaj/archipixels`, checked out at `~/Sites/archipixels`. That repository's own `CLAUDE.md`, `ROADMAP.md` and `ARCHITECTURE.md` hold the build rules. This file maps the templates to that app.
 
-## Starting point
+## Status
 
-1. Pick the direction (A, B, C or D). Direction D combines the portfolio look with A's multi-page structure.
-2. Read the Laravel project's `CLAUDE.md`, `composer.json` and existing routes. Follow what is there.
-3. Move the chosen direction's markup into Blade, its CSS and JS into `public/assets/` (the app has no build step), and `data/*.json` into migrations and seeders.
+The direction is D, and the Laravel app has it built: every page, the one-page portfolio and the error pages, with `data/*.json` loaded by seeders. Design changes continue in this repository. The app's `docs/design-sync.md` describes how a change is carried over, and its `scripts/sync-template.sh` copies the CSS, JS, vendor files, photos and PDF.
+
+## Starting point (for a new direction or a rebuild)
+
+1. Read the Laravel project's `CLAUDE.md`, `composer.json` and existing routes. Follow what is there.
+2. Move the direction's markup into Blade, its CSS and JS into `public/assets/` (the app has no build step), and `data/*.json` into migrations and seeders.
 
 ## Target app
 
@@ -51,7 +54,7 @@ Build rules that apply from the first migration:
 `layouts/app.blade.php` holds the head, skip link, header, footer and scripts. The generated HTML marks each partial with a `<!-- component: name -->` comment:
 
 - A, B and C: `site-header`, `site-footer`, `hero-slideshow`, `featured-works`, `intro`, `services`, `range-band`, `homes-and-experiences`, `studio-teaser`, `cta-band`, `page-hero`, `filter-bar`, `palette`, `project-gallery`, `enquiry-form`.
-- Direction D: `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, plus `approach`, `founders`, `works-wall` and `closing-line`.
+- Direction D: `site-header`, `site-footer`, `hero-slideshow`, `services`, `homes-and-experiences`, `cta-band`, `page-hero`, `filter-bar`, `project-gallery` and `enquiry-form`, plus `approach`, `studio-teaser`, `team-carousel`, `team-member`, `works-wall` and `closing-line`.
 - The work card has no comment. It is `.card-work` in A, B and C and `.d-tile` in D, and it appears on Works and in the related-projects row. The project hero and the story block (design language, story, signature details) have no comment either.
 - A Direction D project page has these parts in order, none with a comment: A's hero and facts row, the gallery (no visible heading, arrows on the slider's edges), the story block, the palette, a next-project band, three related tiles and the call to action. The home page spotlights are three colour blocks, each a photo beside a tan panel.
 - The portfolio PDF in `assets/downloads/` goes in `public/` or a storage disk, and the download buttons link to it.
@@ -63,7 +66,8 @@ Build rules that apply from the first migration:
 |---|---|
 | `/` | Home |
 | `/about` | About |
-| `/team` | Team (listed under About in the menu) |
+| `/team` | Team: founders, then a swipeable member carousel (listed under About in the menu) |
+| `/team/{slug}` | A team member's profile page. `data/team.json` is the placeholder content, and each person becomes a `team_members` row |
 | `/studio` | Studio |
 | `/services` | Services |
 | `/works` | Works, filterable, with `#category` deep links |
@@ -86,7 +90,7 @@ Team members and services can move to database tables once the client supplies t
 - Colours, fonts and shadows are tokens. Components never hold literal theme colours.
 - JavaScript hides content right before it animates. CSS never hides content. `prefers-reduced-motion` turns the motion off.
 - Project pages set `--lit` from the project's `lit` value and use the body class `page-project`.
-- The works filter uses `data-cats`. In the Laravel app it runs as a Livewire component with the same category logic.
+- The works filter uses `data-cats`. The Laravel app runs the template's `core.js` filter. A Livewire component with the same category logic is optional.
 
 ## Before launch
 
@@ -98,7 +102,7 @@ Decisions and content from the client:
 - Confirm the contact details. The portfolio gives `1/146, Gomti Nagar, Lucknow` and `hello@archipixels.com`. The old Wix site gave `B-2, 1222, DLF MyPad, Vibhuti Khand, Gomtinagar` and `info@archipixels.com`. The templates use the portfolio values.
 - Fill the placeholders (they show with a dashed underline): `[YEAR]`, `[AREA IN SQ FT]`, `[LOCATION]` and `[PROJECT STORY]` on each project page, `[ROLE]` and `[SHORT BIO]` for each founder, the team member cards, `[STUDIO HOURS AND HOW TO BOOK A VISIT]` on the studio page and `[TURNKEY EXAMPLES]` on the services page.
 - Write the real project stories. The text on each project page comes only from the portfolio facts.
-- Add individual team members when the client supplies them. The studio and team sections use the PDF photos only.
+- Replace the placeholder team in `data/team.json` (6 members and the founders' roles, intros and bios) when the client supplies it. Each person's profile page needs a photo, role, intro, bio, year joined and focus areas.
 - Check the colour swatches. The names come from the portfolio and the hex values were estimated by eye.
 - Confirm the Dubai mentions in D's About page, which repeats A's story.
 
