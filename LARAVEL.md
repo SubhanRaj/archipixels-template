@@ -18,7 +18,7 @@ The direction is D, and the Laravel app has it built: every page, the one-page p
 | Repository | `SubhanRaj/archipixels`, local path `~/Sites/archipixels` |
 | Runtime | PHP ^8.5, Laravel 13, Livewire 4 |
 | Database | MariaDB locally, MySQL on Hostinger. Migrations use only features both support. |
-| Public site | Blade layout plus the chosen direction's CSS and JS from this repository, served from `public/assets/`. The templates are token-driven custom CSS, so the public side uses neither Tailwind nor Bootstrap. |
+| Public site | Full-page Livewire components with Blade views, plus the chosen direction's CSS and JS from this repository, served from `public/assets/`. The templates are token-driven custom CSS, so the public side uses neither Tailwind nor Bootstrap. |
 | Admin panel (later phase) | Livewire 4 with Tailwind from the Play CDN, in the style of the Excise Livewire apps (`upexcise-stats-dashboard`, `excise-budget-tracker`). Tables, filters and confirm dialogs are reused from them. |
 | Front-end build | None. Hostinger shared hosting has no Node, so the public assets are vendored and the admin panel loads Tailwind from the CDN. The CDN is allowed in the admin CSP only. The public pages keep the strict CSP. |
 | Testing and style | Pest 4, Laravel Pint |
@@ -49,16 +49,15 @@ Build rules that apply from the first migration:
 | `assets/img/brand/`, `assets/brand-originals/` | Logos, favicon and touch icon. |
 | `data/*.json` | Seed data. |
 
-## Changes still to carry into the app
+## State of the app
 
-These changes are in the templates and not yet in the Laravel app.
+The Laravel app carries all of this and runs on Livewire:
 
-- Run `scripts/sync-template.sh` (CSS, JS, photos, `assets/img/earlier/`, the new `portfolio/img/` files and the PDF). The centred last row of the project walls is CSS only (`.d-wall` in `theme-d.css`, `.wall` in the portfolio CSS, `.grid-works` in `core.css`) and needs no markup change. `.legacy__list` also changed in `core.css`: each row is now a link.
-- Four projects: poddar-mansion, mr-singhs-dwelling, house-of-mishras, house-of-agarwals, appended to `projects.json` and `portfolio.json` (the projects seeder, with colours and photo lists). Jewellery Spaces has no signature details now, and the project story and portfolio panel leave the heading out when the list is empty.
-- Palette photos: a `palette` entry in `projects.json` can have a third item, a file in `assets/img/swatches/` (a photo of the material, cut from the PowerPoint). The four new projects use them. In the palette partial and D's panel swatches the photo goes on the circle (`background-image` on `.swatch__dot` and `.d-dot`, inline), and the hex stays as the fallback colour. Add a nullable image column to the palette items, and `core.css` gets `background: var(--sw) center / cover` on `.swatch__dot`.
-- Headings: the home wall reads "Our projects." with the "Selected works" eyebrow (`works-wall`), the portfolio wall reads "Our projects.", and the Works page block is "Our earlier works" (no place name).
-- Earlier works: `legacy-projects.json` now carries `slug`, `story` (paragraphs), local `images` (files in `assets/img/earlier/`) and `wix_images`. They need a model and table (`earlier_works`: slug, name, category, type, location, year, summary, story, images, sort), a seeder, a `/earlier/{slug}` route, a view built like `page_earlier` in `tools/build.py`, rows linking to it in the Works page, and sitemap entries. Leave out the year, location and story when they are empty.
-- Download button: `assets/downloads/Archipixels-Portfolio.pdf` is the new 31-page file.
+- Every public page is a full-page Livewire component rendered on the server, with `wire:navigate` links that swap the next page in. The scripts load once, and `core.js` restarts the page on `livewire:navigated` (`AP.stop()`, `start()` and every `AP.run()` function), so `theme-a.js` and `theme-d.js` wrap their setup in `AP.run()`. Keep that pattern in any new page script. A static page runs the scripts once, as before.
+- The Works filter and the enquiry form are Livewire components. The works filter reads `?category=` and the form validates as the visitor leaves a field. Sign-in stays on plain controllers.
+- The one-page portfolio has its own CSS, scripts and theme, so links to and from it are plain page loads. The app's `portfolio.js` has no enquiry fetch handler, because the form is a Livewire component.
+- The 23 projects, the earlier works with their pages (`/earlier/{slug}`) and the palette photos are in the database seeders (`database/seeders/data/`), copied from `data/*.json`. A palette entry's third item is the swatch photo.
+- Palette photos are cut from the swatch images in the client's PowerPoint (`assets/img/swatches/`). Run `python3 tools/check_images.py` after adding photos.
 
 ## Layout and partials
 
@@ -102,7 +101,7 @@ Team members and services can move to database tables once the client supplies t
 - Colours, fonts and shadows are tokens. Components never hold literal theme colours.
 - JavaScript hides content right before it animates. CSS never hides content. `prefers-reduced-motion` turns the motion off.
 - Project pages set `--lit` from the project's `lit` value and use the body class `page-project`.
-- The works filter uses `data-cats`. The Laravel app runs the template's `core.js` filter. A Livewire component with the same category logic is optional.
+- The works filter uses `data-cats` in the templates. The Laravel app filters on the server in the Works component (`?category=`).
 
 ## Before launch
 
