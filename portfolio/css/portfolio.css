@@ -41,8 +41,6 @@ img { max-width: 100%; display: block; }
 a { color: inherit; }
 strong { font-weight: 600; }
 
-.skip { position: fixed; left: 12px; top: -60px; z-index: 100; background: var(--gold); color: var(--tan-ink); padding: 0.6rem 1rem; font: 500 0.85rem var(--sans); text-decoration: none; transition: top 0.2s; }
-.skip:focus { top: 12px; }
 
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
@@ -334,3 +332,12 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 .glightbox-clean .gslide-description { background: #1a0e0a; }
 .glightbox-clean .gslide-title { color: var(--cream); font: 500 1.1rem var(--display); margin: 0; }
 .goverlay { background: rgba(14, 5, 4, 0.94); }
+
+/* arrival reveal: runs on every load of the page, however it was reached. CSS only, so it needs no script and removes itself. */
+.veil { position: fixed; inset: 0; z-index: 300; display: grid; place-content: center; justify-items: center; gap: 1.1rem; background: var(--cover); animation: veil-lift 0.95s cubic-bezier(0.76, 0, 0.24, 1) 1s both; }
+.veil img { width: clamp(170px, 20vw, 250px); height: auto; animation: veil-in 0.9s ease-out 0.1s both; }
+.veil__rule { width: clamp(90px, 10vw, 140px); height: 1px; background: var(--gold); transform-origin: left; animation: veil-rule 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.3s both; }
+@keyframes veil-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes veil-rule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes veil-lift { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .veil { display: none; } }

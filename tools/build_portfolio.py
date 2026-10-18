@@ -133,7 +133,7 @@ ICON_IG = (
 
 
 def header():
-    return f"""<a class="skip" href="#story">Skip to content</a>
+    return f"""<div class="veil" aria-hidden="true"><img src="../assets/img/brand/logo-horizontal-white.png" width="184" height="38" alt=""><span class="veil__rule"></span></div>
 <div class="progress" aria-hidden="true"><span></span></div>
 <header class="top" id="top">
   <a class="top__brand" href="#cover" aria-label="Archipixels, back to the start">

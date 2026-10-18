@@ -106,7 +106,8 @@
   /* ---- motion ---- */
 
   /* cover entrance and exit */
-  var intro = gsap.timeline({ defaults: { ease: 'power4.out' } });
+  /* the arrival veil (portfolio.css) lifts at about 1.1 s, so the cover text waits for it */
+  var intro = gsap.timeline({ delay: 1.1, defaults: { ease: 'power4.out' } });
   intro
     .from('.cover__title', { yPercent: 18, opacity: 0, duration: 1.6 }, 0.2)
     .from('.cover__rule', { scaleX: 0, duration: 1.4 }, 0.7)
