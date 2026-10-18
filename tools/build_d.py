@@ -65,13 +65,13 @@ def project_meta(p):
     return b.meta_line(p)
 
 
-def swatches(p):
+def swatches(c, p):
     d = PF['projects'][p['slug']]
     cols = d.get('swatches') or [x[1] for x in p['palette']]
     if not p['palette']:
         return ''
-    items = ''.join(f'<li><span class="d-dot" style="--c:{col}"></span><span>{e(n)}</span></li>'
-                    for col, (n, _) in zip(cols, p['palette']))
+    items = ''.join(f'<li><span class="d-dot" style="--c:{col};{b.swatch_bg(c, x)}"></span><span>{e(x[0])}</span></li>'
+                    for col, x in zip(cols, p['palette']))
     return f'<ul class="d-swatches" aria-label="Colour palette">{items}</ul>'
 
 
@@ -136,7 +136,7 @@ def pj_block(c, p, n, prev_bg, full):
       <{title_tag} class="d-panel__title">{e(p['name'])}</{title_tag}>
       {by}
       <p class="d-panel__tagline">{e(p['tagline'])}</p>
-      {swatches(p)}
+      {swatches(c, p)}
       {tail}
     </article>
   </div>
@@ -186,7 +186,7 @@ def founders(c):
 def wall(c, projects=None, link=True, title=None):
     items = projects or PROJECTS
     lis = ''.join(tile(c, p, PROJECTS.index(p) + 1) for p in items)
-    head = b.section_head('Selected works', title or f'All {len(PROJECTS)} projects.',
+    head = b.section_head('Selected works', title or 'Our projects.',
                           (c.loc + 'works.html', 'View all works') if link else None)
     return f'''<!-- component: works-wall -->
 <section class="section d-wallsec">
@@ -234,7 +234,6 @@ def page_works():
     c = b.Ctx('d', 'works.html')
     chips = ''.join(f'<button class="chip{" is-active" if k == "all" else ""}" type="button" data-filter="{k}" aria-pressed="{"true" if k == "all" else "false"}">{e(l)}</button>' for k, l in b.FILTERS)
     lis = ''.join(tile(c, p, i + 1) for i, p in enumerate(PROJECTS))
-    legacy = ''.join(f'<li><span class="legacy__name">{e(x["name"])}</span><span class="legacy__meta">{e(x["type"])} · {e(x["location"])}</span><span class="legacy__year">{e(x["year"])}</span></li>' for x in b.LEGACY)
     body = f'''<section class="page-hero page-hero--simple">
   <div class="container">
     <p class="eyebrow" data-reveal>Selected works</p>
@@ -249,11 +248,7 @@ def page_works():
     <ul class="d-wall d-wall--works">{lis}</ul>
   </div>
 </section>
-<section class="section surface legacy">
-  <div class="container">{b.section_head('', 'Earlier work in Lucknow')}
-    <ul class="legacy__list" data-reveal>{legacy}</ul>
-  </div>
-</section>
+{b.legacy_section(c)}
 {b.cta(c)}'''
     write_d(c, 'Selected works | Archipixels', 'Hotels, cafés, residences, workplaces and themed stays by Archipixels.', 'deco-facade.jpg', 'works', 'works.html', body)
 
@@ -270,7 +265,7 @@ def page_project(p, idx):
 </a>'''
     rel = [PROJECTS[(idx + k) % len(PROJECTS)] for k in (2, 3, 4)]
     related = f'''<section class="section d-related"><div class="container">{b.section_head('', 'More projects', (c.loc + 'works.html', 'All works'))}<ul class="d-wall d-wall--three">{''.join(tile(c, r, PROJECTS.index(r) + 1) for r in rel)}</ul></div></section>'''
-    body = (b.project_hero_a(c, p) + b.project_gallery(c, p, [pimg(c, im['file']) for im in PF['projects'][p['slug']]['images']], inline=True) + b.project_story(p) + b.project_palette(p)
+    body = (b.project_hero_a(c, p) + b.project_gallery(c, p, [pimg(c, im['file']) for im in PF['projects'][p['slug']]['images']], inline=True) + b.project_story(p) + b.project_palette(c, p)
             + nxt_html + related + b.cta(c, 'Have a space in mind? Tell us its story.'))
     style = f'<style>body.page-project{{--lit:{p["lit"]}}}</style>\n'
     write_d(c, f"{p['name']} | Archipixels", f"{p['name']}: {p['tagline']}. {p['kind']} by Archipixels.",
@@ -310,6 +305,8 @@ def main():
     page_404()
     for i, p in enumerate(PROJECTS):
         page_project(p, i)
+    for x in b.LEGACY:
+        b.page_earlier('d', x)
     print('built', sum(1 for _ in OUT.glob('**/*.html')), 'pages in d/')
 
 
