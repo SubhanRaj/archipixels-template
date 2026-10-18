@@ -66,4 +66,24 @@
       });
     }
   });
+
+  /* The portfolio is a separate page with its own look, so a link to it is a normal page load. The screen fades to the
+     portfolio's colour first, and the portfolio's own opening (the veil in portfolio.css) starts from that same colour. */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank' || a.hasAttribute('download')) return;
+    if (AP.reduce) return;
+    var url;
+    try { url = new URL(a.href, window.location.href); } catch (err) { return; }
+    if (url.origin !== window.location.origin || !/\/portfolio(\/index\.html)?\/?$/.test(url.pathname)) return;
+    e.preventDefault();
+    var veil = document.createElement('div');
+    veil.className = 'leave-veil';
+    document.body.appendChild(veil);
+    window.setTimeout(function () { window.location.href = a.href; }, 340);
+  });
+  /* A page restored by the back button must not stay covered. */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) $$('.leave-veil').forEach(function (v) { v.remove(); });
+  });
 })();

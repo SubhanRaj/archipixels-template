@@ -173,3 +173,7 @@ body.theme-d {
 .btn--outline { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1px var(--text); }
 .btn--outline:hover { background: var(--text); color: var(--bg); }
 .d-closing .actions { flex-wrap: wrap; }
+
+/* fades the screen to the portfolio's colour before the portfolio opens (theme-d.js) */
+.leave-veil { position: fixed; inset: 0; z-index: 9999; background: #321B13; opacity: 0; animation: leave-in .32s ease forwards; }
+@keyframes leave-in { to { opacity: 1; } }
