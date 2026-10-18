@@ -553,7 +553,7 @@ a.member:hover h3 { color: var(--text); }
    and cannot flash bright first; it ends on its own, so nothing can stay hidden. */
 @keyframes hero-photo-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) {
-  .hero--a .hero-swiper, .phero--a .phero__media { animation: hero-photo-in 1.5s cubic-bezier(.33, 0, .2, 1) backwards; }
+  body:not([data-motion="off"]) .hero--a .hero-swiper, body:not([data-motion="off"]) .phero--a .phero__media { animation: hero-photo-in 1.5s cubic-bezier(.33, 0, .2, 1) backwards; }
 }
 @media (prefers-reduced-motion: no-preference) { .map-card__pin { animation: map-pin 3.4s ease-in-out infinite; } }
 @keyframes map-pin { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }

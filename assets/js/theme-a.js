@@ -11,8 +11,8 @@
     var hero = $('.hero--a');
     if (hero && window.Swiper) {
       var hs = AP.swiper($('.hero-swiper', hero), {
-        effect: 'fade', fadeEffect: { crossFade: true }, speed: 1600, rewind: true,
-        autoplay: AP.reduce ? false : { delay: 6500, disableOnInteraction: false },
+        effect: 'fade', fadeEffect: { crossFade: true }, speed: Math.round(AP.heroFade * 1000), rewind: true,
+        autoplay: AP.reduce ? false : { delay: Math.round(AP.heroDelay * 1000), disableOnInteraction: false },
         pagination: { el: '.hero__pagination', clickable: true },
         navigation: { prevEl: '.hero-prev', nextEl: '.hero-next' }, keyboard: { enabled: true }
       });
@@ -47,8 +47,7 @@
 
     AP.splitReveal({ dur: 1.3, stagger: .09, ease: 'expo.out' });
     AP.reveals({ y: 44, dur: 1.1, ease: 'expo.out' });
-    AP.parallax();
-    AP.tilt(4, 0);
+    if (!AP.soft) { AP.parallax(); AP.tilt(4, 0); } /* soft motion keeps the fades and drops the parallax and tilt */
 
     $$('.rule').forEach(function (r) {
       gsap.set(r, { scaleX: 0 });

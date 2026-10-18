@@ -7,6 +7,7 @@
   'use strict';
   var d = document;
   var AP = window.AP = {
+    osReduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     fine: window.matchMedia('(hover: hover) and (pointer: fine)').matches,
     $: function (s, r) { return (r || d).querySelector(s); },
@@ -37,17 +38,17 @@
   function wallCount() { return AP.$('.works [data-count], .works .filters__count'); }
   AP.wallOut = function (done) {
     var t = wallTiles();
-    if (AP.reduce || !hasGsap || !t.length) { if (done) done(); return; }
+    if (AP.reduce || !AP.filterFx || !hasGsap || !t.length) { if (done) done(); return; }
     gsap.to(t, { opacity: 0, duration: .5, stagger: { amount: .2 }, ease: 'power1.inOut', overwrite: true, onComplete: done });
   };
   AP.wallIn = function (wait) {
     var t = wallTiles(), n = wallCount();
-    if (AP.reduce || !hasGsap) return;
+    if (AP.reduce || !AP.filterFx || !hasGsap) return;
     if (t.length) gsap.fromTo(t, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.2, delay: wait || 0, stagger: { amount: Math.min(.7, t.length * .06) }, ease: 'power2.out', overwrite: true, clearProps: 'opacity,transform' });
     if (n) gsap.fromTo(n, { opacity: 0 }, { opacity: 1, duration: .7, delay: wait || 0, ease: 'power1.out', clearProps: 'opacity,transform' });
   };
   AP.wallBack = function () { if (hasGsap) gsap.to(wallTiles(), { opacity: 1, y: 0, duration: .25, overwrite: true, clearProps: 'opacity,transform' }); };
-  AP.chipPop = function (chip) { if (!AP.reduce && hasGsap && chip) gsap.fromTo(chip, { scale: .96 }, { scale: 1, duration: .6, ease: 'power2.out', clearProps: 'transform' }); };
+  AP.chipPop = function (chip) { if (!AP.reduce && AP.filterFx && hasGsap && chip) gsap.fromTo(chip, { scale: .96 }, { scale: 1, duration: .6, ease: 'power2.out', clearProps: 'transform' }); };
 
   /* The Livewire filter (Laravel): a chip press starts the fade at once, and the new tiles rise when the page has been updated. */
   var filtering = false, fadedAt = 0; /* fadedAt: when the old tiles have finished fading, so the new ones never cut in */
@@ -87,7 +88,7 @@
       window.setTimeout(function () { if (el.isConnected) { AP.leaving = false; gsap.to(el, { opacity: 0, duration: .3, onComplete: function () { el.remove(); } }); } }, 6000);
     });
   }
-  function fadeOn() { return !AP.reduce && hasGsap && !AP.leaving && !d.body.classList.contains('page-home'); } /* the home pages keep their own motion */
+  function fadeOn() { return !AP.reduce && AP.pageFade && hasGsap && !AP.leaving && !d.body.classList.contains('page-home'); } /* the home pages keep their own motion */
   /* A plain link: the page loads after the fade. */
   d.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
@@ -109,8 +110,22 @@
   });
   window.addEventListener('pageshow', function (e) { if (e.persisted) { AP.leaving = false; AP.$$('.page-fade').forEach(function (c) { c.remove(); }); } });
 
+  /* The admin's Motion settings reach the page as data attributes on the body (the Laravel layout writes them). A page
+     without them, such as the static templates, keeps the defaults. "off" works like the visitor's reduced-motion setting. */
+  function readMotion() {
+    var b = d.body, mode = b.getAttribute('data-motion') || 'full';
+    AP.reduce = AP.osReduce || mode === 'off';
+    AP.soft = mode === 'soft';
+    AP.heroDelay = parseFloat(b.getAttribute('data-hero-delay')) || 6.5;
+    AP.heroFade = parseFloat(b.getAttribute('data-hero-fade')) || 1.6;
+    AP.pageFade = b.getAttribute('data-page-fade') !== '0';
+    AP.filterFx = b.getAttribute('data-filter-motion') !== '0';
+  }
+  readMotion();
+
   function start() {
     AP.leaving = false;
+    readMotion();
     life = window.AbortController ? new AbortController() : { signal: undefined, abort: function () {} };
     var sig = life.signal;
     /* ---- header: scrolled state + mobile nav ---- */
