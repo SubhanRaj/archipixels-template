@@ -57,6 +57,7 @@ The Laravel app carries all of this and runs on Livewire:
 - The Works filter and the enquiry form are Livewire components. The works filter reads `?category=` and the form validates as the visitor leaves a field. Sign-in stays on plain controllers.
 - The one-page portfolio has its own CSS, scripts and theme, so links to and from it are plain page loads. The app's `portfolio.js` has no enquiry fetch handler, because the form is a Livewire component.
 - The 23 projects, the earlier works with their pages (`/earlier/{slug}`) and the palette photos are in the database seeders (`database/seeders/data/`), copied from `data/*.json`. A palette entry's third item is the swatch photo.
+- Every page, project, earlier work and team member gets a generated 1200 x 630 share picture for link previews (`App\Support\ShareCard`, GD, fonts in `resources/fonts/`). The address carries a hash of its content, so a change is picked up without a command. `php artisan share:generate` draws them all ahead of time. A security header middleware sets a CSP with a nonce, and the admin (Tailwind, Livewire screens over the POST routes) has its own policy.
 - Palette photos are cut from the swatch images in the client's PowerPoint (`assets/img/swatches/`). Run `python3 tools/check_images.py` after adding photos.
 
 ## Layout and partials
