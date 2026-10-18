@@ -30,7 +30,87 @@
     if (hasGsap) ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
   };
 
+  /* ---- works filter motion ----
+     The tiles fade out when a chip is pressed and drift back in, one after another, with the new set. Shared by the static
+     filter below and by the Livewire filter on the Laravel Works page. JS hides the tiles right before it shows them. */
+  function wallTiles() { return AP.$$('.works [data-cats]').filter(function (t) { return !t.hidden; }); }
+  function wallCount() { return AP.$('.works [data-count], .works .filters__count'); }
+  AP.wallOut = function (done) {
+    var t = wallTiles();
+    if (AP.reduce || !hasGsap || !t.length) { if (done) done(); return; }
+    gsap.to(t, { opacity: 0, duration: .25, stagger: { amount: .1 }, ease: 'power1.out', overwrite: true, onComplete: done });
+  };
+  AP.wallIn = function () {
+    var t = wallTiles(), n = wallCount();
+    if (AP.reduce || !hasGsap) return;
+    if (t.length) gsap.fromTo(t, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .8, stagger: { amount: Math.min(.4, t.length * .04) }, ease: 'power2.out', overwrite: true, clearProps: 'opacity,transform' });
+    if (n) gsap.fromTo(n, { opacity: 0 }, { opacity: 1, duration: .5, ease: 'power1.out', clearProps: 'opacity,transform' });
+  };
+  AP.wallBack = function () { if (hasGsap) gsap.to(wallTiles(), { opacity: 1, y: 0, duration: .25, overwrite: true, clearProps: 'opacity,transform' }); };
+  AP.chipPop = function (chip) { if (!AP.reduce && hasGsap && chip) gsap.fromTo(chip, { scale: .96 }, { scale: 1, duration: .45, ease: 'power2.out', clearProps: 'transform' }); };
+
+  /* The Livewire filter (Laravel): a chip press starts the fade at once, and the new tiles rise when the page has been updated. */
+  var filtering = false;
+  d.addEventListener('click', function (e) {
+    var chip = e.target.closest('.works .filters .chip, .filters .chip');
+    if (!chip || chip.hasAttribute('data-filter') || chip.classList.contains('is-active') || !AP.$('.works')) return;
+    filtering = true; AP.wallOut(); AP.chipPop(chip);
+  });
+  function hookLivewire() {
+    if (hookLivewire.done || !window.Livewire || !Livewire.hook) return;
+    hookLivewire.done = true;
+    Livewire.hook('morphed', function () { if (filtering) { filtering = false; AP.wallIn(); } });
+    Livewire.hook('commit', function (c) { c.fail(function () { if (filtering) { filtering = false; AP.wallBack(); } }); });
+  }
+  hookLivewire();
+  d.addEventListener('livewire:init', hookLivewire);
+
+  /* ---- project page transition ----
+     A link to a project (or an earlier work) from the Works wall, a related tile or the "Next project" band fades the page
+     softly into the page colour before it opens. The project page then plays its own entrance, so nothing runs twice.
+     It works the same on a Livewire page swap and on a plain page load, and it is skipped for reduced motion. */
+  var PROJECT = /(^|\/)(works|projects|earlier)\/[^\/?#]+$/;
+  function isProject(url) { return url.origin === window.location.origin && PROJECT.test(url.pathname); }
+  function fadeOut(done) {
+    var el = d.createElement('div');
+    el.className = 'page-fade'; el.setAttribute('aria-hidden', 'true');
+    el.style.background = window.getComputedStyle(d.body).backgroundColor;
+    d.body.appendChild(el);
+    gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: .38, ease: 'power1.inOut', onComplete: done });
+    return el;
+  }
+  function fadeTo(url, viaLivewire) {
+    AP.leaving = true;
+    var el = fadeOut(function () {
+      if (viaLivewire) { AP.passing = url.href; Livewire.navigate(url.href); } else window.location.href = url.href;
+      /* A swap replaces the body and takes the fade with it. If the page is still here, the move failed, so clear the fade. */
+      window.setTimeout(function () { if (el.isConnected) { AP.leaving = false; gsap.to(el, { opacity: 0, duration: .3, onComplete: function () { el.remove(); } }); } }, 6000);
+    });
+  }
+  function fadeOn() { return !AP.reduce && hasGsap && !AP.leaving && !d.body.classList.contains('page-home'); } /* the home pages keep their own motion */
+  /* A plain link: the page loads after the fade. */
+  d.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+    if (Array.prototype.some.call(a.attributes, function (at) { return at.name.indexOf('wire:navigate') === 0; })) return;
+    var url = new URL(a.href, window.location.href);
+    if (!fadeOn() || !isProject(url)) return;
+    e.preventDefault(); e.stopPropagation();
+    fadeTo(url, false);
+  }, true);
+  /* A wire:navigate link opens on mouse release, so the fade hooks into the navigation itself. */
+  d.addEventListener('livewire:navigate', function (e) {
+    var url = e.detail && e.detail.url ? new URL(String(e.detail.url), window.location.href) : null;
+    if (!url || e.detail.history || e.defaultPrevented) return;
+    if (AP.passing === url.href) { AP.passing = null; return; }
+    if (!fadeOn() || !isProject(url)) return;
+    e.preventDefault();
+    fadeTo(url, true);
+  });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { AP.leaving = false; AP.$$('.page-fade').forEach(function (c) { c.remove(); }); } });
+
   function start() {
+    AP.leaving = false;
     life = window.AbortController ? new AbortController() : { signal: undefined, abort: function () {} };
     var sig = life.signal;
     /* ---- header: scrolled state + mobile nav ---- */
@@ -70,7 +150,7 @@
     if (chips.length) {
       var items = AP.$$('.works [data-cats]');
       var count = AP.$('[data-count]');
-      var apply = function (key) {
+      var swap = function (key) {
         var n = 0;
         items.forEach(function (it) {
           var show = key === 'all' || it.getAttribute('data-cats').split(' ').indexOf(key) > -1;
@@ -86,7 +166,12 @@
         if (hasGsap) ScrollTrigger.refresh();
         d.dispatchEvent(new CustomEvent('ap:filtered', { detail: { key: key } }));
       };
-      chips.forEach(function (c) { c.addEventListener('click', function () { apply(c.getAttribute('data-filter')); }); });
+      var apply = function (key, animate) {
+        if (!animate) { swap(key); return; }
+        AP.wallOut(function () { swap(key); AP.wallIn(); });
+      };
+
+      chips.forEach(function (c) { c.addEventListener('click', function () { if (c.classList.contains('is-active')) return; apply(c.getAttribute('data-filter'), true); AP.chipPop(c); }); });
       var h = (location.hash || '').replace('#', '');
       if (h && chips.some(function (c) { return c.getAttribute('data-filter') === h; })) apply(h);
     }

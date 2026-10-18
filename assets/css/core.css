@@ -551,3 +551,6 @@ a.member:hover h3 { color: var(--text); }
 .visit .prose > p { margin: 0; }
 @media (prefers-reduced-motion: no-preference) { .map-card__pin { animation: map-pin 3.4s ease-in-out infinite; } }
 @keyframes map-pin { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* the soft fade between a Works tile and its project page (core.js) */
+.page-fade { position: fixed; inset: 0; z-index: 9990; pointer-events: none; }
