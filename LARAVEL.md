@@ -49,6 +49,17 @@ Build rules that apply from the first migration:
 | `assets/img/brand/`, `assets/brand-originals/` | Logos, favicon and touch icon. |
 | `data/*.json` | Seed data. |
 
+## Changes still to carry into the app
+
+These changes are in the templates and not yet in the Laravel app.
+
+- Run `scripts/sync-template.sh` (CSS, JS, photos, `assets/img/earlier/`, the new `portfolio/img/` files and the PDF). The centred last row of the project walls is CSS only (`.d-wall` in `theme-d.css`, `.wall` in the portfolio CSS, `.grid-works` in `core.css`) and needs no markup change. `.legacy__list` also changed in `core.css`: each row is now a link.
+- Four projects: poddar-mansion, mr-singhs-dwelling, house-of-mishras, house-of-agarwals, appended to `projects.json` and `portfolio.json` (the projects seeder, with colours and photo lists). Jewellery Spaces has no signature details now, and the project story and portfolio panel leave the heading out when the list is empty.
+- Palette photos: a `palette` entry in `projects.json` can have a third item, a file in `assets/img/swatches/` (a photo of the material, cut from the PowerPoint). The four new projects use them. In the palette partial and D's panel swatches the photo goes on the circle (`background-image` on `.swatch__dot` and `.d-dot`, inline), and the hex stays as the fallback colour. Add a nullable image column to the palette items, and `core.css` gets `background: var(--sw) center / cover` on `.swatch__dot`.
+- Headings: the home wall reads "Our projects." with the "Selected works" eyebrow (`works-wall`), the portfolio wall reads "Our projects.", and the Works page block is "Our earlier works" (no place name).
+- Earlier works: `legacy-projects.json` now carries `slug`, `story` (paragraphs), local `images` (files in `assets/img/earlier/`) and `wix_images`. They need a model and table (`earlier_works`: slug, name, category, type, location, year, summary, story, images, sort), a seeder, a `/earlier/{slug}` route, a view built like `page_earlier` in `tools/build.py`, rows linking to it in the Works page, and sitemap entries. Leave out the year, location and story when they are empty.
+- Download button: `assets/downloads/Archipixels-Portfolio.pdf` is the new 31-page file.
+
 ## Layout and partials
 
 `layouts/app.blade.php` holds the head, skip link, header, footer and scripts. The generated HTML marks each partial with a `<!-- component: name -->` comment:
@@ -71,7 +82,8 @@ Build rules that apply from the first migration:
 | `/studio` | Studio |
 | `/services` | Services |
 | `/works` | Works, filterable, with `#category` deep links |
-| `/works/{slug}` | Project page (19 projects) |
+| `/works/{slug}` | Project page (23 projects) |
+| `/earlier/{slug}` | Earlier work detail page (`data/legacy-projects.json`, photos in `assets/img/earlier/`): header, facts, photo slider (`gallery-slider`), paragraphs and three more earlier works. The `legacy_section`, `legacy_list` and `page_earlier` functions in `build.py` map to a `legacy-list` component and an `earlier` view |
 | `/contact` | Contact facts, pen drawing and enquiry form (A and D layout) |
 | `/portfolio` | The one-page portfolio: the PDF as a web page that reads the same on every platform, with a button for the PDF download |
 
@@ -79,7 +91,7 @@ The 404 design in `404.html` of the chosen direction maps to `resources/views/er
 
 ## Data
 
-Project fields: slug, name, by, tagline, kind, cats[], place, lit (hex), language[], details[], palette[] (name and hex), card image, gallery[], story, year and area. Direction D also uses a background colour (`bg`), a layout name and a photo list with captions per project, from `data/portfolio.json`.
+Project fields: slug, name, by, tagline, kind, cats[], place, lit (hex), language[], details[], palette[] (name, hex and an optional photo file), card image, gallery[], story, year and area. Direction D also uses a background colour (`bg`), a layout name and a photo list with captions per project, from `data/portfolio.json`.
 
 Studio details, founders, contact details, services and the closing line are in `data/site.json`. The menu (Works, About with About us and Team, Studio, Services, Portfolio, Contact) is the `NAV` list in `tools/build.py`. Seven earlier Lucknow projects are in `data/legacy-projects.json` with Wix image ids.
 
@@ -111,7 +123,7 @@ Decisions and content from the client:
 Images:
 
 - Replace the PDF crops with original photos. The crops are about 1000 px wide in A, B and C and 600 to 1,600 px wide in D and the portfolio.
-- Download the old-site photos. `data/legacy-projects.json` lists seven earlier Lucknow projects with Wix image ids (`https://static.wixstatic.com/media/<id>`). They appear as a text list on the works page.
+- Check the earlier-works text with the client. `data/legacy-projects.json` holds seven earlier works with their photos downloaded and compressed into `assets/img/earlier/`. The paragraphs are paraphrased from the old Wix pages, and three of the seven have no description at all.
 
 Direction D and the portfolio version:
 
