@@ -15,100 +15,131 @@
   var hasGsap = !!(window.gsap && window.ScrollTrigger);
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
-  /* ---- header: scrolled state + mobile nav ---- */
-  var header = AP.$('[data-header]');
-  function onScroll() { if (header) header.classList.toggle('is-scrolled', window.scrollY > 40); }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  /* ---- page lifecycle ----
+     Everything that binds to the page runs in start(). A Livewire wire:navigate swaps the body, so core.js
+     (loaded once) calls stop(), start() and every AP.run() function again on livewire:navigated. On a plain
+     page this runs once, as before. Theme scripts wrap their setup in AP.run(). */
+  var life = null, swipers = [], hooks = [];
+  AP.swiper = function (el, opts) { var s = new Swiper(el, opts); swipers.push(s); return s; };
+  AP.run = function (fn) { hooks.push(fn); fn(); };
+  AP.stop = function () {
+    if (life) life.abort();
+    swipers.forEach(function (s) { if (s && !s.destroyed) s.destroy(true, true); });
+    swipers = [];
+    if (AP.lightbox) { AP.lightbox.destroy(); AP.lightbox = null; }
+    if (hasGsap) ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
+  };
 
-  var toggle = AP.$('.nav-toggle');
-  function setNav(open) {
-    d.body.classList.toggle('nav-open', open);
-    if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (!open) {
-      AP.$$('.has-sub.is-open').forEach(function (li) {
-        li.classList.remove('is-open');
-        li.querySelector('.sub-toggle').setAttribute('aria-expanded', 'false');
-      });
+  function start() {
+    life = window.AbortController ? new AbortController() : { signal: undefined, abort: function () {} };
+    var sig = life.signal;
+    /* ---- header: scrolled state + mobile nav ---- */
+    var header = AP.$('[data-header]');
+    function onScroll() { if (header) header.classList.toggle('is-scrolled', window.scrollY > 40); }
+    window.addEventListener('scroll', onScroll, { passive: true, signal: sig });
+    onScroll();
+
+    var toggle = AP.$('.nav-toggle');
+    function setNav(open) {
+      d.body.classList.toggle('nav-open', open);
+      if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!open) {
+        AP.$$('.has-sub.is-open').forEach(function (li) {
+          li.classList.remove('is-open');
+          li.querySelector('.sub-toggle').setAttribute('aria-expanded', 'false');
+        });
+      }
     }
-  }
-  if (toggle) {
-    toggle.addEventListener('click', function () { setNav(!d.body.classList.contains('nav-open')); });
-    AP.$$('.site-nav a').forEach(function (a) { a.addEventListener('click', function () { setNav(false); }); });
-    AP.$$('.sub-toggle').forEach(function (btn) {
+    if (toggle) {
+      toggle.addEventListener('click', function () { setNav(!d.body.classList.contains('nav-open')); });
+      AP.$$('.site-nav a').forEach(function (a) { a.addEventListener('click', function () { setNav(false); }); });
+      AP.$$('.sub-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var li = btn.parentNode;
+          var open = !li.classList.contains('is-open');
+          li.classList.toggle('is-open', open);
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      });
+      d.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); }, { signal: sig });
+      window.addEventListener('resize', function () { if (window.innerWidth > 1100) setNav(false); }, { signal: sig });
+    }
+
+    /* ---- works filter (chips + count; reads #hash like works.html#dubai) ---- */
+    var chips = AP.$$('.chip[data-filter]');
+    if (chips.length) {
+      var items = AP.$$('.works [data-cats]');
+      var count = AP.$('[data-count]');
+      var apply = function (key) {
+        var n = 0;
+        items.forEach(function (it) {
+          var show = key === 'all' || it.getAttribute('data-cats').split(' ').indexOf(key) > -1;
+          it.hidden = !show;
+          if (show) n++;
+        });
+        chips.forEach(function (c) {
+          var on = c.getAttribute('data-filter') === key;
+          c.classList.toggle('is-active', on);
+          c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        if (count) count.textContent = n + (n === 1 ? ' project' : ' projects');
+        if (hasGsap) ScrollTrigger.refresh();
+        d.dispatchEvent(new CustomEvent('ap:filtered', { detail: { key: key } }));
+      };
+      chips.forEach(function (c) { c.addEventListener('click', function () { apply(c.getAttribute('data-filter')); }); });
+      var h = (location.hash || '').replace('#', '');
+      if (h && chips.some(function (c) { return c.getAttribute('data-filter') === h; })) apply(h);
+    }
+
+    /* ---- demo forms: no backend, show the thank-you message ---- */
+    AP.$$('[data-demo-form]').forEach(function (f) {
+      f.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var ok = f.querySelector('[required]') ? Array.prototype.every.call(f.querySelectorAll('[required]'), function (i) { return i.value.trim(); }) : true;
+        var msg = f.querySelector('.form__thanks');
+        if (!ok) { f.querySelector('[required]:invalid, [required]').focus(); return; }
+        if (msg) msg.hidden = false;
+        f.reset();
+      });
+    });
+
+    /* ---- lightbox + project gallery slider ---- */
+    if (window.GLightbox && AP.$('.glightbox')) AP.lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true });
+    AP.$$('.gallery-swiper').forEach(function (el) {
+      AP.swiper(el, { slidesPerView: 'auto', spaceBetween: 16, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.gallery-prev', nextEl: '.gallery-next' } });
+    });
+
+    /* ---- team carousel (cards link to the member pages) ---- */
+    AP.$$('.team-swiper').forEach(function (el) {
+      AP.swiper(el, { slidesPerView: 'auto', spaceBetween: 24, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.team-prev', nextEl: '.team-next' } });
+    });
+
+    /* ---- map card: the Google map loads on click, so the page sets no Google cookies until then ---- */
+    AP.$$('.map-card__stage').forEach(function (stage) {
+      var btn = AP.$('.map-card__load', stage);
+      if (!btn) return;
       btn.addEventListener('click', function () {
-        var li = btn.parentNode;
-        var open = !li.classList.contains('is-open');
-        li.classList.toggle('is-open', open);
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var f = d.createElement('iframe');
+        f.src = stage.getAttribute('data-map-src');
+        f.title = 'Map showing the Archipixels studio in Gomti Nagar, Lucknow';
+        f.loading = 'lazy'; f.allowFullscreen = true; f.referrerPolicy = 'strict-origin-when-cross-origin';
+        stage.appendChild(f);
+        stage.classList.add('is-loaded');
+        AP.$('.map-card__veil', stage).hidden = true;
       });
     });
-    d.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
-    window.addEventListener('resize', function () { if (window.innerWidth > 1100) setNav(false); });
+
   }
 
-  /* ---- works filter (chips + count; reads #hash like works.html#dubai) ---- */
-  var chips = AP.$$('.chip[data-filter]');
-  if (chips.length) {
-    var items = AP.$$('.works [data-cats]');
-    var count = AP.$('[data-count]');
-    var apply = function (key) {
-      var n = 0;
-      items.forEach(function (it) {
-        var show = key === 'all' || it.getAttribute('data-cats').split(' ').indexOf(key) > -1;
-        it.hidden = !show;
-        if (show) n++;
-      });
-      chips.forEach(function (c) {
-        var on = c.getAttribute('data-filter') === key;
-        c.classList.toggle('is-active', on);
-        c.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-      if (count) count.textContent = n + (n === 1 ? ' project' : ' projects');
-      if (hasGsap) ScrollTrigger.refresh();
-      d.dispatchEvent(new CustomEvent('ap:filtered', { detail: { key: key } }));
-    };
-    chips.forEach(function (c) { c.addEventListener('click', function () { apply(c.getAttribute('data-filter')); }); });
-    var h = (location.hash || '').replace('#', '');
-    if (h && chips.some(function (c) { return c.getAttribute('data-filter') === h; })) apply(h);
-  }
+  start();
 
-  /* ---- demo forms: no backend, show the thank-you message ---- */
-  AP.$$('[data-demo-form]').forEach(function (f) {
-    f.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var ok = f.querySelector('[required]') ? Array.prototype.every.call(f.querySelectorAll('[required]'), function (i) { return i.value.trim(); }) : true;
-      var msg = f.querySelector('.form__thanks');
-      if (!ok) { f.querySelector('[required]:invalid, [required]').focus(); return; }
-      if (msg) msg.hidden = false;
-      f.reset();
-    });
-  });
-
-  /* ---- lightbox + project gallery slider ---- */
-  if (window.GLightbox && AP.$('.glightbox')) AP.lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true });
-  AP.$$('.gallery-swiper').forEach(function (el) {
-    new Swiper(el, { slidesPerView: 'auto', spaceBetween: 16, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.gallery-prev', nextEl: '.gallery-next' } });
-  });
-
-  /* ---- team carousel (cards link to the member pages) ---- */
-  AP.$$('.team-swiper').forEach(function (el) {
-    new Swiper(el, { slidesPerView: 'auto', spaceBetween: 24, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.team-prev', nextEl: '.team-next' } });
-  });
-
-  /* ---- map card: the Google map loads on click, so the page sets no Google cookies until then ---- */
-  AP.$$('.map-card__stage').forEach(function (stage) {
-    var btn = AP.$('.map-card__load', stage);
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-      var f = d.createElement('iframe');
-      f.src = stage.getAttribute('data-map-src');
-      f.title = 'Map showing the Archipixels studio in Gomti Nagar, Lucknow';
-      f.loading = 'lazy'; f.allowFullscreen = true; f.referrerPolicy = 'strict-origin-when-cross-origin';
-      stage.appendChild(f);
-      stage.classList.add('is-loaded');
-      AP.$('.map-card__veil', stage).hidden = true;
-    });
+  var booted = d.body;
+  d.addEventListener('livewire:navigated', function () {
+    if (d.body === booted) return; /* Livewire fires this on the first load too */
+    booted = d.body;
+    AP.stop(); start();
+    hooks.forEach(function (fn) { fn(); });
+    if (hasGsap) ScrollTrigger.refresh();
   });
 
   /* ---- helpers for theme scripts ---- */
