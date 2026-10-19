@@ -214,9 +214,13 @@
       AP.swiper(el, { slidesPerView: 'auto', spaceBetween: 16, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.gallery-prev', nextEl: '.gallery-next' } });
     });
 
-    /* ---- team carousel (cards link to the member pages) ---- */
+    /* ---- team carousel (cards link to the member pages) ----
+       Swiper cancels the press on a slide by default. Livewire opens a wire:navigate link when the mouse button is released,
+       so with the default a plain click does nothing, and only a right click or a new tab opens the page. The press is kept,
+       and the browser's own link drag is stopped so dragging the row still slides it. */
     AP.$$('.team-swiper').forEach(function (el) {
-      AP.swiper(el, { slidesPerView: 'auto', spaceBetween: 24, grabCursor: true, keyboard: { enabled: true }, navigation: { prevEl: '.team-prev', nextEl: '.team-next' } });
+      AP.swiper(el, { slidesPerView: 'auto', spaceBetween: 24, grabCursor: true, touchStartPreventDefault: false, keyboard: { enabled: true }, navigation: { prevEl: '.team-prev', nextEl: '.team-next' } });
+      el.addEventListener('dragstart', function (e) { e.preventDefault(); });
     });
 
     /* ---- map card: the Google map loads on click, so the page sets no Google cookies until then ---- */

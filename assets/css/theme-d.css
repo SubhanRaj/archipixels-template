@@ -133,6 +133,14 @@ body.theme-d {
   .d-pj--spot .d-panel__cta { margin-top: 1.2rem; }
 }
 
+/* Every page except the home page: a section's vertical padding is half of the shared value, so two sections on top of each other
+   stay apart without a tall empty band. :where() keeps the specificity of .section, so the tighter rules below (the project and
+   earlier work galleries) still win. */
+:where(.theme-d:not(.page-home)) .section { padding-block: clamp(2.25rem, 5vw, 4.5rem); }
+:where(.theme-d:not(.page-home)) .page-hero { padding-bottom: clamp(1.5rem, 3.5vw, 3rem); }
+:where(.theme-d:not(.page-home)) .services-rows { padding-bottom: clamp(1.5rem, 3.5vw, 3rem); }
+.theme-d .contact-facts { margin-bottom: clamp(24px, 3.5vw, 52px); }
+
 /* project page: the gallery sits under the facts row with no visible heading, and its arrows sit on the slider's edges */
 .gallery--inline { padding-block: clamp(2.5rem, 4.5vw, 4rem); }
 .gallery__stage { position: relative; }
