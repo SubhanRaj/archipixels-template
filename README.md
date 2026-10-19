@@ -138,6 +138,12 @@ The CSS keeps a plain `rgba()` fallback before each `color-mix()` and a `-webkit
 
 Motion respects `prefers-reduced-motion`. Only JavaScript hides content before an animation, so the pages stay readable when scripts fail.
 
+## Brand guidelines
+
+`brand/Archipixels-Brand-Guidelines.pdf` is a 15-page guide to the logo, colours, fonts, components, photography, layout, motion and voice, in the
+same 1440 x 810 shape as the portfolio. `python3 tools/build_brand_guide.py` rebuilds it from `data/portfolio.json`, the theme files and
+`brand/img/` (the moodboard and website screenshots). It needs Chrome and a network connection, because the fonts load from Google Fonts.
+
 ## Mood boards
 
 `moodboards/` holds a 1620 x 2340 px board for each direction (A, B, C and D) and for the one-page portfolio. Each board shows the palette, type, components and photos of that version. `moodboards-overview.png` puts all five side by side. The chooser page shows the boards under the five version cards and opens each one in a lightbox. It loads the small JPEGs in `moodboards/thumbs/` and opens the full PNG on click.

@@ -73,6 +73,14 @@ The Laravel app lives in its own repository, `SubhanRaj/archipixels`, at `~/Site
 
 The Before launch section of `LARAVEL.md` lists what to confirm or fill before launch.
 
+## Brand guidelines
+
+`brand/Archipixels-Brand-Guidelines.pdf` and `brand/brand-guidelines.html` are generated. Edit `tools/build_brand_guide.py` (the copy, the colour lists and the
+CSS), then run `python3 tools/build_brand_guide.py`. Do not edit the HTML or the PDF by hand. The guide takes its colours from `theme-a.css`, `portfolio.css` and
+`data/portfolio.json`, so a change to a token or a project colour needs a rebuild. `brand/img/` holds the moodboard and the website screenshots used on the "In use"
+page. Take new screenshots of a finished page, without placeholders such as `[YEAR]`, and keep the files under 250 KB each. After a rebuild, look at every page
+of the PDF (`pdftoppm -r 50 -png`): no text may touch the footer, and the gold button must show its colour.
+
 ## Portfolio version
 
 `portfolio/` is a one-page version of the PDF portfolio. It is separate from directions A, B and C and does not use `build.py`.
