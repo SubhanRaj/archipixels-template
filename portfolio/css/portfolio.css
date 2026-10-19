@@ -190,7 +190,7 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 .project::before { content: ""; position: absolute; inset: 0 0 auto 0; height: min(26vh, 260px); background: linear-gradient(var(--prev), transparent); pointer-events: none; z-index: 0; }
 .project__inner { position: relative; z-index: 1; max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: clamp(26px, 4vw, 64px); align-items: start; }
 
-.project__media { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(10px, 1.4vw, 20px); align-content: start; }
+.project__media { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(10px, 1.4vw, 20px); align-self: stretch; align-content: center; }
 .project__media .shot { grid-column: span 6; }
 .project__media .frame { box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
 
@@ -204,7 +204,7 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 .panel {
   position: sticky; top: clamp(84px, 12vh, 140px);
   background: var(--tan); color: var(--tan-ink); text-align: center;
-  padding: clamp(32px, 3.4vw, 56px) clamp(24px, 2.8vw, 46px);
+  padding: clamp(26px, 2.8vw, 44px) clamp(22px, 2.4vw, 40px);
   box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.6);
   outline: 1px solid rgba(27, 16, 10, 0.28); outline-offset: -11px;
 }
@@ -214,12 +214,21 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 .panel__title { font: 700 clamp(1.7rem, 2.5vw, 2.5rem)/1.1 var(--display); text-transform: uppercase; margin: 0 0 0.5rem; text-wrap: balance; }
 .panel__by { font: 500 0.78rem var(--sans); letter-spacing: 0.22em; text-transform: uppercase; margin: 0 0 0.6rem; }
 .panel__tagline { font: italic 500 clamp(1.3rem, 1.7vw, 1.6rem)/1.3 var(--serif); margin: 0.5rem 0 0; }
-.swatches { list-style: none; margin: clamp(22px, 2.6vw, 38px) auto; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.3rem 1rem; max-width: 20rem; }
+.swatches { list-style: none; margin: clamp(16px, 2vw, 28px) auto; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem .8rem; max-width: 20rem; }
 .swatches li { display: grid; justify-items: center; gap: 0.55rem; }
-.dot { width: clamp(64px, 6vw, 84px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.3), transparent 52%) center / cover, var(--c); box-shadow: 0 0 0 3px var(--gold), 0 0 0 4px rgba(27, 16, 10, 0.35), 0 12px 20px -8px rgba(0, 0, 0, 0.5), inset 0 -8px 14px rgba(0, 0, 0, 0.18); }
+.dot { width: clamp(52px, 4.8vw, 68px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.3), transparent 52%) center / cover, var(--c); box-shadow: 0 0 0 3px var(--gold), 0 0 0 4px rgba(27, 16, 10, 0.35), 0 12px 20px -8px rgba(0, 0, 0, 0.5), inset 0 -8px 14px rgba(0, 0, 0, 0.18); }
 .swatch__name { font: 500 1rem/1.2 var(--serif); }
-.panel h3 { font: 500 0.95rem/1.2 var(--display); letter-spacing: 0.12em; text-transform: uppercase; margin: 1.6rem 0 0.5rem; }
+.panel h3 { font: 500 0.95rem/1.2 var(--display); letter-spacing: 0.12em; text-transform: uppercase; margin: 1.2rem 0 0.4rem; }
 .panel h3 + p { font-size: 1.18rem; line-height: 1.5; margin-bottom: 0; }
+
+/* The photo column sits centred beside a taller panel. A project with one photo grows that photo to the panel's height
+   (cropped), so a small photo leaves no empty band under it. */
+@media (min-width: 1001px) {
+  .project--single .project__media { grid-template-rows: minmax(0, 1fr); align-content: stretch; }
+  .project--single .shot { display: flex; flex-direction: column; }
+  .project--single .shot > a { display: block; flex: 1; }
+  .project--single .frame { height: 100%; }
+}
 
 /* ---------- studio and team ---------- */
 
@@ -244,7 +253,7 @@ a.glightbox:focus-visible { outline-offset: 5px; }
 .contact a:hover { background-size: 100% 1px; color: #fff; }
 .contact .ig { display: inline-flex; align-items: center; gap: 0.6rem; }
 .social-reveal { display: grid; gap: 0.8rem; justify-items: center; }
-.social-row { display: flex; justify-content: center; gap: 0.9rem; opacity: 0; transform: translateY(-6px); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
+.social-row { display: flex; flex-wrap: wrap; max-width: 11.5rem; margin-inline: auto; justify-content: center; gap: 0.9rem; opacity: 0; transform: translateY(-6px); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
 .social-reveal:hover .social-row, .social-reveal:focus-within .social-row { opacity: 1; transform: none; }
 @media (hover: none) { .social-row { opacity: 1; transform: none; } }
 .social-row a { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid rgba(216, 169, 58, 0.45); border-radius: 50%; background: none; transition: color 0.3s, border-color 0.3s; }
