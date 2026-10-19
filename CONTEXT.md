@@ -180,7 +180,7 @@ The work card (`.card-work` in A, B and C, `.d-tile` in D), the project hero and
 - Each version has its own `404.html` (built by `build.py` and `build_d.py`), and the root has a fallback `404.html` (built from `tools/root-404.tpl`). Cloudflare Pages serves the nearest one, so `/a/missing` shows A's page. The pages use root-relative paths because they are served at the missing URL.
 - `functions/_middleware.js` and `_routes.json` stay in the root. They return 404 on the preview for `tools/`, `data/` and every `.md`, `.py` and `.pyc` file. A page that needs a new file of one of those types has to move it out of the blocked set.
 - `_headers` stays in the root. It blocks search engines on the preview, which an HTTP header does for every file type, including images and PDFs.
-- The portfolio PDF is compressed to 10.6 MB (from 122 MB; 100 dpi, JPEG, no visible loss at screen size). Every version links it from the footer, and the one-page portfolio and D link it in more places.
+- The portfolio PDF is compressed to 12.4 MB (from 122 MB; 100 dpi, JPEG, no visible loss at screen size). Every version links it from the footer, and the one-page portfolio and D link it in more places.
 - Writing rules for docs, comments and UI text: plain present tense, no em dashes, no "X, not Y" contrasts, no flourish adjectives, no bold lead-ins on bullets, no emoji in headings, no leftover placeholders unless they stand for content the client still owes.
 
 ## 7. Open items
