@@ -61,9 +61,10 @@
       gsap.to('.hero-swiper', { yPercent: 8, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
     }
 
-    /* project hero: the title fades as the hero scrolls away */
+    /* project hero: the title fades as the hero scrolls away. It starts from an explicit opacity of 1, because GSAP would
+       otherwise read 0 while the CSS entrance (hero-photo-in) is still waiting, and keep the title hidden after it ends. */
     var ph = $('.phero--a');
-    if (ph) gsap.to($('.phero__content', ph), { yPercent: -10, opacity: .2, ease: 'none', scrollTrigger: { trigger: ph, start: 'center top', end: 'bottom top', scrub: true } });
+    if (ph) gsap.fromTo($('.phero__content', ph), { yPercent: 0, opacity: 1 }, { yPercent: -10, opacity: .2, ease: 'none', scrollTrigger: { trigger: ph, start: 'center top', end: 'bottom top', scrub: true } });
 
     /* homes tiles drift against the scroll */
     $$('.home-tile').forEach(function (t, i) {
